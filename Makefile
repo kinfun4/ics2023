@@ -1,5 +1,5 @@
 STUID = 221900156 
-STUNAME =韩加瑞 
+STUNAME = 韩加瑞 
 
 # DO NOT modify the following code!!!
 
