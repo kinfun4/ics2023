@@ -63,6 +63,15 @@ static int cmd_si(char *args) {
 	return 0;
 } 
 
+static int cmd_info(char *args) {
+	char *arg=strtok(args," ");
+	char *opt[]={"r","w"};
+	if (strcmp(arg,opt[0])==0)
+		isa_reg_display();
+	else if (strcmp(arg,opt[1])==0);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -73,7 +82,8 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "Let the program step N instructions", cmd_si }
+  { "si", "Let the program step N instructions", cmd_si },
+  { "info", "Print the register status and the information of watchpoint", cmd_info }
 
   /* TODO: Add more commands */
 
