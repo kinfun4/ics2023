@@ -79,7 +79,8 @@ static int cmd_x(char *args) {
 	printf("%-10d 0x%-10x",n,addr);
 	for(int i=0;i<n;i++)
 	{
-		printf("%-20x",isa_mmu_translate(addr,4,0));
+		printf("%20x\n",isa_mmu_translate(addr,4,4));
+		addr+=32;
 	}
 	return 0;
 }
