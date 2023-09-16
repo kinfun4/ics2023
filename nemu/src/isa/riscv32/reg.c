@@ -25,7 +25,7 @@ const char *regs[] = {
 
 void isa_reg_display() {
 	for (int i=0;i<32;i++)
-	printf("%-15s 0x%020x %020d \n",regs[i] ,gpr(i) ,gpr(i) );
+	printf("%-15s 0x%-20x %-20d \n",regs[i] ,gpr(i) ,gpr(i) );
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
