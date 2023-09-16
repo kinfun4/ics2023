@@ -76,11 +76,12 @@ static int cmd_x(char *args) {
 	int n;
 	paddr_t addr=0; 
 	sscanf(args,"%d 0x%x",&n,&addr);
-	printf("%-10d 0x%-10x",n,addr);
+	printf("%-10d 0x%-10x\n",n,addr);
 	for(int i=0;i<n;i++)
 	{
-		printf("%20x\n",isa_mmu_translate(addr,4,4));
-		addr+=32;
+		printf("0x%-20x\n",isa_mmu_translate(addr,4,4));
+		addr+=4;
+		printf("0x%-10x\n",addr);
 	}
 	return 0;
 }
