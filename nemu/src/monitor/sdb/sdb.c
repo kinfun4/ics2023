@@ -72,6 +72,18 @@ static int cmd_info(char *args) {
 	return 0;
 }
 
+static int cmd_x(char *args) {
+	int n;
+//	paddr_t expr; 
+	sscanf(args,"%d",&n);
+	for(int i=0;i<n;i++)
+	{
+	//	vaddr_read(expr,4);
+		;
+	}
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -83,7 +95,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Let the program step N instructions", cmd_si },
-  { "info", "Print the register status and the information of watchpoint", cmd_info }
+  { "info", "Print the register status and the information of watchpoint", cmd_info },
+  { "x", "Evaluate the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal form", cmd_x}
 
   /* TODO: Add more commands */
 
