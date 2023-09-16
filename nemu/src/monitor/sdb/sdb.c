@@ -74,12 +74,13 @@ static int cmd_info(char *args) {
 
 static int cmd_x(char *args) {
 	int n;
-//	paddr_t expr; 
+	paddr_t addr=0; 
 	sscanf(args,"%d",&n);
+	sscanf(args,"%i",&addr);
+	printf("%-10d 0x%-10x",n,addr);
 	for(int i=0;i<n;i++)
 	{
-	//	vaddr_read(expr,4);
-		;
+		printf("%-20x",isa_mmu_translate(addr,4,0));
 	}
 	return 0;
 }
