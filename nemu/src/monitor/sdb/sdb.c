@@ -80,17 +80,20 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-
-	if(args==NULL){
+	char* num;
+	num=strtok(args," ");
+	if(num==NULL){
 		unknown_cmd(NULL);
 		return 0;
 	}
 	int n;
-	paddr_t addr=0; 
-	sscanf(args,"%d 0x%x",&n,&addr);
+	sscanf(num,"%d",&n);
+	char* arg = args +strlen(num)+1;
+	bool suc;
+	paddr_t addr = expr(arg, &suc);
 	for(int i=0;i<n;i++)
 	{
-		printf("0x%08x\n",isa_mmu_translate(addr,4,4));
+		printf("0x%08x\n",isa_mmu_translate(addr,4,0));
 		addr+=4;
 	}
 	return 0;
