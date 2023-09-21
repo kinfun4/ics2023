@@ -42,6 +42,12 @@ static char* rl_gets() {
   return line_read;
 }
 
+static void unknown_cmd(char* args)
+{
+   	Log("Unknown command: %s, you can use 'help' to find the usable command\n", args); 
+	return;
+}
+
 static int cmd_c(char *args) {
   cpu_exec(-1);
   return 0;
@@ -69,7 +75,7 @@ static int cmd_info(char *args) {
 	if (strcmp(arg,opt[0])==0)
 		isa_reg_display();
 	else if (strcmp(arg,opt[1])==0);
-	else Log("Can not find the command : %s , you can use 'help' to check the usable command",arg );
+	else unknown_cmd(arg);
 	return 0;
 }
 
@@ -96,7 +102,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Let the program step N instructions", cmd_si },
-  { "info", "Print the register status and the information of watchpoint", cmd_info },
+  { "info", "Print the register status (use 'r') or the information of watchpoint (use 'w') ", cmd_info },
   { "x", "Evaluate the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal form", cmd_x}
 
   /* TODO: Add more commands */
@@ -166,7 +172,7 @@ void sdb_mainloop() {
       }
     }
 
-    if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
+    if (i == NR_CMD) unknown_cmd(cmd);
   }
 }
 
