@@ -44,8 +44,8 @@ static struct rule {
   {"\\*", TK_MUL},		// multiply
   {"/", TK_DIV},			// divide 
   {"[0-9]", TK_NUM},		//number
-  {"(", TK_LEF},
-  {")", TK_RIG},
+  {"\\(", TK_LEF},
+  {"\\)", TK_RIG},
 };
 
 #define NR_REGEX ARRLEN(rules)
