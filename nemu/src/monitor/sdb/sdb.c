@@ -69,6 +69,7 @@ static int cmd_info(char *args) {
 	if (strcmp(arg,opt[0])==0)
 		isa_reg_display();
 	else if (strcmp(arg,opt[1])==0);
+	else Log("Can not find the command : %s , you can use 'help' to check the usable command",arg );
 	return 0;
 }
 
