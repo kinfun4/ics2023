@@ -80,6 +80,11 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
+
+	if(args==NULL){
+		unknown_cmd(NULL);
+		return 0;
+	}
 	int n;
 	paddr_t addr=0; 
 	sscanf(args,"%d 0x%x",&n,&addr);
