@@ -21,11 +21,12 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 1 ,TK_NUM , TK_EQ,TK_PLU,TK_MIN,TK_MUL,TK_DIV,TK_LEF,TK_RIG,
 
   /* TODO: Add more token types */
 
 };
+
 
 static struct rule {
   const char *regex;
@@ -37,8 +38,14 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", TK_PLU},         // plus
   {"==", TK_EQ},        // equal
+  {"-", TK_MIN},			// minus
+  {"\\*", TK_MUL},		// multiply
+  {"/", TK_DIV},			// divide 
+  {"[0-9]", TK_NUM},		//number
+  {"(", TK_LEF},
+  {")", TK_RIG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -65,6 +72,7 @@ void init_regex() {
 typedef struct token {
   int type;
   char str[32];
+  int num;
 } Token;
 
 static Token tokens[32] __attribute__((used)) = {};
@@ -93,11 +101,21 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+		if(nr_token>=32)panic("Too many tokens!");
 
+		if(rules[i].token_type!=0){
+			tokens[nr_token].type=rules[i].token_type;
+		}
         switch (rules[i].token_type) {
-          default: TODO();
+			case 1:break;											//space
+			case 2:tokens[nr_token].type=rules[i].token_type;				//number
+				   sscanf(substr_start,"%d",&tokens[nr_token].num);
+				   nr_token++;
+				   break;
+			default:tokens[nr_token].type=rules[i].token_type;
+					nr_token++;
+					break;
         }
-
         break;
       }
     }
