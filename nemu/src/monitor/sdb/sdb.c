@@ -91,6 +91,10 @@ static int cmd_x(char *args) {
 	char* arg = args +strlen(num)+1;
 	bool suc;
 	paddr_t addr = expr(arg, &suc);
+	if(addr==0){
+		Log("Invalid expressions!");
+		return 0;
+	}
 	for(int i=0;i<n;i++)
 	{
 		printf("0x%08x\n",isa_mmu_translate(addr,4,0));

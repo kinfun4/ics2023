@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 1 ,TK_NUM , TK_EQ,TK_PLU,TK_MIN,TK_MUL,TK_DIV,TK_LEF,TK_RIG,
+  TK_NOTYPE = 0 ,TK_NUM , TK_EQ,TK_PLU,TK_MIN,TK_MUL,TK_DIV,TK_LEF,TK_RIG,
 
   /* TODO: Add more token types */
 
@@ -106,17 +106,16 @@ static bool make_token(char *e) {
 		if(rules[i].token_type!=0){
 			tokens[nr_token].type=rules[i].token_type;
 		}
+
         switch (rules[i].token_type) {
 			case 1:break;											//space
-			case 2:tokens[nr_token].type=rules[i].token_type;				//number
-				   sscanf(substr_start,"%d",&tokens[nr_token].num);
+			case 2:sscanf(substr_start,"%d",&tokens[nr_token].num);  //number 
 				   nr_token++;
 				   break;
-			default:tokens[nr_token].type=rules[i].token_type;
-					nr_token++;
+			default:nr_token++;
 					break;
         }
-        break;
+		break;
       }
     }
 
@@ -128,9 +127,21 @@ static bool make_token(char *e) {
 
   return true;
 }
-
+bool check_parentheses(int p,int q){
+	return true;
+}
 word_t eval(int p,int q)
 {
+	return 0;
+	if(p>q){
+		return 0;
+	}
+	else if(p==q){
+		return tokens[p].num;
+	}
+	else if(check_parentheses(p,q)==true){
+		return eval(p+1,q-1);
+	}
 	return 0;
 }
 
@@ -139,8 +150,6 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
   /* TODO: Insert codes to evaluate the expression. */
-
-  return (int)0x80000000;
+  return eval(0,nr_token);
 }
