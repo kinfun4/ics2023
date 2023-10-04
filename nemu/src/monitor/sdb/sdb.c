@@ -103,6 +103,16 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
+static int cmd_p(char *args) {
+	bool suc;
+	word_t ans=expr(args, &suc);
+	if(suc==false){
+		Log("Failed to caculate the expressions!\n");
+	}
+	printf("ans = %u\n", ans);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -115,7 +125,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Let the program step N instructions", cmd_si },
   { "info", "Print the register status (use 'r') or the information of watchpoint (use 'w') ", cmd_info },
-  { "x", "Evaluate the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal form", cmd_x}
+  { "x", "Evaluate the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal form", cmd_x},
+  {"p", "Evaluate the expressions", cmd_p},
 
   /* TODO: Add more commands */
 
