@@ -209,12 +209,12 @@ word_t eval(int p,int q)
 		}
 		return tokens[p].num;
 	}
-	else if(check_parentheses(p,q)==false){
+	else if(!check_parentheses(p,q)){
 		Log("check_parentheses(p,q)	is false, p = %d, q = %d\n",p,q);
 		*suc=false;
 		return 0;
 	}
-	else if(tokens[p].type== TK_LEF && tokens[q].type==TK_RIG)	{
+	else if(tokens[p].type== TK_LEF && tokens[q].type==TK_RIG && check_parentheses(p+1,q-1))	{
 		return eval(p+1,q-1);
 	}
 	else{
