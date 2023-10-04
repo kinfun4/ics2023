@@ -94,7 +94,6 @@ void add_wp(char* args){
 		Log("There is no more watchpoints!");
 		return;
 	}
-	sscanf(args,"%s",wp->str);
 	bool suc;
 	wp->rec=expr(args,&suc);
 	if(!suc){
