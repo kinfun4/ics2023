@@ -37,12 +37,12 @@ enum {
 
 enum {
 	P_NOTYPE = 0, 
-	P_EQ, 
-	P_PLU, P_MIN, 
-	P_MOD, 
-	P_MUL, P_DIV, 
-	P_NUM,
-	P_LEF, P_RIG,
+	P_EQ=1, 
+	P_PLU=2, P_MIN=2, 
+	P_MOD=3, 
+	P_MUL=4, P_DIV=4, 
+	P_NUM=5,
+	P_LEF=6, P_RIG=6,
 
 };
 
@@ -186,7 +186,7 @@ word_t eval(int p,int q)
 		int op __attribute__((unused));
 		for(int i=p;i<=q;i++)
 		{
-			if(pri>tokens[i].priority+cnt*P_RIG){
+			if(pri>=tokens[i].priority+cnt*P_RIG){
 				op=i;
 				pri=tokens[i].priority+cnt*P_RIG;
 			}
