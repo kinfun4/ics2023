@@ -219,7 +219,7 @@ word_t eval(int p,int q)
 	}
 	else{
 		int cnt=0,pri=1e7;
-		int op __attribute__((unused));
+		int op=0;
 		for(int i=p;i<=q;i++)
 		{
 			if((pri>=tokens[i].priority+cnt*P_RIG && tokens[i].priority<P_SUB) || pri>tokens[i].priority+cnt*P_RIG ){
