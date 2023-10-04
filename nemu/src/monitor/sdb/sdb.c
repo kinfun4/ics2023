@@ -109,7 +109,7 @@ static int cmd_p(char *args) {
 	if(suc==false){
 		Log("Failed to caculate the expressions!\n");
 	}
-	printf("ans = %u\n", ans);
+	printf("%90u     0x%80x\n", ans, ans);
 	return 0;
 }
 
