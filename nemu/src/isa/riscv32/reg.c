@@ -29,10 +29,10 @@ void isa_reg_display() {
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
-	Log("string =%s\n",s);
 	for(int  i=0;i<32;i++)
 	{
 		if(strcmp(regs[i],s)==0 && sizeof(regs[i])==sizeof(s)){
+			Log("string =%s, reg=%s\n",s,regs[i]);
 			*success=true;
 			return gpr(i);
 		}
