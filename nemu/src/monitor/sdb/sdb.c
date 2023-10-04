@@ -23,7 +23,9 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-
+void add_wp(char* args);
+void delete_wp(int id);
+void list_wp();
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -74,7 +76,9 @@ static int cmd_info(char *args) {
 	char *opt[]={"r","w"};
 	if (strcmp(arg,opt[0])==0)
 		isa_reg_display();
-	else if (strcmp(arg,opt[1])==0);
+	else if (strcmp(arg,opt[1])==0){
+		list_wp();
+	}
 	else unknown_cmd(arg);
 	return 0;
 }
@@ -113,6 +117,18 @@ static int cmd_p(char *args) {
 	return 0;
 }
 
+static int cmd_w(char *args) {
+	add_wp(args);
+	return 0;
+}
+
+static int cmd_d(char *args){
+	int id=0;
+	sscanf(args, "%d", &id);
+	delete_wp(id);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -127,6 +143,8 @@ static struct {
   { "info", "Print the register status (use 'r') or the information of watchpoint (use 'w') ", cmd_info },
   { "x", "Evaluate the expression EXPR, use the result as the starting memory address, and output N consecutive 4-bytes in hexadecimal form", cmd_x},
   {"p", "Evaluate the expressions", cmd_p},
+	{"w", "Set watchpoint by expressions", cmd_w},
+	{"d", "Delete watchpoint by ID", cmd_d},
 
   /* TODO: Add more commands */
 
