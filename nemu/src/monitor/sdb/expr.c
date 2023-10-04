@@ -207,6 +207,7 @@ word_t eval(int p,int q)
 			*suc=false;
 			return 0;
 		}
+		Log("tokesn[%d].num=%u\n",p,tokens[p].num);
 		return tokens[p].num;
 	}
 	else if(!check_parentheses(p,q)){
