@@ -104,7 +104,7 @@ void init_regex() {
 
 typedef struct token {
   int type;
-  char* str;
+  char str[100];
   int priority;
   word_t num;
 } Token;
