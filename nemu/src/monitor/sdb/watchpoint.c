@@ -19,7 +19,7 @@
 
 typedef struct watchpoint {
   int id;
-	char* str;
+	char str[50];
 	uint32_t rec;
 	struct watchpoint *prev;
   struct watchpoint *next;
@@ -96,7 +96,7 @@ void add_wp(char* args){
 	}
 	sscanf(args,"%s",wp->str);
 	bool suc;
-	wp->rec=expr(wp->str,&suc);
+	wp->rec=expr(args,&suc);
 	if(!suc){
 		Log("Invalid expressions when use add_wp(char* args)!\n *args=%s\n",args);
 	}
@@ -105,7 +105,7 @@ void add_wp(char* args){
 void delete_wp(int id){
 	WP* wp=&wp_pool[id];
 	wp->rec=0;
-	wp->str=NULL;
+	wp->str[0]='\0';
 	free_wp(wp);
 }
 
@@ -129,6 +129,6 @@ void list_wp(){
 		Log("There is no watchpoint.\n");
 	}
 	for(WP* i=head;i!=NULL;i=i->next){
-		printf("id=%-10d expressions=%-20s value=%-10u\n",i->id,i->str,i->rec);
+		printf("id=%-10d expressions=%-25s value=%-10u\n",i->id,i->str,i->rec);
 	}
 }
