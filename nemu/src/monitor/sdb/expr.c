@@ -109,7 +109,7 @@ typedef struct token {
   word_t num;
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[100] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token (char *e) {
@@ -135,7 +135,7 @@ static bool make_token (char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-		if(nr_token>=32)panic("Too many tokens!");
+		if(nr_token>=100)panic("Too many tokens!");
 
 		if(rules[i].token_type!=0){
 			tokens[nr_token].type=rules[i].token_type;
