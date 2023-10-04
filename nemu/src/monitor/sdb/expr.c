@@ -140,7 +140,7 @@ static bool make_token (char *e) {
 		if(rules[i].token_type!=0){
 			tokens[nr_token].type=rules[i].token_type;
 			tokens[nr_token].priority=rules[i].token_priority;
-			strncpy(tokens[nr_token].str,substr_start,substr_len);
+			strncpy(tokens[nr_token].str,substr_start+1,substr_len);
 		}
 
         switch (rules[i].token_type) {
@@ -151,7 +151,7 @@ static bool make_token (char *e) {
 					case TK_HEX:sscanf(substr_start,"0x%x",&tokens[nr_token].num); // hex-number
 							 nr_token++;
 							 break;
-					case TK_REG:tokens[nr_token].num=isa_reg_str2val(tokens[nr_token].str+1,suc);
+					case TK_REG:tokens[nr_token].num=isa_reg_str2val(tokens[nr_token].str,suc);
 							 nr_token++;
 							 break;
 					default:nr_token++;break;
