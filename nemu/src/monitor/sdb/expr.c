@@ -233,7 +233,7 @@ word_t eval(int p,int q)
 				cnt--;
 			}
 		}
-		Log("op=%d, token_type=%d \n",op, tokens[op].type);
+		Log("op=%d\n",op);
 		word_t val1=0,val2=0;
 		if(op!=p)val1=eval(p,op-1);
 		if(op!=q)val2=eval(op+1,q);
