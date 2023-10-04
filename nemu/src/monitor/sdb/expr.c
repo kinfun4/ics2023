@@ -256,6 +256,7 @@ word_t eval(int p,int q)
 
 word_t expr(char *e, bool *success) {
 	suc=success;
+	*suc=true;
   if (!make_token(e)) {
     *suc = false;
     return 0;
