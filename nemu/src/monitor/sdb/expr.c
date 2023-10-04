@@ -246,7 +246,7 @@ word_t eval(int p,int q)
 			case TK_MOD: return val1%val2;break;
 			case TK_EQ: return val1==val2;break;
 			case TK_NEQ: return val1!=val2;break; 
-			case TK_AND: return (val1 && val2); break;
+			case TK_AND: if(val1 && val2)return 1;else return 0; break;
 			case TK_SUB: return -val2;break;
 			case TK_UCI: return get_addr(val2);break; 
 			default: Log("Invalid expression at position %d,string = %s\n",op, tokens[op].str);*suc=false; return 0;
