@@ -32,7 +32,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 	Log("string =%s\n",s);
 	for(int  i=0;i<32;i++)
 	{
-		if(strcmp(regs[i],s)==0){
+		if(strcmp(regs[i],s)==0 && sizeof(regs[i])==sizeof(s)){
 			*success=true;
 			return gpr(i);
 		}
