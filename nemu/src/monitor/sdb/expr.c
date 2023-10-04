@@ -59,7 +59,9 @@ static struct rule {
 
   {" +", TK_NOTYPE, P_NOTYPE},    // spaces
   {"\\+", TK_PLU, P_PLU},         // plus
+  {"-", TK_MIN, P_MIN},							  // minus
   {"==", TK_EQ, P_EQ},        // equal
+  {"\\*", TK_MUL, P_MUL},						  // multiply
   {"/", TK_DIV, P_DIV},			// divide 
   {"[0-9]+", TK_NUM, P_NUM},  //number
   {"%", TK_MOD, P_MOD},						  //mod
