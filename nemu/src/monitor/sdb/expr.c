@@ -183,7 +183,7 @@ bool check_parentheses(int p,int q){
 
 bool check_unary_op(int p) {
 	if(tokens[p].type==TK_MIN||tokens[p].type==TK_MUL){
-		if(p==0||(tokens[p-1].type!=TK_NUM && tokens[p-1].type!=TK_HEX && tokens[p-1].type!=TK_REG)){
+		if(p==0||(tokens[p-1].type!=TK_NUM && tokens[p-1].type!=TK_HEX && tokens[p-1].type!=TK_REG && tokens[p-1].type != TK_RIG)){
 				return true;
 		}
 	}
