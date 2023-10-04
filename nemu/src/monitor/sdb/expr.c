@@ -157,7 +157,7 @@ bool check_parentheses(int p,int q){
 	{
 		if(tokens[i].type==TK_LEF)cnt++;
 		if(tokens[i].type==TK_RIG)cnt--;
-		if(cnt<=0)return false;
+		if(cnt<0)return false;
 	}
 	if(cnt!=0)return false;
 	return true;
