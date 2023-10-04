@@ -72,7 +72,7 @@ static struct rule {
   {"\\*", TK_MUL, P_MUL},						  // multiply
   {"/", TK_DIV, P_DIV},			// divide 
   {"%", TK_MOD, P_MOD},						  //mod
-	{"0x[0-9|a-e]+", TK_HEX, P_HEX},		 //hex-number
+	{"0x[0-9|a-f]+", TK_HEX, P_HEX},		 //hex-number
 	{"\\$[0-9|a-z|\\$]+", TK_REG, P_REG},		// reg name
 	{"!=", TK_NEQ, P_NEQ},  // no euqal
 	{"&&", TK_AND, P_AND}, // and
