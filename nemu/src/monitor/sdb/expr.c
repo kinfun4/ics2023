@@ -195,6 +195,7 @@ word_t eval(int p,int q)
 				cnt--;
 			}
 		}
+		Log("op=%d\n",op);
 		if(pri>=P_LEF||pri==0)return 0;
 		word_t val1,val2;
 		val1=eval(p,op-1);
