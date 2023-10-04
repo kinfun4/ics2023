@@ -140,7 +140,7 @@ static bool make_token (char *e) {
 		if(rules[i].token_type!=0){
 			tokens[nr_token].type=rules[i].token_type;
 			tokens[nr_token].priority=rules[i].token_priority;
-			strncpy(tokens[nr_token].str,substr_start+1,substr_len);
+			strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);
 		}
 
         switch (rules[i].token_type) {
