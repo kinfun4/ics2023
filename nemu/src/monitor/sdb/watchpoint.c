@@ -115,6 +115,7 @@ bool check_wp(){
 		uint32_t ans=expr(i->str,&suc);
 		if(ans!=i->rec){
 			ret=true;
+			i->rec=ans;
 			Log("The watchpoint %d (expression=%s) have changed, the formal value is %u, the present value is %u\n",i->id, i->str, i->rec, ans);
 		}
 		if(!suc){
