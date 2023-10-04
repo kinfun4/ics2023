@@ -234,11 +234,9 @@ word_t eval(int p,int q)
 			}
 		}
 		Log("op=%d\n",op);
-		if(pri>=P_LEF||pri==0)return 0;
 		word_t val1=0,val2=0;
 		if(op!=p)val1=eval(p,op-1);
 		if(op!=q)val2=eval(op+1,q);
-		Log("val1 = %u, val2 = %u , val1&&val2=%u\n",val1,val2,val1&&val2);
 		switch (tokens[op].type) {
 			case TK_PLU: return val1+val2;break;
 			case TK_MIN: return val1-val2;break;
