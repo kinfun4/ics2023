@@ -168,11 +168,13 @@ word_t eval(int p,int q)
 		return 0;
 	}
 	else if(p==q){
-		if(tokens[p].type!=TK_NUM)
+		if(tokens[p].type!=TK_NUM){
 			Log("Invalid expression at position %d, string = %s \n" ,p, tokens[p].str);
+		}
 		return tokens[p].num;
 	}
 	else if(check_parentheses(p,q)==false){
+		Log("check_parentheses(p,q) is false, p = %d, q = %d\n",p,q);
 		return 0;
 	}
 	else if(tokens[p].type==TK_LEF && tokens[q].type==TK_RIG)
@@ -219,5 +221,6 @@ word_t expr(char *e, bool *success) {
   }
   /* TODO: Insert codes to evaluate the expression. */
   *success=true;
+  Log("nr_token = %d\n",nr_token);
   return eval(0,nr_token-1);
 }
