@@ -22,6 +22,7 @@
 
 // this should be enough
 static char buf[65536] = {};
+static int p;
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
 "#include <stdio.h>\n"
@@ -30,20 +31,57 @@ static char *code_format =
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
+uint32_t choose(uint32_t n) {
+	return rand()%n;
+}
+
+static void gen(char* str) {
+	for(char* i=str;*i!='\0';i++)
+	{
+		buf[p++]=*i;
+	}
+	buf[p]='\0';
+}
+
+static void gen_num() {
+	char str[32];
+	uint32_t maxn=100;
+	snprintf(str, sizeof(str),"%u", choose(maxn));
+	gen(str);
+}
+
+static void gen_rand_op() {
+	switch(choose(4)) {
+		case 0: gen("+");break;
+		case 1: gen("-");break;
+		case 2: gen("*");break;
+		case 3: gen("/");break;
+		default: printf("Invalid value when gen_rand_op()!\n");assert(0);
+	}
+}
 
 static void gen_rand_expr() {
-  buf[0] = '\0';
+	int k=choose(3);
+	if(p>100)k=0;
+	switch (k) {
+		case 0: gen_num();break;
+		case 1: gen("(");gen_rand_expr();gen(")");break;
+		case 2: gen_rand_expr();gen_rand_op();gen_rand_expr();break;
+		default: printf("Invalid value when gen_rand_expr()!\n");assert(0);
+	}
 }
 
 int main(int argc, char *argv[]) {
   int seed = time(0);
   srand(seed);
-  int loop = 1;
+  int loop = 10;
   if (argc > 1) {
     sscanf(argv[1], "%d", &loop);
   }
   int i;
   for (i = 0; i < loop; i ++) {
+	buf[0]='\0';
+	p=0;
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
@@ -62,6 +100,7 @@ int main(int argc, char *argv[]) {
     int result;
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
+	if(ret==EOF)continue;
 
     printf("%u %s\n", result, buf);
   }

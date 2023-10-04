@@ -104,7 +104,7 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_p(char *args) {
-	bool suc;
+	bool suc=true;
 	word_t ans=expr(args, &suc);
 	if(suc==false){
 		Log("Failed to caculate the expressions!\n");
