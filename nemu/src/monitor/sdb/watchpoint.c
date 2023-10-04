@@ -96,7 +96,7 @@ void add_wp(char* args){
 	}
 	sscanf(args,"%s",wp->str);
 	bool suc;
-	wp->rec=expr(args,&suc);
+	wp->rec=expr(wp->str,&suc);
 	if(!suc){
 		Log("Invalid expressions when use add_wp(char* args)!\n *args=%s\n",args);
 	}
