@@ -20,4 +20,7 @@ submit:
 	git gc
 	STUID=$(STUID) STUNAME=$(STUNAME) bash -c "$$(curl -s http://why.ink:8080/static/submit.sh)"
 
-.PHONY: default submit
+count:
+	-@find . -name "*.c" -o -name "*.h" | xargs cat | grep -v ^$$ |wc -l
+
+.PHONY: default submit count
