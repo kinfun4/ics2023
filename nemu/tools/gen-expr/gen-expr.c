@@ -46,7 +46,7 @@ static void gen(char* str) {
 static void gen_num() {
 	char str[32];
 	uint32_t maxn=100;
-	snprintf(str, sizeof(str),"%u", choose(maxn));
+	snprintf(str, sizeof(str),"%uu", choose(maxn));
 	gen(str);
 }
 
@@ -101,7 +101,10 @@ int main(int argc, char *argv[]) {
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
 	if(ret==EOF)continue;
-
+	for(char* i=buf;*i!='\0';i++)
+	{
+			if(*i=='u')*i=' ';
+	}
     printf("%u %s\n", result, buf);
   }
   return 0;
