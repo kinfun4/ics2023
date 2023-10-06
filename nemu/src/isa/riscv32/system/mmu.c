@@ -22,14 +22,13 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 }
 
 paddr_t isa_mmu_execute(vaddr_t vaddr,int len, int type, ...) {
-		vaddr_t addr=vaddr;
-		Log("%d",isa_mmu_check(vaddr, len, type));
+		vaddr_t addr=0;
 		switch (isa_mmu_check(vaddr, len, type)) {
-				case MMU_DIRECT:break;
+				case MMU_DIRECT:addr=vaddr;break;
 				case MMU_TRANSLATE:addr=isa_mmu_translate(vaddr, len, type);break;
 				case MMU_FAIL:panic("Invalid address!");
 		}
-		if(type==MEM_TYPE_READ){
+		if(type==MEM_TYPE_WRITE){
 				va_list ap;
 				va_start(ap, type);
 				word_t data = va_arg(ap, word_t); 
