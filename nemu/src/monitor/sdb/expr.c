@@ -191,7 +191,7 @@ bool check_unary_op(int p) {
 }
 
 static word_t get_addr(word_t addr){
-	return isa_mmu_translate(addr,4,0);
+	return isa_mmu_execute(addr,4,MEM_TYPE_READ);
 }
 
 word_t eval(int p,int q)

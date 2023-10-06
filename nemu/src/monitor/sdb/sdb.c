@@ -101,7 +101,7 @@ static int cmd_x(char *args) {
 	}
 	for(int i=0;i<n;i++)
 	{
-		printf("0x%08x\n",isa_mmu_translate(addr,4,0));
+		printf("0x%08x\n",isa_mmu_execute(addr,4,MEM_TYPE_READ));
 		addr+=4;
 	}
 	return 0;

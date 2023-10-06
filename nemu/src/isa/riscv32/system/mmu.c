@@ -18,5 +18,27 @@
 #include <memory/paddr.h>
 
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
-  return vaddr_read(vaddr,len); 
+		return MEM_RET_OK;
+}
+
+paddr_t isa_mmu_execute(vaddr_t vaddr,int len, int type, ...) {
+		vaddr_t addr=vaddr;
+		switch (isa_mmu_check(vaddr, len, type)) {
+				case MMU_DIRECT:break;
+				case MMU_TRANSLATE:addr=isa_mmu_translate(vaddr, len, type);break;
+				case MMU_FAIL:panic("Invalid address!");
+		}
+		if(type==MEM_TYPE_READ){
+				va_list ap;
+				va_start(ap, type);
+				word_t data = va_arg(ap, word_t); 
+				vaddr_write(addr, len, data);
+		}
+		else {
+				switch (type) {
+						case MEM_TYPE_IFETCH:return vaddr_ifetch(addr,len);
+						case MEM_TYPE_READ:return vaddr_read(addr, len);
+				}
+		}
+		return 0;
 }
