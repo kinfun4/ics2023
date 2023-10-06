@@ -197,13 +197,13 @@ static word_t get_addr(word_t addr){
 word_t eval(int p,int q)
 {
 	if(p>q){ 
-		Log("Invalid expression because p>q where p=%d, q=%d \n",p,q);
+		Log_Red("Invalid expression because p>q where p=%d, q=%d \n",p,q);
 		*suc=false;
 		return 0;
 	}
 	else if(p==q){ 
 		if(tokens[p].type!=TK_NUM && tokens[p].type!=TK_HEX && tokens[p].type!=TK_REG){
-			Log("Invalid expression at position %d, string = %s \n" ,p, tokens[p].str);
+			Log_Red("Invalid expression at position %d, string = %s \n" ,p, tokens[p].str);
 			*suc=false;
 			return 0;
 		}
@@ -211,7 +211,7 @@ word_t eval(int p,int q)
 		return tokens[p].num;
 	}
 	else if(!check_parentheses(p,q)){
-		Log("check_parentheses(p,q)	is false, p = %d, q = %d\n",p,q);
+		Log_Red("Check_parentheses is false, p = %d, q = %d\n",p,q);
 		*suc=false;
 		return 0;
 	}
