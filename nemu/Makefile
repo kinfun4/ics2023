@@ -24,7 +24,7 @@ endif
 
 remove_quote = $(patsubst "%",%,$(1))
 
-# Extract variabls from menuconfig
+# Extract variables from menuconfig
 GUEST_ISA ?= $(call remove_quote,$(CONFIG_ISA))
 ENGINE ?= $(call remove_quote,$(CONFIG_ENGINE))
 NAME    = $(GUEST_ISA)-nemu-$(ENGINE)
