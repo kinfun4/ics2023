@@ -46,7 +46,7 @@ static char* rl_gets() {
 
 static void unknown_cmd(char* args)
 {
-   	Log("Unknown command: %s, you can use 'help' to find the usable command\n", args); 
+   	Log_Red("Unknown command: %s, you can use 'help' to find the usable command\n", args); 
 	return;
 }
 
@@ -95,8 +95,8 @@ static int cmd_x(char *args) {
 	char* arg = args +strlen(num)+1;
 	bool suc;
 	paddr_t addr = expr(arg, &suc);
-	if(addr==0){
-		Log("Invalid expressions!");
+	if(!suc){
+		Log_Red("Invalid expressions!");
 		return 0;
 	}
 	for(int i=0;i<n;i++)
@@ -111,7 +111,7 @@ static int cmd_p(char *args) {
 	bool suc=true;
 	word_t ans=expr(args, &suc);
 	if(suc==false){
-		Log("Failed to caculate the expressions!\n");
+		Log_Red("Failed to caculate the expressions!\n");
 	}
 	printf("%10u           0x%08x\n", ans, ans);
 	return 0;
