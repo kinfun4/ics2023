@@ -23,7 +23,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
 paddr_t isa_mmu_execute(vaddr_t vaddr,int len, int type, ...) {
 		vaddr_t addr=vaddr;
-		return vaddr_read(addr,len);
+		Log("%d",isa_mmu_check(vaddr, len, type));
 		switch (isa_mmu_check(vaddr, len, type)) {
 				case MMU_DIRECT:break;
 				case MMU_TRANSLATE:addr=isa_mmu_translate(vaddr, len, type);break;
