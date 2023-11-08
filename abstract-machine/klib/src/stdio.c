@@ -67,7 +67,7 @@ int sprintf(char *out, const char *fmt, ...) {
           i=i+2;
           int2str(d, out,&ret);
           break;
-        default:break;
+        default:i=i+2;break;
       }
     }
   }
