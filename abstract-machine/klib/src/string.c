@@ -68,7 +68,7 @@ int strncmp(const char *s1, const char *s2, size_t n) {
 
 void *memset(void *s, int c, size_t n) {
   size_t i;
-  char* _s = (char*)s;
+  uint8_t* _s = (uint8_t*)s;
   for(i=0;i<n;i++){
     _s[i]=c;
   }
@@ -77,9 +77,9 @@ void *memset(void *s, int c, size_t n) {
 
 void *memmove(void *dst, const void *src, size_t n) {
   size_t i;
-  char* tmp = (char*) malloc(n);
-  char* _dst = (char*) dst;
-  char* _src = (char*) src;
+  uint8_t* tmp = (uint8_t*) malloc(n);
+  uint8_t* _dst = (uint8_t*) dst;
+  uint8_t* _src = (uint8_t*) src;
   for(i=0;i<n;i++){
     tmp[i]=_src[i];
   }
@@ -91,8 +91,8 @@ void *memmove(void *dst, const void *src, size_t n) {
 
 void *memcpy(void *out, const void *in, size_t n) {
   size_t i;
-  char* _out =out;
-  char* _in = (char*)in;
+  uint8_t* _out =out;
+  uint8_t* _in = (uint8_t*)in;
   for (i=0; i<n; i++){
     _out[i]=_in[i];
   }
