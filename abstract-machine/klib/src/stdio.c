@@ -21,7 +21,7 @@ void int2str(int num, char *str,int* p) {
 
     int j = *p;
 
-    if (str[0] == '-') {
+    if (str[j] == '-') {
         j++;
     }
 
