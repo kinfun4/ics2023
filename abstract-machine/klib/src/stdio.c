@@ -19,8 +19,6 @@ void int2str(int num, char *str,int* p) {
         num /= 10;
     } while (num);
 
-    str[i] = '\0';
-
     int j = *p;
 
     if (str[0] == '-') {
@@ -32,7 +30,7 @@ void int2str(int num, char *str,int* p) {
         str[i - 1 - (k-j)] = str[k] - str[i - 1 - (k-j)];
         str[k] = str[k] - str[i - 1 - (k-j)];
     }
-    *p=i+1;
+    *p=i;
 }
 
 int printf(const char *fmt, ...) {
@@ -68,6 +66,8 @@ int sprintf(char *out, const char *fmt, ...) {
           d=va_arg(ap, int);
           i=i+2;
           int2str(d, out,&ret);
+          break;
+        default:break;
       }
     }
   }
