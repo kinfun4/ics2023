@@ -77,15 +77,16 @@ void *memset(void *s, int c, size_t n) {
 
 void *memmove(void *dst, const void *src, size_t n) {
   size_t i;
-  uint8_t* tmp = (uint8_t*) malloc(n);
   uint8_t* _dst = (uint8_t*) dst;
   uint8_t* _src = (uint8_t*) src;
-  for(i=0;i<n;i++){
-    tmp[i]=_src[i];
-  }
-  for(i=0;i<n;i++){
-    _dst[i]=tmp[i];
-  }
+  if(dst<src)
+    for(i=0;i<n;i++){
+      _dst[i]=_src[i];
+    }
+  else
+    for(i=n-1;i>=0;i--){
+      _dst[i]=_src[i];
+    }
   return dst;
 }
 
