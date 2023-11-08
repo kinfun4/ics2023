@@ -13,7 +13,7 @@
 #define MMAP_WRITE 0x00000002 // can write
 
 // Memory area for [@start, @end)
-typedef struct {
+typedef struct{ 
   void *start, *end;
 } Area;
 
