@@ -17,6 +17,8 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
+#include <stdio.h>
+#include <string.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -24,18 +26,25 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 15
+#define MAX_INST_TO_TRACE 15
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+static char iringbuf[MAX_INST_TO_TRACE][128];
+static int iringbuf_cnt;
 bool check_wp();
 
 void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
-  if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
+  if (ITRACE_COND) { 
+    log_write("%s\n", _this->logbuf);
+    strcpy(iringbuf[iringbuf_cnt], _this->logbuf);
+    iringbuf_cnt = (iringbuf_cnt+1)%15;
+  }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
@@ -44,6 +53,11 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 		Log("The watchpoint have changed!\n");
 	}
 }
+
+static void print_iringbuf(){
+  for(int i=0;i<MAX_INST_TO_TRACE;i++)
+    puts(iringbuf[iringbuf_cnt+i]);
+};
 
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
@@ -124,19 +138,23 @@ void cpu_exec(uint64_t n) {
       break;
 
     case NEMU_END: 
+      if(!nemu_state.halt_ret)print_iringbuf();
       Log("nemu: %s at pc = " FMT_WORD,
           nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED),
           nemu_state.halt_pc);
-          statistic();
-          break;
+      statistic();
+      break;
 
     case NEMU_ABORT:
+      print_iringbuf();
       Log("nemu: %s at pc = " FMT_WORD,
           ANSI_FMT("ABORT", ANSI_FG_RED),
           nemu_state.halt_pc);
-          statistic();
-          break;
+      statistic();
+      break;
       // fall through
-    case NEMU_QUIT: statistic();break;
+    case NEMU_QUIT: 
+      statistic();
+      break;
   }
 }
