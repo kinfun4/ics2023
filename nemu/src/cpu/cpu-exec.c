@@ -153,7 +153,7 @@ void cpu_exec(uint64_t n) {
     break;
 
   case NEMU_END:
-    IFDEF(CONFIG_IRINGBUF, if (nemu_state.halt_ret == 0) print_iringbuf());
+    IFDEF(CONFIG_IRINGBUF, if (nemu_state.halt_ret == 1) print_iringbuf());
     Log("nemu: %s at pc = " FMT_WORD,
         nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
                                  : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED),
