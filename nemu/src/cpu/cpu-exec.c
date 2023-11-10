@@ -42,12 +42,12 @@ void device_update();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
-  if (ITRACE_COND) {
+  if (ITRACE_COND)
     log_write("%s\n", _this->logbuf);
-    strcpy(iringbuf[iringbuf_cnt], _this->logbuf);
-    iringbuf_cnt = iringbuf_cnt == MAX_INST_TO_TRACE ? 0 : iringbuf_cnt + 1;
-  }
 #endif
+  IFDEF(CONFIG_IRINGBUF, strcpy(iringbuf[iringbuf_cnt], _this->logbuf),
+        iringbuf_cnt =
+            iringbuf_cnt == MAX_INST_TO_TRACE ? 0 : iringbuf_cnt + 1);
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
@@ -153,10 +153,7 @@ void cpu_exec(uint64_t n) {
     break;
 
   case NEMU_END:
-#ifdef CONFIG_ITRACE_COND
-    if (nemu_state.halt_ret == 0)
-      print_iringbuf();
-#endif /* ifdef CONFIG_ITRACE_COND */
+    IFDEF(CONFIG_IRINGBUF, if (nemu_state.halt_ret == 0) print_iringbuf());
     Log("nemu: %s at pc = " FMT_WORD,
         nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
                                  : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED),
@@ -165,9 +162,7 @@ void cpu_exec(uint64_t n) {
     break;
 
   case NEMU_ABORT:
-#ifdef CONFIG_ITRACE_COND
-    print_iringbuf();
-#endif /* ifdef CONFIG_ITRACE_COND */
+    IFDEF(CONFIG_IRINGBUF, print_iringbuf());
     Log("nemu: %s at pc = " FMT_WORD, ANSI_FMT("ABORT", ANSI_FG_RED),
         nemu_state.halt_pc);
     statistic();
