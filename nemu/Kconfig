@@ -151,6 +151,14 @@ config ITRACE_COND
   string "Only trace instructions when the condition is true"
   default "true"
 
+config IRINGBUF
+  depends on ITRACE
+  bool "Print iringbuf(instructions near the mistake) when program meet mistake"
+  default y
+
+config MTRACE
+  bool "Enable memory trace"
+  default y
 
 config DIFFTEST
   depends on TARGET_NATIVE_ELF

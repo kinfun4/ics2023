@@ -45,7 +45,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (ITRACE_COND) {
     log_write("%s\n", _this->logbuf);
     strcpy(iringbuf[iringbuf_cnt], _this->logbuf);
-    iringbuf_cnt = iringbuf_cnt == MAX_INST_TO_TRACE ? 0 : iringbuf_cnt+1;
+    iringbuf_cnt = iringbuf_cnt == MAX_INST_TO_TRACE ? 0 : iringbuf_cnt + 1;
   }
 #endif
   if (g_print_step) {
@@ -60,8 +60,8 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
 static void print_iringbuf() {
   for (int i = 0; i < MAX_INST_TO_TRACE; i++)
-    if(strcmp(iringbuf[(iringbuf_cnt+i)%MAX_INST_TO_TRACE], "")!=0)
-    puts(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE]);
+    if (strcmp(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE], "") != 0)
+      puts(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE]);
 };
 
 static void exec_once(Decode *s, vaddr_t pc) {
