@@ -114,7 +114,7 @@ void func_call(word_t pc, word_t dnpc){
     for(int j=0;j<depth;j++)
       printf(" ");
     printf("call [%s@0x%08x]\n",func_tab[func2].name, dnpc);
-    stack[depth++] = func2;
+    depth++;
   }
 }
 
@@ -124,12 +124,7 @@ void func_ret(word_t pc, word_t dnpc){
   // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
   if(func1!=func2){
-    while(stack[--depth]!=func2){
-      printf("0x%08x: ",pc);
-      for(int j=0;j<depth;j++)
-        printf(" ");
-      printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
-    }
+    depth--;
     printf("0x%08x: ",pc);
     for(int j=0;j<depth;j++)
       printf(" ");
