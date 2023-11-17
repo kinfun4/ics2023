@@ -13,16 +13,22 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include <alloca.h>
 #include <common.h>
+#include <elf.h>
+#include <stdio.h>
 
 FILE *elf_fp = NULL;
 
 void init_elf(const char *elf_file) {
   if (elf_file == NULL)return;
 
-  FILE *fp = fopen(elf_file, "r");
+  FILE *fp = fopen(elf_file, "rb");
   Assert(fp, "Can not read '%s'", elf_file);
   elf_fp = fp;
+  Elf32_Ehdr header;
+  if(!fread(&header, sizeof(Elf32_Ehdr), 1, elf_fp))return;
+  printf("%u,%u\n",header.e_shoff,header.e_phoff);
 }
 
 bool elf_enable() {
