@@ -28,22 +28,20 @@ void init_elf(const char *elf_file) {
   Assert(elf_fp, "Can not read '%s'", elf_file);
   FILE *fp =elf_fp;
 
-  Elf32_Ehdr header;
-  if(fread(&header, sizeof(Elf32_Ehdr), 1, fp)!=1){
+  Elf32_Ehdr Header;
+  if(fread(&Header, sizeof(Elf32_Ehdr), 1, fp)!=1){
     Assert(0, "Can not read ELF Header");
   }
-  printf("%d,%d,%d\n",header.e_shoff,header.e_shentsize,header.e_shnum);
-  Assert(header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
+  printf("%d,%d,%d\n",Header.e_shoff,Header.e_shentsize,Header.e_shnum);
+  Assert(Header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
 
-  fseek(fp, header.e_shoff + (header.e_shstrndx)*header.e_shentsize, SEEK_SET);
-  Elf32_Shdr str_table;
-  Assert(fread(&str_table, sizeof(Elf32_Shdr), 1, elf_fp)==1, "Can not read Section Table");
-  printf("0x%x\n",str_table.sh_offset);
+  fseek(fp, Header.e_shoff, SEEK_SET);
+  Elf32_Shdr Section;
+  for(int i=0;i<Header.e_shnum;i++){
+    Assert(fread(&Section, sizeof(Elf32_Shdr), 1, elf_fp)==1, "Can not read Section Table");
+    printf("name=%08d,type=%08d,offset=%08x,size=%08x\n",Section.sh_name,Section.sh_type,Section.sh_offset,Section.sh_size);
+  }
   
-  fseek(fp, str_table.sh_offset, SEEK_SET);
-  // char * symble = alloca(sizeof(char)*20);
-  //   Assert(fscanf(fp, "%s", symble)!=EOF,"Can not read symble!");
-  //   printf("%s\n",symble);
   return;
 }
 
