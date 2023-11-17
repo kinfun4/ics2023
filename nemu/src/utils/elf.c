@@ -36,7 +36,7 @@ static int func_pt;
 struct func{
   char *name;
   word_t st,en;
-} *func_tab;
+} func_tab[100];
 
 void init_elf(const char *elf_file) {
   if (elf_file == NULL)return;
@@ -79,7 +79,6 @@ void init_elf(const char *elf_file) {
   Assert(fread(str_tab, sizeof(char), strtab_section.sh_size, fp)==strtab_section.sh_size, "Can not read str Table");
   
   fseek(fp, symtab_section.sh_offset, SEEK_SET);
-  func_tab =alloca(sizeof(struct func)*symtab_num);
   for(int i=0;i<symtab_num; i++){
     Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
     if(Symbol.st_info == RISCV_32_NEMU_FUNC){
@@ -88,10 +87,6 @@ void init_elf(const char *elf_file) {
       func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
       func_cnt++;
     }
-  }
-  for(int i=0;i<func_cnt;i++)
-  {
-    printf("0x%08x,0x%08x\n",func_tab[i].st,func_tab[i].en);
   }
   return;
 }
