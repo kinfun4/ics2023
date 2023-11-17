@@ -17,9 +17,19 @@
 #include <alloca.h>
 #include <common.h>
 #include <elf.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
-FILE *elf_fp = NULL;
+static FILE *elf_fp = NULL;
+static char* section_header_strtab = NULL; 
+static Elf32_Ehdr Header;
+static Elf32_Shdr Section;
+static Elf32_Shdr shstr_section, symtab_section, strtab_section;
+struct symbol{
+  char *name;
+  uint32_t st,en;
+};
 
 void init_elf(const char *elf_file) {
   if (elf_file == NULL)return;
@@ -28,7 +38,6 @@ void init_elf(const char *elf_file) {
   Assert(elf_fp, "Can not read '%s'", elf_file);
   FILE *fp =elf_fp;
 
-  Elf32_Ehdr Header;
   if(fread(&Header, sizeof(Elf32_Ehdr), 1, fp)!=1){
     Assert(0, "Can not read ELF Header");
   }
@@ -36,17 +45,21 @@ void init_elf(const char *elf_file) {
   Assert(Header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
 
   fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize, SEEK_SET);
-  Elf32_Shdr shstr_section;
   Assert(fread(&shstr_section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read shstr_section");
   fseek(fp, shstr_section.sh_offset, SEEK_SET);
-  char* section_header_strtab = alloca(sizeof(char)* shstr_section.sh_size +1);
+  section_header_strtab = alloca(sizeof(char)* shstr_section.sh_size +1);
   Assert(fread(section_header_strtab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
 
   fseek(fp, Header.e_shoff, SEEK_SET);
-  Elf32_Shdr Section;
   for(int i=0;i<Header.e_shnum;i++){
     Assert(fread(&Section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read Section Table");
-    printf("name_index=%08d,name=%s,type=%08d,offset=%08x,size=%08x\n",Section.sh_name,section_header_strtab+Section.sh_name,Section.sh_type,Section.sh_offset,Section.sh_size);
+    if(Section.sh_type == SHT_SYMTAB){
+      symtab_section = Section;
+    }
+    if(Section.sh_type == SHT_STRTAB && strcmp(section_header_strtab+Section.sh_name, ".strtab")==0){
+      strtab_section = Section;
+      printf("get strtab");
+    }
   }
   
   return;
