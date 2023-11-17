@@ -59,6 +59,7 @@ void init_elf(const char *elf_file) {
       symtab_section = Section;
       symtab_ndx=i;
       symtab_num = Section.sh_size /Section.sh_entsize;
+      printf("%d\n",symtab_num);
     }
     if(Section.sh_type == SHT_STRTAB && strcmp(shstr_tab+Section.sh_name, ".strtab")==0){
       strtab_section = Section;
