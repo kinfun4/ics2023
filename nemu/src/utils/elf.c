@@ -32,7 +32,8 @@ static Elf32_Shdr shstr_section, symtab_section, strtab_section;
 static Elf32_Sym Symbol;
 static uint32_t symtab_ndx,strtab_ndx,symtab_num;
 static uint32_t func_cnt;
-static int func_pt;
+static int depth;
+static int stack[1000];
 struct func{
   char *name;
   word_t st,en;
@@ -42,7 +43,7 @@ void init_elf(const char *elf_file) {
   if (elf_file == NULL)return;
 
   func_cnt=0;
-  func_pt=0;
+  depth=0;
 
   elf_fp = fopen(elf_file, "rb");
   Assert(elf_fp, "Can not read '%s'", elf_file);
@@ -110,10 +111,10 @@ void func_call(word_t pc, word_t dnpc){
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
   if(func1!=func2){
     printf("0x%08x: ",pc);
-    for(int j=0;j<func_pt;j++)
-      printf("  ");
+    for(int j=0;j<depth;j++)
+      printf(" ");
     printf("call [%s@0x%08x]\n",func_tab[func2].name, dnpc);
-    func_pt++;
+    stack[depth++] = func2;
   }
 }
 
@@ -123,10 +124,16 @@ void func_ret(word_t pc, word_t dnpc){
   // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
   if(func1!=func2){
-    func_pt--;
+    while(stack[--depth]!=func2){
+      printf("0x%08x: ",pc);
+      for(int j=0;j<depth;j++)
+        printf(" ");
+      printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
+    }
+    depth--;
     printf("0x%08x: ",pc);
-    for(int j=0;j<func_pt;j++)
-      printf("  ");
-    printf("ret  [%s@0x%08x]\n",func_tab[func2].name, dnpc);
+    for(int j=0;j<depth;j++)
+      printf(" ");
+    printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
   }
 }
