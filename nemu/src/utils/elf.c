@@ -18,11 +18,11 @@
 FILE *elf_fp = NULL;
 
 void init_elf(const char *elf_file) {
-  if (elf_file != NULL) {
-    FILE *fp = fopen(elf_file, "r");
-    Assert(fp, "Can not read '%s'", elf_file);
-    elf_fp = fp;
-  }
+  if (elf_file == NULL)return;
+
+  FILE *fp = fopen(elf_file, "r");
+  Assert(fp, "Can not read '%s'", elf_file);
+  elf_fp = fp;
 }
 
 bool elf_enable() {
