@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define FUNC 18
+#define RISCV_32_NEMU_FUNC 18
 
 static FILE *elf_fp = NULL;
 static char *shstr_tab = NULL;
@@ -78,11 +78,11 @@ void init_elf(const char *elf_file) {
   func_tab =alloca(sizeof(struct func)*symtab_num);
   for(int i=0;i<symtab_num; i++){
     Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
-    if(Symbol.st_info == FUNC){
+    if(Symbol.st_info == RISCV_32_NEMU_FUNC){
       func_tab[func_cnt].name = str_tab+ Symbol.st_name;
-      printf("%d,%s\n",Symbol.st_name,func_tab[func_cnt].name);
       func_tab[func_cnt].st = Symbol.st_value;
       func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
+      printf("%08x,%08x\n",func_tab[func_cnt].st,func_tab[func_cnt].en);
       func_cnt++;
     }
   }
