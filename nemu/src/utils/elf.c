@@ -109,6 +109,7 @@ int find_func(word_t pc){
 void func_call(word_t pc, word_t dnpc){
   if(!elf_enable())return;
   int func1=find_func(pc),func2=find_func(dnpc);
+  printf("%d,%d\n",func1,func2);
   // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
   if(func1!=func2){
@@ -123,6 +124,7 @@ void func_call(word_t pc, word_t dnpc){
 void func_ret(word_t pc, word_t dnpc){
   if(!elf_enable())return;
   int func1=find_func(pc),func2=find_func(dnpc);
+  printf("%d,%d\n",func1,func2);
   // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
   if(func1!=func2){
