@@ -40,11 +40,9 @@ void init_elf(const char *elf_file) {
   Assert(fread(&str_table, sizeof(Elf32_Shdr), 1, elf_fp)==1, "Can not read Section Table");
   
   fseek(fp, str_table.sh_offset, SEEK_SET);
-  char * symble = alloca(sizeof(char)*200);
-  for(int i=0;i<1;i++){
+  char * symble = alloca(sizeof(char)*20);
     Assert(fscanf(fp, "%s", symble)!=EOF,"Can not read symble!");
     printf("%s\n",symble);
-  }
 }
 
 bool elf_enable() {
