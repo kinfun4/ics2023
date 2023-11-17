@@ -33,7 +33,7 @@ void init_elf(const char *elf_file) {
     Assert(0, "Can not read ELF Header");
   }
   printf("%d,%d,%d\n",header.e_shoff,header.e_shentsize,header.e_shnum);
-  Assert(header.e_shstrndx==SHN_UNDEF, "There is no String and Symble Table ");
+  Assert(header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
 
   fseek(fp, header.e_shoff + header.e_shstrndx*header.e_shentsize, SEEK_SET);
   Elf32_Shdr str_table;
