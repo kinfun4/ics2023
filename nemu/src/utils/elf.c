@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define FUNC 18
+
 static FILE *elf_fp = NULL;
 static char *shstr_tab = NULL;
 static char *str_tab =NULL;
@@ -76,8 +78,7 @@ void init_elf(const char *elf_file) {
   func_tab =alloca(sizeof(struct func)*symtab_num);
   for(int i=0;i<symtab_num; i++){
     Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
-    printf("i=%d,name=%08x,type=%d,value=%08x,size=%08x\n",i,Symbol.st_name,Symbol.st_info,Symbol.st_value,Symbol.st_size);
-    if(Symbol.st_info == STT_FUNC){
+    if(Symbol.st_info == FUNC){
       func_tab[func_cnt].name = str_tab+ Symbol.st_name;
       printf("%d,%s\n",Symbol.st_name,func_tab[func_cnt].name);
       func_tab[func_cnt].st = Symbol.st_value;
