@@ -41,7 +41,7 @@ void init_elf(const char *elf_file) {
   
   fseek(fp, str_table.sh_offset, SEEK_SET);
   char * symble = alloca(sizeof(char)*20);
-  for(int i=0;i<5;i++){
+  for(int i=0;i<2;i++){
     Assert(fscanf(fp, "%s", symble)!=EOF,"Can not read symble!");
     printf("%s\n",symble);
   }
