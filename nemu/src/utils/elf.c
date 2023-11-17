@@ -32,6 +32,7 @@ static Elf32_Shdr shstr_section, symtab_section, strtab_section;
 static Elf32_Sym Symbol;
 static uint32_t symtab_ndx,strtab_ndx,symtab_num;
 static uint32_t func_cnt;
+static int func_pt;
 struct func{
   char *name;
   uint32_t st,en;
@@ -39,6 +40,9 @@ struct func{
 
 void init_elf(const char *elf_file) {
   if (elf_file == NULL)return;
+
+  func_cnt=0;
+  func_pt=0;
 
   elf_fp = fopen(elf_file, "rb");
   Assert(elf_fp, "Can not read '%s'", elf_file);
@@ -82,14 +86,50 @@ void init_elf(const char *elf_file) {
       func_tab[func_cnt].name = str_tab+ Symbol.st_name;
       func_tab[func_cnt].st = Symbol.st_value;
       func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
-      printf("%08x,%08x\n",func_tab[func_cnt].st,func_tab[func_cnt].en);
       func_cnt++;
     }
   }
-
   return;
 }
 
 bool elf_enable() {
   return elf_fp!=NULL;
+}
+
+int find_func(word_t pc){
+  for(int i=0;i<func_cnt;i++)
+  {
+    if(func_tab[i].st<=pc && pc<func_tab[i].en){
+      return i;
+    }
+  }
+  return -1;
+}
+
+void func_call(word_t pc, word_t dnpc){
+  if(!elf_enable())return;
+  int func1=find_func(pc),func2=find_func(dnpc);
+  Assert(func1!= -1, "Can not find func on 0x%08x", pc);
+  Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
+  if(func1!=func2){
+    printf("0x%08x: ",pc);
+    for(int j=0;j<func_pt;j++)
+      printf("  ");
+    printf("call [%s@0x%08x]\n",func_tab[func2].name, dnpc);
+    func_pt++;
+  }
+}
+
+void func_ret(word_t pc, word_t dnpc){
+  if(!elf_enable())return;
+  int func1=find_func(pc),func2=find_func(dnpc);
+  Assert(func1!= -1, "Can not find func on 0x%08x", pc);
+  Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
+  if(func1!=func2){
+    func_pt--;
+    printf("0x%08x: ",pc);
+    for(int j=0;j<func_pt;j++)
+      printf("  ");
+    printf("ret  [%s@0x%08x]\n",func_tab[func2].name, dnpc);
+  }
 }
