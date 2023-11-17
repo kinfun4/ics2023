@@ -38,6 +38,7 @@ void init_elf(const char *elf_file) {
   fseek(fp, header.e_shoff + (header.e_shstrndx-1)*header.e_shentsize, SEEK_SET);
   Elf32_Shdr str_table;
   Assert(fread(&str_table, sizeof(Elf32_Shdr), 1, elf_fp)==1, "Can not read Section Table");
+  printf("%u\n",str_table.sh_offset);
   
   fseek(fp, str_table.sh_offset, SEEK_SET);
   // char * symble = alloca(sizeof(char)*20);
