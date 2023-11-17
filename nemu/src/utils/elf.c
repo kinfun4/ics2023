@@ -24,8 +24,8 @@
 #define RISCV_32_NEMU_FUNC 18
 
 static FILE *elf_fp = NULL;
-static char *shstr_tab = NULL;
-static char *str_tab =NULL;
+static char shstr_tab[1000];
+static char str_tab [1000];
 static Elf32_Ehdr Header;
 static Elf32_Shdr Section;
 static Elf32_Shdr shstr_section, symtab_section, strtab_section;
@@ -55,7 +55,6 @@ void init_elf(const char *elf_file) {
   fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize, SEEK_SET);
   Assert(fread(&shstr_section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read shstr_section");
   fseek(fp, shstr_section.sh_offset, SEEK_SET);
-  shstr_tab = alloca(sizeof(char)* shstr_section.sh_size);
   Assert(fread(shstr_tab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
 
   fseek(fp, Header.e_shoff, SEEK_SET);
@@ -75,7 +74,6 @@ void init_elf(const char *elf_file) {
   Assert(strtab_ndx!= 0 , "Can not get strtab_section");
 
   fseek(fp, strtab_section.sh_offset, SEEK_SET);
-  str_tab = alloca(sizeof(char)*strtab_section.sh_size);
   Assert(fread(str_tab, sizeof(char), strtab_section.sh_size, fp)==strtab_section.sh_size, "Can not read str Table");
   
   fseek(fp, symtab_section.sh_offset, SEEK_SET);
