@@ -59,7 +59,6 @@ void init_elf(const char *elf_file) {
       symtab_section = Section;
       symtab_ndx=i;
       symtab_num = Section.sh_size /Section.sh_entsize;
-      printf("%d\n",symtab_num);
     }
     if(Section.sh_type == SHT_STRTAB && strcmp(shstr_tab+Section.sh_name, ".strtab")==0){
       strtab_section = Section;
@@ -77,9 +76,9 @@ void init_elf(const char *elf_file) {
   func_tab =alloca(sizeof(struct func)*symtab_num);
   for(int i=0;i<symtab_num; i++){
     Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
-    if(Symbol.st_info==STT_FUNC){
+    if(Symbol.st_info == STT_FUNC){
       func_tab[func_cnt].name = str_tab+ Symbol.st_name;
-      printf("%s\n",func_tab[func_cnt].name);
+      printf("%d,%s\n",Symbol.st_name,func_tab[func_cnt].name);
       func_tab[func_cnt].st = Symbol.st_value;
       func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
       func_cnt++;
