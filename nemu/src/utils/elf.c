@@ -130,10 +130,10 @@ void func_ret(word_t pc, word_t dnpc){
         printf(" ");
       printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
     }
-    depth--;
     printf("0x%08x: ",pc);
     for(int j=0;j<depth;j++)
       printf(" ");
     printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
+    depth--;
   }
 }
