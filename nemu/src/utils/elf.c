@@ -86,9 +86,12 @@ void init_elf(const char *elf_file) {
       func_tab[func_cnt].name = str_tab+ Symbol.st_name;
       func_tab[func_cnt].st = Symbol.st_value;
       func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
-      printf("0x%08x,0x%08x\n",func_tab[func_cnt].st,func_tab[func_cnt].en);
       func_cnt++;
     }
+  }
+  for(int i=0;i<func_cnt;i++)
+  {
+    printf("0x%08x,0x%08x\n",func_tab[i].st,func_tab[i].en);
   }
   return;
 }
