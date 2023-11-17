@@ -51,7 +51,7 @@ void init_elf(const char *elf_file) {
   fseek(fp, Header.e_shoff, SEEK_SET);
   for(int i=0;i<Header.e_shnum;i++){
     Assert(fread(&Section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read Section Table");
-    if(Section.sh_type == SHT_SYMTAB && strcmp(shstr_tab+Section.sh_name, ".symtab")){
+    if(Section.sh_type == SHT_SYMTAB && strcmp(shstr_tab+Section.sh_name, ".symtab")==0){
       symtab_section = Section;
       printf("get symtab");
     }
