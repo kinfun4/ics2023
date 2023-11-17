@@ -35,7 +35,7 @@ void init_elf(const char *elf_file) {
   printf("%d,%d,%d\n",header.e_shoff,header.e_shentsize,header.e_shnum);
   Assert(header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
 
-  fseek(fp, header.e_shoff + (header.e_shstrndx-1)*header.e_shentsize, SEEK_SET);
+  fseek(fp, header.e_shoff + (header.e_shstrndx)*header.e_shentsize, SEEK_SET);
   Elf32_Shdr str_table;
   Assert(fread(&str_table, sizeof(Elf32_Shdr), 1, elf_fp)==1, "Can not read Section Table");
   printf("0x%x\n",str_table.sh_offset);
