@@ -26,6 +26,7 @@ static char* shstr_tab = NULL;
 static Elf32_Ehdr Header;
 static Elf32_Shdr Section;
 static Elf32_Shdr shstr_section, symtab_section, strtab_section;
+static uint32_t symtabndx,strtabndx;
 struct symbol{
   char *name;
   uint32_t st,en;
@@ -53,12 +54,15 @@ void init_elf(const char *elf_file) {
     Assert(fread(&Section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read Section Table");
     if(Section.sh_type == SHT_SYMTAB && strcmp(shstr_tab+Section.sh_name, ".symtab")==0){
       symtab_section = Section;
-      printf("get symtab");
+      symtabndx=i;
     }
     if(Section.sh_type == SHT_STRTAB && strcmp(shstr_tab+Section.sh_name, ".strtab")==0){
       strtab_section = Section;
+      strtabndx=i;
     }
   }
+  Assert(symtabndx!= 0 , "Can not get symtab_section");
+  Assert(strtabndx!= 0 , "Can not get strtab_section");
   
   return;
 }
