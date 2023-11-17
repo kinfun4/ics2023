@@ -38,9 +38,8 @@ void init_elf(const char *elf_file) {
   fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize, SEEK_SET);
   Elf32_Shdr shstr_section;
   Assert(fread(&shstr_section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read shstr_section");
-  printf("1\n");
   char* section_header_strtab = alloca(sizeof(char)* shstr_section.sh_size +1);
-  Assert(fread(&section_header_strtab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
+  Assert(fread(section_header_strtab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
 
   fseek(fp, Header.e_shoff, SEEK_SET);
   Elf32_Shdr Section;
