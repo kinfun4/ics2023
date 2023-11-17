@@ -33,7 +33,6 @@ static Elf32_Sym Symbol;
 static uint32_t symtab_ndx,strtab_ndx,symtab_num;
 static uint32_t func_cnt;
 static int depth;
-static int stack[1000];
 struct func{
   char *name;
   word_t st,en;
@@ -128,6 +127,6 @@ void func_ret(word_t pc, word_t dnpc){
     printf("0x%08x: ",pc);
     for(int j=0;j<depth;j++)
       printf(" ");
-    printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
+    printf("ret  [%s@0x%08x]\n",func_tab[func2].name, dnpc);
   }
 }
