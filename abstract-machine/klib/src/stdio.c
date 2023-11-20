@@ -12,7 +12,7 @@ static int base, precision, field_width;
 static int exit_flag;
 static char *buf_pt;
 #define BUF_SIZE 100
-char buf[BUF_SIZE];
+static char buf[BUF_SIZE];
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #define WRITE(str,c) *(str++) = c
