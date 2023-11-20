@@ -3,46 +3,201 @@
 #include <klib.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <sys/types.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-void int2str(int num, char *str, int *p) {
-  int i = *p;
+static bool is_formed,is_filed_width,is_precision, is_show_sign, is_capital, space_or_zero, right_or_left;
+static int base, precision, field_width;
+static int exit_flag;
+static char *buf_pt;
+#define BUF_SIZE 100
+char buf[BUF_SIZE];
 
-  if (num < 0) {
-    num = -num;
-    str[i++] = '-';
-  }
+#define ABS(x) ((x) < 0 ? (x) : -(x))
+#define WRITE(str,c) *(str++) = c
+#define CHEKE_BOUND(st,pt,bound) if(pt-st >= bound) assert(0);
+#define IS_NUM(c) ((c<='9') && (c>='0'))
 
-  do {
-    str[i++] = num % 10 + '0';
-    num /= 10;
-  } while (num);
+#define GET_NUM(x,str,ap) \
+do {\
+  if(*str == '*') x =va_arg(ap, int),str++;\
+  else if(IS_NUM(*str)) x =atoi(str);\
+} while (0)
 
-  int j = *p;
+#define SWAP(a,b) \
+do {\
+  char c;\
+  c = a; a = b; b=c;\
+} while (0)
 
-  if (str[j] == '-') {
-    j++;
-  }
+#define REVERSE(st,en) \
+do {\
+  char *a = st;\
+  char *b = en;\
+  while(b-a > 0){\
+    SWAP(*b,*a);\
+    a++;b--;\
+  }\
+} while (0)
 
-  for (int k = j; k < (i + j) / 2; k++) {
-    str[k] = str[k] + str[i - 1 - (k - j)];
-    str[i - 1 - (k - j)] = str[k] - str[i - 1 - (k - j)];
-    str[k] = str[k] - str[i - 1 - (k - j)];
-  }
-  *p = i;
+#define ITOA(x,cap) (char) ((x)>=0&&x<=9) ? (x)+'0' : ((cap) ? ((x)-10)+'A' : ((x)-10)+'a')
+
+#define CHECK_FLAG(fmt,ap) \
+do { \
+  exit_flag=0;\
+  switch (*fmt){\
+    case '#': is_formed =1;fmt++;break;\
+    case '0': space_or_zero = 1;fmt++;break;\
+    case '-': right_or_left =1;fmt++;break;\
+    case '+': is_show_sign = 1;fmt++;break;\
+    default:exit_flag=1;break;\
+  }\
+} while (!exit_flag)
+
+#define CHECK_FIELD_WIDTH(fmt,ap) \
+do {\
+  if(IS_NUM(*fmt)||(*fmt)=='*')is_filed_width=1;\
+  GET_NUM(field_width, fmt, ap);\
+} while (0)
+
+#define CHECK_PRECISION(fmt,ap) \
+do {\
+  switch (*fmt) {\
+    case '.':GET_NUM(precision,fmt,ap);is_precision=1;space_or_zero=1;break;\
+    default: break;\
+  }\
+} while (0)
+
+#define CHECK_LENGTH_MODIFIER(fmt,ap)
+
+#define PARSE_ARGS(fmt,ap) \
+do{\
+  fmt++;\
+  CHECK_FLAG(fmt,ap);\
+  CHECK_FIELD_WIDTH(fmt,ap);\
+  CHECK_PRECISION(fmt,ap);\
+  CHECK_LENGTH_MODIFIER(fmt,ap);\
+}while(0)
+
+#define PROCESS_CHAR(out,ap) \
+do {\
+  char c =(char)va_arg(ap, int);\
+  WRITE(out, c);\
+} while (0)
+
+#define PROCESS_STRING(out,ap) \
+do {\
+  char *s = va_arg(ap, char*);\
+  while(*s!='\0'){\
+    WRITE(out, *(s++));\
+  }\
+} while (0)
+
+#define PROCESS_SIGNED(out,ap) \
+do {\
+  assert(is_formed==1);\
+  assert(right_or_left && space_or_zero);\
+  assert(base==10);\
+  int x = va_arg(ap, int);\
+  int y;\
+  bool is_negtive = x<0;\
+  int space = is_precision ? precision : (is_filed_width ? field_width : 1);\
+  do {\
+    y=x%base;\
+    WRITE(buf_pt, ITOA(ABS(y), is_capital));\
+    assert(buf_pt - buf < BUF_SIZE);\
+    x/=base;\
+  }while(x!=0);\
+  if(space_or_zero){\
+    while(buf_pt - buf < space) WRITE(buf_pt,'0');\
+  }\
+  if(is_negtive) WRITE(buf_pt, '-');\
+  else if(is_show_sign) WRITE(buf_pt, '+');\
+  int siz = buf_pt-buf;\
+  if(right_or_left){\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+    while(siz < space) WRITE(out,' '),space--;\
+  }\
+  else{\
+    while(siz < space) WRITE(out,' '),space--;\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+  }\
+} while (0)
+
+#define PROCESS_UNSIGNED(out,ap) \
+do {\
+  assert(is_show_sign==1);\
+  assert(right_or_left && space_or_zero);\
+  uint32_t x = va_arg(ap, uint32_t);\
+  uint32_t y;\
+  int space = is_precision ? precision : (is_filed_width ? field_width : 1);\
+  do {\
+    y=x%base;\
+    WRITE(buf_pt, ITOA(y, is_capital));\
+    assert(buf_pt - buf < BUF_SIZE);\
+    x/=base;\
+  }while(x!=0);\
+  if(space_or_zero){\
+    while(buf_pt - buf < space) WRITE(buf_pt,'0');\
+  }\
+  if(is_formed && base == 8) WRITE(buf_pt, '0');\
+  if(is_show_sign && base == 16) WRITE(buf_pt, 'x'),WRITE(buf_pt, '0');\
+  int siz = buf_pt-buf;\
+  if(right_or_left){\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+    while(siz < space) WRITE(out,' '),space--;\
+  }\
+  else{\
+    while(siz < space) WRITE(out,' '),space--;\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+  }\
+} while (0)
+
+#define PROCESS(out,fmt,ap) \
+do {\
+ switch (*fmt) {\
+  case 'c':PROCESS_CHAR(out,ap);fmt++;break;\
+  case 's':PROCESS_STRING(out,ap);fmt++;break;\
+  case 'd':PROCESS_SIGNED(out,ap);fmt++;break;\
+  case 'i':PROCESS_SIGNED(out,ap);fmt++;break;\
+  case 'o':base=8;PROCESS_UNSIGNED(out,ap);fmt++;break;\
+  case 'x':base=16;PROCESS_UNSIGNED(out,ap);fmt++;break;\
+  case 'X':base=16;is_capital=1;PROCESS_UNSIGNED(out,ap);fmt++;break;\
+  case 'p':is_formed=1;base=16;PROCESS_UNSIGNED(out,ap);fmt++;break;\
+  case '%':WRITE(out, '%');break;\
+  default: assert(0);\
+ }\
+} while (0)
+
+static void init_flag() {
+  buf_pt=buf;
+  is_filed_width=0;
+  is_precision=0;
+  is_capital=0;
+  is_formed = 0;
+  is_show_sign = 0;
+  space_or_zero = 0;
+  right_or_left = 0;
+  base = 10;
+  precision = 1;
+  field_width = 1;
 }
 
-int printf(const char *fmt, ...) { panic("Not implemented"); }
+// d,i,o,u,x,X,c,s,p
+int printf(const char *fmt, ...) {
+  panic("Not implemented");
+  return 0;
+}
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  return vsnprintf(out, -1, fmt,ap);
+  return vsnprintf(out, -1, fmt, ap);
 }
 
 int sprintf(char *out, const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
-  int ret=vsprintf(out,fmt,ap);
+  int ret = vsprintf(out, fmt, ap);
   va_end(ap);
   return ret;
 }
@@ -50,42 +205,26 @@ int sprintf(char *out, const char *fmt, ...) {
 int snprintf(char *out, size_t n, const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
-  int ret=vsnprintf(out,n,fmt,ap);
+  int ret = vsnprintf(out, n, fmt, ap);
   va_end(ap);
   return ret;
 }
 
 int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
-  size_t i = 0;
+  char *st = out;
   int ret = 0;
-  char *s;
-  size_t j;
-  int d;
-  while (fmt[i] != '\0') {
-    if (fmt[i] != '%') {
-      out[ret++] = fmt[i++];
-    } else {
-      switch (fmt[i + 1]) {
-      case 's':
-        s = va_arg(ap, char *);
-        j = 0;
-        i = i + 2;
-        while (s[j] != '\0') {
-          out[ret++] = s[j++];
-        }
-        break;
-      case 'd':
-        d = va_arg(ap, int);
-        i = i + 2;
-        int2str(d, out, &ret);
-        break;
-      default:
-        i = i + 2;
-        break;
-      }
+  while (*fmt != '\0') {
+    init_flag();
+    switch (*fmt) {
+      case '%': PARSE_ARGS(fmt,ap);
+                PROCESS(out,fmt,ap);
+                break;
+      default:WRITE(out,*(fmt++));
+              break;
     }
+    CHEKE_BOUND(st, out, n);
   }
-  out[ret] = '\0';
+  WRITE(out, *fmt);
   return ret;
 }
 
