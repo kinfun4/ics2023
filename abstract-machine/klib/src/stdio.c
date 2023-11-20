@@ -36,6 +36,26 @@ void int2str(int num, char *str, int *p) {
 int printf(const char *fmt, ...) { panic("Not implemented"); }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
+  return vsnprintf(out, -1, fmt,ap);
+}
+
+int sprintf(char *out, const char *fmt, ...) {
+  va_list ap;
+  va_start(ap, fmt);
+  int ret=vsprintf(out,fmt,ap);
+  va_end(ap);
+  return ret;
+}
+
+int snprintf(char *out, size_t n, const char *fmt, ...) {
+  va_list ap;
+  va_start(ap, fmt);
+  int ret=vsnprintf(out,n,fmt,ap);
+  va_end(ap);
+  return ret;
+}
+
+int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
   size_t i = 0;
   int ret = 0;
   char *s;
@@ -67,22 +87,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   }
   out[ret] = '\0';
   return ret;
-}
-
-int sprintf(char *out, const char *fmt, ...) {
-  va_list ap;
-  va_start(ap, fmt);
-  int ret=vsprintf(out,fmt,ap);
-  va_end(ap);
-  return ret;
-}
-
-int snprintf(char *out, size_t n, const char *fmt, ...) {
-  panic("Not implemented");
-}
-
-int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
-  panic("Not implemented");
 }
 
 #endif
