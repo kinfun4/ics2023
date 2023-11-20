@@ -14,7 +14,7 @@ static char *buf_pt;
 #define BUF_SIZE 100
 char buf[BUF_SIZE];
 
-#define ABS(x) ((x) < 0 ? (x) : -(x))
+#define ABS(x) ((x) < 0 ? -(x) : (x))
 #define WRITE(str,c) *(str++) = c
 #define CHEKE_BOUND(st,pt,bound) if(pt-st >= bound) assert(0);
 #define IS_NUM(c) ((c<='9') && (c>='0'))
@@ -22,22 +22,11 @@ char buf[BUF_SIZE];
 #define GET_NUM(x,str,ap) \
 do {\
   if(*str == '*') x =va_arg(ap, int),str++;\
-  else if(IS_NUM(*str)) x =atoi(str);\
-} while (0)
-
-#define SWAP(a,b) \
-do {\
-  char c;\
-  c = a; a = b; b=c;\
-} while (0)
-
-#define REVERSE(st,en) \
-do {\
-  char *a = st;\
-  char *b = en;\
-  while(b-a > 0){\
-    SWAP(*b,*a);\
-    a++;b--;\
+  else {\
+    while (IS_NUM(*str)) {\
+      x = x * 10 + *str - '0';\
+      str ++;\
+    }\
   }\
 } while (0)
 
@@ -64,7 +53,7 @@ do {\
 #define CHECK_PRECISION(fmt,ap) \
 do {\
   switch (*fmt) {\
-    case '.':GET_NUM(precision,fmt,ap);is_precision=1;space_or_zero=1;break;\
+    case '.':fmt++;GET_NUM(precision,fmt,ap);is_precision=1;space_or_zero=1;break;\
     default: break;\
   }\
 } while (0)
@@ -96,8 +85,8 @@ do {\
 
 #define PROCESS_SIGNED(out,ap) \
 do {\
-  assert(is_formed==1);\
-  assert(right_or_left && space_or_zero);\
+  assert(is_formed!=1);\
+  assert(!(right_or_left && space_or_zero));\
   assert(base==10);\
   int x = va_arg(ap, int);\
   int y;\
@@ -109,6 +98,8 @@ do {\
     assert(buf_pt - buf < BUF_SIZE);\
     x/=base;\
   }while(x!=0);\
+  if(is_negtive) space--;\
+  else if(is_show_sign) space--;\
   if(space_or_zero){\
     while(buf_pt - buf < space) WRITE(buf_pt,'0');\
   }\
@@ -116,19 +107,19 @@ do {\
   else if(is_show_sign) WRITE(buf_pt, '+');\
   int siz = buf_pt-buf;\
   if(right_or_left){\
-    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1)),buf_pt--;\
     while(siz < space) WRITE(out,' '),space--;\
   }\
   else{\
-    while(siz < space) WRITE(out,' '),space--;\
-    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+    while(siz < space)WRITE(out,' '),space--;\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1)),buf_pt--;\
   }\
 } while (0)
 
 #define PROCESS_UNSIGNED(out,ap) \
 do {\
-  assert(is_show_sign==1);\
-  assert(right_or_left && space_or_zero);\
+  assert(is_show_sign!=1);\
+  assert(!(right_or_left && space_or_zero));\
   uint32_t x = va_arg(ap, uint32_t);\
   uint32_t y;\
   int space = is_precision ? precision : (is_filed_width ? field_width : 1);\
@@ -138,19 +129,21 @@ do {\
     assert(buf_pt - buf < BUF_SIZE);\
     x/=base;\
   }while(x!=0);\
+  if(is_formed && base == 8) space--;\
+  if(is_formed && base == 16) space-=2;\
   if(space_or_zero){\
     while(buf_pt - buf < space) WRITE(buf_pt,'0');\
   }\
   if(is_formed && base == 8) WRITE(buf_pt, '0');\
-  if(is_show_sign && base == 16) WRITE(buf_pt, 'x'),WRITE(buf_pt, '0');\
+  if(is_formed && base == 16) WRITE(buf_pt, 'x'),WRITE(buf_pt, '0');\
   int siz = buf_pt-buf;\
   if(right_or_left){\
-    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1)),buf_pt--;\
     while(siz < space) WRITE(out,' '),space--;\
   }\
   else{\
     while(siz < space) WRITE(out,' '),space--;\
-    while(buf_pt > buf)WRITE(out, *(buf_pt-1));\
+    while(buf_pt > buf)WRITE(out, *(buf_pt-1)),buf_pt--;\
   }\
 } while (0)
 
@@ -161,6 +154,7 @@ do {\
   case 's':PROCESS_STRING(out,ap);fmt++;break;\
   case 'd':PROCESS_SIGNED(out,ap);fmt++;break;\
   case 'i':PROCESS_SIGNED(out,ap);fmt++;break;\
+  case 'u':PROCESS_UNSIGNED(out,ap);fmt++;break;\
   case 'o':base=8;PROCESS_UNSIGNED(out,ap);fmt++;break;\
   case 'x':base=16;PROCESS_UNSIGNED(out,ap);fmt++;break;\
   case 'X':base=16;is_capital=1;PROCESS_UNSIGNED(out,ap);fmt++;break;\
@@ -180,8 +174,8 @@ static void init_flag() {
   space_or_zero = 0;
   right_or_left = 0;
   base = 10;
-  precision = 1;
-  field_width = 1;
+  precision = 0;
+  field_width = 0;
 }
 
 // d,i,o,u,x,X,c,s,p
