@@ -34,11 +34,18 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+bool check_wp();
+void device_update();
+
+#ifdef CONFIG_IRINGBUF
 static char iringbuf[MAX_INST_TO_TRACE][128];
 static int iringbuf_cnt;
-bool check_wp();
-
-void device_update();
+static void print_iringbuf() {
+  for (int i = 0; i < MAX_INST_TO_TRACE; i++)
+    if (strcmp(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE], "") != 0)
+      puts(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE]);
+};
+#endif /* ifdef CONFIG_IRINGBUF */
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -57,12 +64,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     Log("The watchpoint have changed!\n");
   }
 }
-
-static void print_iringbuf() {
-  for (int i = 0; i < MAX_INST_TO_TRACE; i++)
-    if (strcmp(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE], "") != 0)
-      puts(iringbuf[(iringbuf_cnt + i) % MAX_INST_TO_TRACE]);
-};
 
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
