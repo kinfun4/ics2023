@@ -89,9 +89,6 @@ void init_elf(const char *elf_file) {
   return;
 }
 
-bool elf_enable() {
-  return elf_fp!=NULL;
-}
 
 int find_func(word_t pc){
   for(int i=0;i<func_cnt;i++)
@@ -104,7 +101,7 @@ int find_func(word_t pc){
 }
 
 void func_call(word_t pc, word_t dnpc){
-  if(!elf_enable())return;
+  if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
   // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
@@ -118,7 +115,7 @@ void func_call(word_t pc, word_t dnpc){
 }
 
 void func_ret(word_t pc, word_t dnpc){
-  if(!elf_enable())return;
+  if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
   // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
   // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
