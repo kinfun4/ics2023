@@ -157,7 +157,15 @@ config IRINGBUF
   default y
 
 config MTRACE
-  bool "Enable memory trace"
+  bool "Enable memory tracer"
+  default n
+
+config FTRACE
+  bool "Enable function tracer"
+  default n
+
+config DTRACE
+  bool "Enable device tracer"
   default n
 
 config DIFFTEST
