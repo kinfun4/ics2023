@@ -4,7 +4,7 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
-// static void *heap_addr = NULL;
+static void *heap_addr = NULL;
 #define ALIGN_SIZE 8
 
 int rand(void) {
@@ -29,16 +29,16 @@ int atoi(const char *nptr) {
   return x;
 }
 
-// void *malloc(size_t size) {
-//   // On native, malloc() will be called during initializaion of C runtime.
-//   // Therefore do not call panic() here, else it will yield a dead recursion:
-//   //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
-//   if (heap_addr == NULL)
-//     heap_addr = heap.start;
-//   void *ret = heap_addr;
-//   heap_addr  = heap_addr + ((size + ALIGN_SIZE - 1) & (~(ALIGN_SIZE - 1)));
-//   return ret;
-// }
+void *malloc(size_t size) {
+  // On native, malloc() will be called during initializaion of C runtime.
+  // Therefore do not call panic() here, else it will yield a dead recursion:
+  //   panic() -> putchar() -> (glibc) -> malloc() -> panic()
+  if (heap_addr == NULL)
+    heap_addr = heap.start;
+  void *ret = heap_addr;
+  heap_addr  = heap_addr + ((size + ALIGN_SIZE - 1) & (~(ALIGN_SIZE - 1)));
+  return ret;
+}
 
 void free(void *ptr) {}
 
