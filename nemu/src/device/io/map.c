@@ -68,7 +68,7 @@ void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   assert(len >= 1 && len <= 8);
   check_bound(map, addr);
 #ifdef CONFIG_DTRACE
-  printf("Write Devtce:%15s len=%4d addr=%#x\n",map->name,len,addr);
+  printf("Write Devtce:%10s len=%-4d addr=%#x\n",map->name,len,addr);
 #endif /* ifdef CONFIG_DTRACE */
   paddr_t offset = addr - map->low;
   host_write(map->space + offset, len, data);
