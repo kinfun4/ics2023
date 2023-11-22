@@ -26,7 +26,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int offset_addr;
   for (i = 0; i < h; i++)
     for (j = 0; j < w; j++) {
-      offset_addr = (y + i) * width + (x + j);
+      offset_addr = (y + i) *400  + (x + j);
       outl(FB_ADDR + offset_addr * 4, *(uint32_t *)(ctl->pixels));
     }
   if (ctl->sync) {
