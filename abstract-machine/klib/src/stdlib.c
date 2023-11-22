@@ -5,7 +5,7 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
 static void *heap_addr = NULL;
-#define ALIGN_SIZE 4096
+#define ALIGN_SIZE 8
 
 int rand(void) {
   // RAND_MAX assumed to be 32767
