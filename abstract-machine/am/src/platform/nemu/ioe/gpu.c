@@ -7,7 +7,7 @@
 
 static int width;
 
-void __am_gpu_init() {}
+void __am_gpu_init() { width = 0; }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   uint32_t data = inl(VGACTL_ADDR);
