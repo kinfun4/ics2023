@@ -25,6 +25,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   }
   int x = ctl->x, y = ctl->y;
   int w = ctl->w, h = ctl->h;
+  if(w==0 || h==0)return;
   int i, j;
   int offset_addr;
   for (i = 0; i < h; i++)
