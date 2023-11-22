@@ -7,7 +7,7 @@
 
 static int width;
 
-void __am_gpu_init() { width = 0; }
+void __am_gpu_init() { width = 400; }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   uint32_t data = inl(VGACTL_ADDR);
@@ -26,7 +26,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int offset_addr;
   for (i = 0; i < h; i++)
     for (j = 0; j < w; j++) {
-      offset_addr = (y + i) *400  + (x + j);
+      offset_addr = (y + i) * width + (x + j);
       outl(FB_ADDR + offset_addr * 4, *(uint32_t *)(ctl->pixels));
     }
   if (ctl->sync) {
