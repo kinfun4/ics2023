@@ -1,23 +1,21 @@
 #include <am.h>
 #include <nemu.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
-#ifdef MODE_800x600
-#define W 800
-#define H 600
-#else
-#define W 400
-#define H 300
-#endif
+
+static int width;
 
 void __am_gpu_init() {}
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
+  uint32_t data = inl(VGACTL_ADDR);
+  width = data >> 16;
   *cfg = (AM_GPU_CONFIG_T){.present = true,
                            .has_accel = false,
-                           .width = W,
-                           .height = H,
+                           .width = data >> 16,
+                           .height = data & ((1 << 16) - 1),
                            .vmemsz = 0};
 }
 
@@ -31,8 +29,8 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int offset_addr;
   for (i = 0; i < h; i++)
     for (j = 0; j < w; j++) {
-      offset_addr = (y + i) * W + (x + j);
-      outl(FB_ADDR + offset_addr, *(uint32_t *)(ctl->pixels));
+      offset_addr = (y + i) * width + (x + j);
+      outl(FB_ADDR + offset_addr * 4, *(uint32_t *)(ctl->pixels));
     }
 }
 
