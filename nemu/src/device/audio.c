@@ -15,6 +15,7 @@
 
 #include <common.h>
 #include <device/map.h>
+#include <device/mmio.h>
 #include <SDL2/SDL.h>
 
 enum {
