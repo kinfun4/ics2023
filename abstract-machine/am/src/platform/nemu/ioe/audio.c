@@ -33,13 +33,14 @@ void __am_audio_ctrl(AM_AUDIO_CTRL_T *ctrl) {
 
 void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
   stat->count = inl(AUDIO_COUNT_ADDR);
+  outl(AUDIO_COUNT_ADDR, stat->count);
 }
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   int len = ctl->buf.end - ctl->buf.start;
   uint8_t *ptr = ctl->buf.start;
   int nwrite = 0;
-  int volatile count=0;
+  int count;
   while(nwrite<len){
     count = inl(AUDIO_COUNT_ADDR);
     while(count<bufsize && nwrite<len){
