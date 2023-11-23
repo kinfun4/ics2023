@@ -39,18 +39,21 @@ static uint32_t offset_addr = 0;
 
 static void audio_play(void *userdata, uint8_t *stream, int len) {
   int nread = 0;
-  while (nread < len && audio_base[reg_count] > 0) {
+  int count = audio_base[reg_count];
+  while (nread < len && count > 0) {
     *(stream + nread) = *(sbuf + offset_addr);
     offset_addr = (offset_addr + 1) % CONFIG_SB_SIZE;
     nread++;
-    audio_base[reg_count]--;
+    count--;
   }
+  audio_base[reg_count] = count;
   if (nread < len)
     memset(stream + nread, silence, len - nread);
 };
 
 static void init_audio_ctrl() {
   SDL_AudioSpec s;
+  SDL_zero(s);
   s.format = AUDIO_S16SYS;
   s.userdata = NULL;
   s.freq = audio_base[reg_freq];
