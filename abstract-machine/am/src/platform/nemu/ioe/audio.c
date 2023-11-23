@@ -40,7 +40,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   int nwrite = 0;
   while(nwrite<len){
     int count = inl(AUDIO_COUNT_ADDR);
-    if(count<bufsize){
+    while(count<bufsize && nwrite < len){
       outb(AUDIO_SBUF_ADDR + offset_addr, *(buf+ nwrite));
       offset_addr = (offset_addr + 1) % bufsize;
       nwrite++;
