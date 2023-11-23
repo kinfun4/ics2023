@@ -42,7 +42,6 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   int count;
   while(nwrite<len){
     count = inl(AUDIO_COUNT_ADDR);
-    printf("count = %d, bufsize = %d\n",count,bufsize);
     while(count<bufsize && nwrite<len){
       outb(AUDIO_SBUF_ADDR + offset_addr, *(buf+ nwrite));
       offset_addr = (offset_addr + 1) % bufsize;
@@ -50,6 +49,5 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
       count++;
     }
     outl(AUDIO_COUNT_ADDR, count);
-    printf("2\n");
   }
 }
