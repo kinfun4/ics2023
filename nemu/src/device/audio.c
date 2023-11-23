@@ -71,7 +71,8 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     init_audio_ctrl();
     audio_base[reg_init] = 0;
   }
-  if(offset == reg_count && len==4 && !is_write){
+  printf("2\n");
+  if(offset == reg_count && !is_write){
     SDL_LockAudio();
     printf("1\n");
   }
