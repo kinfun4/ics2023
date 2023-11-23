@@ -5,22 +5,20 @@
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
-static int width,height;
+static int width;
 
 void __am_gpu_init() {
   uint32_t data = inl(VGACTL_ADDR);
   width = data >> 16;
-  height = data & ((1 << 16) - 1);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   uint32_t data = inl(VGACTL_ADDR);
   width = data >> 16;
-  height = data & ((1 << 16) - 1);
   *cfg = (AM_GPU_CONFIG_T){.present = true,
                            .has_accel = false,
-                           .width = width,
-                           .height = height,
+                           .width = data >> 16,
+                           .height = data & ((1 << 16) - 1),
                            .vmemsz = 0};
 }
 
@@ -32,7 +30,7 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   for (i = 0; i < h; i++)
     for (j = 0; j < w; j++) {
       offset_addr = ((y + i) * width + (x + j)) * 4;
-      outl(FB_ADDR + offset_addr, *(uint32_t *)(ctl->pixels + (i * w + j)));
+      outl(FB_ADDR + offset_addr, *(uint32_t *)(ctl->pixels + (i * w + j)*4));
     }
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
