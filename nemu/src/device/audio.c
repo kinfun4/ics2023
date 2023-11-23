@@ -39,14 +39,12 @@ static uint32_t offset_addr = 0;
 
 static void audio_play(void *userdata, uint8_t *stream, int len) {
   int nread = 0;
-  int count = audio_base[reg_count];
-  while (nread < len && count > 0) {
+  while (nread < len && audio_base[reg_count] > 0) {
     *(stream + nread) = *(sbuf + offset_addr);
     offset_addr = (offset_addr + 1) % CONFIG_SB_SIZE;
     nread++;
-    count--;
+    audio_base[reg_count]--;
   }
-  audio_base[reg_count] = count;
   if (nread < len)
     memset(stream + nread, silence, len - nread);
 };
