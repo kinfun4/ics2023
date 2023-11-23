@@ -2,6 +2,7 @@
 #include <nemu.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define AUDIO_FREQ_ADDR      (AUDIO_ADDR + 0x00)
 #define AUDIO_CHANNELS_ADDR  (AUDIO_ADDR + 0x04)
@@ -41,6 +42,7 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   int count;
   while(nwrite<len){
     count = inl(AUDIO_COUNT_ADDR);
+    printf("1\n");
     while(count<bufsize && nwrite<len){
       outb(AUDIO_SBUF_ADDR + offset_addr, *(buf+ nwrite));
       offset_addr = (offset_addr + 1) % bufsize;
@@ -48,5 +50,6 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
       count++;
     }
     outl(AUDIO_COUNT_ADDR, count);
+    printf("2\n");
   }
 }
