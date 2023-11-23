@@ -43,6 +43,7 @@ static SDL_Renderer *renderer = NULL;
 static SDL_Texture *texture = NULL;
 
 static void init_screen() {
+  printf("1\n");
   SDL_Window *window = NULL;
   char title[128];
   sprintf(title, "%s-NEMU", str(__GUEST_ISA__));
@@ -82,7 +83,6 @@ void vga_update_screen() {
 void vga_io_handler(uint32_t offset, int len, bool is_write);
 
 void init_vga() {
-  printf("1\n");
   vgactl_port_base = (uint32_t *)new_space(8);
   vgactl_port_base[0] = (screen_width() << 16) | screen_height();
 #ifdef CONFIG_HAS_PORT_IO
