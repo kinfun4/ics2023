@@ -79,6 +79,8 @@ void vga_update_screen() {
   }
 }
 
+void vga_io_handler(uint32_t offset, int len, bool is_write);
+
 void init_vga() {
   vgactl_port_base = (uint32_t *)new_space(8);
   vgactl_port_base[0] = (screen_width() << 16) | screen_height();

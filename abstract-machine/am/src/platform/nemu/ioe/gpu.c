@@ -5,20 +5,19 @@
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
 
-static int width;
+static int width,height;
 
 void __am_gpu_init() {
   uint32_t data = inl(VGACTL_ADDR);
   width = data >> 16;
+  height = data & ((1 << 16) - 1);
 }
 
 void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
-  uint32_t data = inl(VGACTL_ADDR);
-  width = data >> 16;
   *cfg = (AM_GPU_CONFIG_T){.present = true,
                            .has_accel = false,
-                           .width = data >> 16,
-                           .height = data & ((1 << 16) - 1),
+                           .width = width,
+                           .height = height,
                            .vmemsz = 0};
 }
 
