@@ -38,8 +38,9 @@ void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   int len = ctl->buf.end - ctl->buf.start;
   uint8_t *buf = ctl->buf.start;
   int nwrite = 0;
+  int count;
   while(nwrite<len){
-    int volatile count = inl(AUDIO_COUNT_ADDR);
+    count = inl(AUDIO_COUNT_ADDR);
     while(count<bufsize && nwrite<len){
       outb(AUDIO_SBUF_ADDR + offset_addr, *(buf+ nwrite));
       offset_addr = (offset_addr + 1) % bufsize;
