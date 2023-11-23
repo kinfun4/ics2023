@@ -37,13 +37,13 @@ void __am_audio_status(AM_AUDIO_STATUS_T *stat) {
 
 void __am_audio_play(AM_AUDIO_PLAY_T *ctl) {
   int len = ctl->buf.end - ctl->buf.start;
-  uint8_t *buf = ctl->buf.start;
+  uint8_t *ptr = ctl->buf.start;
   int nwrite = 0;
   int count;
   while(nwrite<len){
     count = inl(AUDIO_COUNT_ADDR);
     while(count<bufsize && nwrite<len){
-      outb(AUDIO_SBUF_ADDR + offset_addr, *(buf+ nwrite));
+      outb(AUDIO_SBUF_ADDR + offset_addr, *(ptr + nwrite));
       offset_addr = (offset_addr + 1) % bufsize;
       nwrite++;
       count++;
