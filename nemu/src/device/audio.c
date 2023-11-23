@@ -53,7 +53,6 @@ static void audio_play(void *userdata, uint8_t *stream, int len) {
 
 static void init_audio_ctrl() {
   SDL_AudioSpec s;
-  SDL_zero(s);
   s.format = AUDIO_S16SYS;
   s.userdata = NULL;
   s.freq = audio_base[reg_freq];
