@@ -71,12 +71,10 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     init_audio_ctrl();
     audio_base[reg_init] = 0;
   }
-  printf("offset = %u, len = %d, is_write =%d\n",offset,len,is_write);
-  if(offset == reg_count && !is_write){
+  if (offset == reg_count * 4 && len == 4 && !is_write) {
     SDL_LockAudio();
-    printf("1\n");
   }
-  if(offset == reg_count && len==4 && is_write){
+  if (offset == reg_count * 4 && len == 4 && is_write) {
     SDL_UnlockAudio();
   }
 }
@@ -94,5 +92,5 @@ void init_audio() {
   sbuf = (uint8_t *)new_space(CONFIG_SB_SIZE);
   add_mmio_map("audio-sbuf", CONFIG_SB_ADDR, sbuf, CONFIG_SB_SIZE, NULL);
   audio_base[reg_sbuf_size] = CONFIG_SB_SIZE;
-  offset_addr =0;
+  offset_addr = 0;
 }
