@@ -71,12 +71,12 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     init_audio_ctrl();
     audio_base[reg_init] = 0;
   }
-  if(offset == reg_count && !is_write){
-    SDL_LockAudio();
-  }
-  if(offset == reg_count && is_write){
-    SDL_UnlockAudio();
-  }
+  // if(offset == reg_count && !is_write){
+  //   SDL_LockAudio();
+  // }
+  // if(offset == reg_count && is_write){
+  //   SDL_UnlockAudio();
+  // }
 }
 
 void init_audio() {
