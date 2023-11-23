@@ -60,7 +60,7 @@ static void init_audio_ctrl() {
   s.channels = audio_base[reg_channels];
   s.samples = audio_base[reg_samples];
   s.callback = audio_play;
-  assert(SDL_Init(SDL_INIT_AUDIO) == 0);
+  assert(SDL_InitSubSystem(SDL_INIT_AUDIO) == 0);
   assert(SDL_OpenAudio(&s, NULL) == 0);
   silence = s.silence;
   SDL_PauseAudio(0);
@@ -72,10 +72,10 @@ static void audio_io_handler(uint32_t offset, int len, bool is_write) {
     audio_base[reg_init] = 0;
   }
   if (offset == reg_count * 4 && len == 4 && !is_write) {
-    SDL_LockAudioDevice(1);
+    SDL_LockAudio();
   }
   if (offset == reg_count * 4 && len == 4 && is_write) {
-    SDL_UnlockAudioDevice(1);
+    SDL_UnlockAudio();
   }
 }
 
