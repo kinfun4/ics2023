@@ -19,6 +19,7 @@ static char buf[BUF_SIZE];
 #define WRITE(str, c, state)                                                   \
   do {                                                                         \
     if (state == 0) {                                                          \
+      assert(str != NULL);                                                     \
       *(str++) = c;                                                            \
     } else                                                                     \
       putch(c);                                                                \
@@ -264,7 +265,6 @@ static char buf[BUF_SIZE];
       fmt++;                                                                   \
       break;                                                                   \
     default:                                                                   \
-      assert(0);                                                               \
     }                                                                          \
   } while (0)
 
