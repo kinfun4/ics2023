@@ -40,6 +40,9 @@ struct func{
 } func_tab[100];
 
 void init_elf(const char *elf_file) {
+  #ifndef CONFIG_FTRACE
+    return;
+  #endif /* ifndef CONFIG_FTRACE */
   if (elf_file == NULL)return;
 
   func_cnt=0;
@@ -102,6 +105,9 @@ int find_func(word_t pc){
 }
 
 void func_call(word_t pc, word_t dnpc){
+  #ifndef CONFIG_FTRACE
+    return;
+  #endif /* ifndef CONFIG_FTRACE */
   if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
   if(dnpc == func_tab[func2].st ){
@@ -114,6 +120,9 @@ void func_call(word_t pc, word_t dnpc){
 }
 
 void func_ret(word_t pc, word_t dnpc){
+  #ifndef CONFIG_FTRACE
+    return;
+  #endif /* ifndef CONFIG_FTRACE */
   if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
 
