@@ -265,6 +265,7 @@ static char buf[BUF_SIZE];
       fmt++;                                                                   \
       break;                                                                   \
     default:                                                                   \
+      assert(0);                                                               \
     }                                                                          \
   } while (0)
 
