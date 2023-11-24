@@ -12,14 +12,13 @@ static bool is_formed, is_filed_width, is_precision, is_show_sign, is_capital,
 static int base, precision, field_width;
 static int exit_flag;
 static char *buf_pt;
-#define BUF_SIZE 200
+#define BUF_SIZE 100
 static char buf[BUF_SIZE];
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #define WRITE(str, c, state)                                                   \
   do {                                                                         \
     if (state == 0) {                                                          \
-      assert(str != NULL);                                                     \
       *(str++) = c;                                                            \
     } else                                                                     \
       putch(c);                                                                \
