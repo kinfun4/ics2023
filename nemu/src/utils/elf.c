@@ -33,6 +33,7 @@ static Elf32_Sym Symbol;
 static uint32_t symtab_ndx,strtab_ndx,symtab_num;
 static uint32_t func_cnt;
 static int depth;
+static int stack[1000];
 struct func{
   char *name;
   word_t st,en;
@@ -103,22 +104,18 @@ int find_func(word_t pc){
 void func_call(word_t pc, word_t dnpc){
   if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
-  // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
-  // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
-  if(func1!=func2){
+  if(dnpc == func_tab[func2].st ){
     printf("0x%08x: ",pc);
     for(int j=0;j<depth;j++)
       printf(" ");
     printf("call [%s@0x%08x]\n",func_tab[func2].name, dnpc);
-    depth++;
+    stack[depth++] = func1;
   }
 }
 
 void func_ret(word_t pc, word_t dnpc){
   if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
-  // Assert(func1!= -1, "Can not find func on 0x%08x", pc);
-  // Assert(func2!= -1, "Can not find func on 0x%08x", dnpc);
   if(func1!=func2){
     depth--;
     printf("0x%08x: ",pc);
