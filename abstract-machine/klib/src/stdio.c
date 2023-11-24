@@ -265,7 +265,7 @@ static char buf[BUF_SIZE];
       fmt++;                                                                   \
       break;                                                                   \
     default:                                                                   \
-      putch(*fmt);                                                               \
+      putch(*fmt);putch('\n');                                                               \
     }                                                                          \
   } while (0)
 
