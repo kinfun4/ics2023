@@ -17,7 +17,7 @@ static char buf[BUF_SIZE];
 #define TYPE(x) TYPE##x
 #define TYPE0 int
 #define TYPE1 long
-#define TYPE2 long long
+#define TYPE2 int
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #define WRITE(str, c, state)                                                   \
