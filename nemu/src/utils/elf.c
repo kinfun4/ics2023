@@ -115,12 +115,18 @@ void func_call(word_t pc, word_t dnpc){
 
 void func_ret(word_t pc, word_t dnpc){
   if(elf_fp==NULL)return;
-  int func2=find_func(dnpc);
+  int func1=find_func(pc),func2=find_func(dnpc);
+
+  printf("0x%08x: ",pc);
+  for(int j=0;j<depth;j++)
+    printf(" ");
+  printf("cur  [%s@0x%08x]\n",func_tab[func1].name, pc);
+
   while(stack[--depth]!=func2){
     printf("0x%08x: ",pc);
     for(int j=0;j<depth;j++)
       printf(" ");
-    printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, dnpc);
+    printf("ret  [%s@0x%08x]\n",func_tab[stack[depth]].name, func_tab[stack[depth]].en);
   }
     printf("0x%08x: ",pc);
     for(int j=0;j<depth;j++)
