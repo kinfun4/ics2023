@@ -265,7 +265,7 @@ static char buf[BUF_SIZE];
       fmt++;                                                                   \
       break;                                                                   \
     default:                                                                   \
-      assert(0);                                                               \
+      putch(*fmt);                                                               \
     }                                                                          \
   } while (0)
 
