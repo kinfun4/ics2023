@@ -279,8 +279,8 @@ static void init_flag() {
   space_or_zero = 0;
   right_or_left = 0;
   base = 10;
-  precision = 1;
-  field_width = 1;
+  precision = 0;
+  field_width = 0;
 }
 
 // d,i,o,u,x,X,c,s,p
