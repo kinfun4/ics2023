@@ -334,7 +334,7 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
     switch (*fmt) {
     case '%':
       PARSE_ARGS(fmt, ap);
-        printf("field_width = %d\n",field_width);
+        // printf("field_width = %d\n",field_width);
       PROCESS(out, fmt, ap, 0);
       break;
     default:
