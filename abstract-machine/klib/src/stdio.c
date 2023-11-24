@@ -8,12 +8,16 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 static bool is_formed, is_filed_width, is_precision, is_show_sign, is_capital,
-    space_or_zero, right_or_left;
+    space_or_zero, right_or_left, long_number;
 static int base, precision, field_width;
 static int exit_flag;
 static char *buf_pt;
 #define BUF_SIZE 100
 static char buf[BUF_SIZE];
+#define TYPE(x) TYPE##x
+#define TYPE0 int
+#define TYPE1 long
+#define TYPE2 long long
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #define WRITE(str, c, state)                                                   \
@@ -93,7 +97,12 @@ static char buf[BUF_SIZE];
     }                                                                          \
   } while (0)
 
-#define CHECK_LENGTH_MODIFIER(fmt, ap)
+#define CHECK_LENGTH_MODIFIER(fmt, ap)                                         \
+  do {                                                                         \
+    while (*fmt == 'l') {                                                      \
+      fmt++;                                                                   \
+    }                                                                          \
+  } while (0)
 
 #define PARSE_ARGS(fmt, ap)                                                    \
   do {                                                                         \
@@ -122,8 +131,8 @@ static char buf[BUF_SIZE];
   do {                                                                         \
     assert(is_formed != 1);                                                    \
     assert(base == 10);                                                        \
-    int x = va_arg(ap, int);                                                   \
-    int y;                                                                     \
+    signed TYPE2 x = va_arg(ap, signed TYPE2);                               \
+    signed TYPE2 y;                                                            \
     bool is_negtive = x < 0;                                                   \
     int space = is_precision ? precision : (is_filed_width ? field_width : 1); \
     do {                                                                       \
@@ -170,8 +179,8 @@ static char buf[BUF_SIZE];
   do {                                                                         \
     assert(is_show_sign != 1);                                                 \
     assert(!(right_or_left && space_or_zero));                                 \
-    uint32_t x = va_arg(ap, uint32_t);                                         \
-    uint32_t y;                                                                \
+    unsigned TYPE2 x = va_arg(ap, unsigned TYPE2);                             \
+    unsigned TYPE2 y;                                                          \
     int space = is_precision ? precision : (is_filed_width ? field_width : 1); \
     do {                                                                       \
       y = x % base;                                                            \
@@ -265,12 +274,14 @@ static char buf[BUF_SIZE];
       fmt++;                                                                   \
       break;                                                                   \
     default:                                                                   \
-      putch(*fmt);putch('\n');                                                               \
+      putch(*fmt);                                                             \
+      putch('\n');                                                             \
     }                                                                          \
   } while (0)
 
 static void init_flag() {
   buf_pt = buf;
+  long_number = 0;
   is_filed_width = 0;
   is_precision = 0;
   is_capital = 0;
