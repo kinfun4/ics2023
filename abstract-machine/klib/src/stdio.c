@@ -14,10 +14,6 @@ static int exit_flag;
 static char *buf_pt;
 #define BUF_SIZE 100
 static char buf[BUF_SIZE];
-#define TYPE(x) TYPE##x
-#define TYPE0 int
-#define TYPE1 long
-#define TYPE2 int
 
 #define ABS(x) ((x) < 0 ? -(x) : (x))
 #define WRITE(str, c, state)                                                   \
@@ -131,8 +127,8 @@ static char buf[BUF_SIZE];
   do {                                                                         \
     assert(is_formed != 1);                                                    \
     assert(base == 10);                                                        \
-    signed TYPE2 x = va_arg(ap, signed TYPE2);                               \
-    signed TYPE2 y;                                                            \
+    signed TYPE x = va_arg(ap, signed TYPE);                                 \
+    signed TYPE y;                                                            \
     bool is_negtive = x < 0;                                                   \
     int space = is_precision ? precision : (is_filed_width ? field_width : 1); \
     do {                                                                       \
@@ -179,8 +175,8 @@ static char buf[BUF_SIZE];
   do {                                                                         \
     assert(is_show_sign != 1);                                                 \
     assert(!(right_or_left && space_or_zero));                                 \
-    unsigned TYPE2 x = va_arg(ap, unsigned TYPE2);                             \
-    unsigned TYPE2 y;                                                          \
+    unsigned TYPE x = va_arg(ap, unsigned TYPE);                             \
+    unsigned TYPE y;                                                          \
     int space = is_precision ? precision : (is_filed_width ? field_width : 1); \
     do {                                                                       \
       y = x % base;                                                            \
@@ -305,6 +301,13 @@ int printf(const char *fmt, ...) {
     switch (*fmt) {
     case '%':
       PARSE_ARGS(fmt, ap);
+        #if long_number == 2
+          #define TYPE long long
+        #elif long_number == 1
+          #define TYPE long
+        #else 
+          #define TYPE int
+        #endif /* if long_number == 2 */
       PROCESS(out, fmt, ap, 1);
       break;
     default:
