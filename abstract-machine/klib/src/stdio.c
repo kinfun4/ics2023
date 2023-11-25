@@ -301,14 +301,15 @@ int printf(const char *fmt, ...) {
     switch (*fmt) {
     case '%':
       PARSE_ARGS(fmt, ap);
-        #if long_number == 2
-          #define TYPE long long
-        #elif long_number == 1
-          #define TYPE long
-        #else 
-          #define TYPE int
-        #endif /* if long_number == 2 */
+#if long_number == 2
+  #define TYPE long long
+#elif long_number == 1
+  #define TYPE long
+#else 
+  #define TYPE int
+#endif /* if long_number == 2 */
       PROCESS(out, fmt, ap, 1);
+#undef TYPE
       break;
     default:
       WRITE(out, *(fmt++), 1);
@@ -348,7 +349,15 @@ int vsnprintf(char *out, size_t n, const char *fmt, va_list ap) {
     switch (*fmt) {
     case '%':
       PARSE_ARGS(fmt, ap);
+#if long_number == 2
+  #define TYPE long long
+#elif long_number == 1
+  #define TYPE long
+#else 
+  #define TYPE int
+#endif /* if long_number == 2 */
       PROCESS(out, fmt, ap, 0);
+#undef TYPE
       break;
     default:
       WRITE(out, *(fmt++), 0);
