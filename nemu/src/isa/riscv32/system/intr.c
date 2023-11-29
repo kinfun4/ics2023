@@ -20,7 +20,6 @@ int csrs[1<<12];
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   CSR(MEPC) = epc;
   CSR(MCAUSE) = NO;
-  printf("mepc=0x%x, mcause = 0x%x\n",epc, NO);
   return CSR(MTVEC);
 }
 
