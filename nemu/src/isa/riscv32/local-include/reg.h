@@ -31,7 +31,7 @@ static inline const char* reg_name(int idx) {
   return regs[check_reg_idx(idx)];
 }
 
-int csrs[1<<12];
+extern int csrs[1<<12];
 #define MSTATUS 0x300
 #define MTVEC 0x305
 #define MEPC 0x341

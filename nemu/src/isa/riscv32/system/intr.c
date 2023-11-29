@@ -14,12 +14,9 @@
 ***************************************************************************************/
 
 #include <isa.h>
-extern int csrs[];
-#define MSTATUS 0x300
-#define MTVEC 0x305
-#define MEPC 0x341
-#define MCAUSE 0x342
-#define CSR(i) (csrs[i])
+#include "../local-include/reg.h"
+
+int csrs[1<<12];
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   CSR(MEPC) = epc;
   CSR(MCAUSE) = NO;
