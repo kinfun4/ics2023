@@ -16,6 +16,7 @@
 #ifndef __RISCV_REG_H__
 #define __RISCV_REG_H__
 
+#include <assert.h>
 #include <common.h>
 
 static inline int check_reg_idx(int idx) {
@@ -29,5 +30,19 @@ static inline const char* reg_name(int idx) {
   extern const char* regs[];
   return regs[check_reg_idx(idx)];
 }
+
+int csrs[1<<12];
+#define MSTATUS 0x300
+#define MTVEC 0x305
+#define MEPC 0x341
+#define MCAUSE 0x342
+
+static inline int check_csr_idx(int idx) {
+  assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE);
+  return idx;
+}
+
+#define csr(idx) (csrs[check_csr_idx(idx)])
+#define CSR(i) csr(i)
 
 #endif
