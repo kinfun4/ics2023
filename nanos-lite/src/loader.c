@@ -29,6 +29,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(Ehdr->e_ident[EI_MAG2] == ELFMAG2);
   assert(Ehdr->e_ident[EI_MAG3] == ELFMAG3);
 
+  assert(Ehdr->e_machine == EXPECT_TYPE);
+
   assert(Ehdr->e_phoff != 0 && Ehdr->e_phnum != 0);
 
   Elf_Phdr Phdr[1];
