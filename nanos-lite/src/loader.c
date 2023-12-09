@@ -22,7 +22,7 @@ size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf_Ehdr Ehdr[1];
-  ramdisk_read(Ehdr, 0, sizeof(Elf32_Ehdr));
+  ramdisk_read(Ehdr, 0, sizeof(Elf_Ehdr));
 
   assert(Ehdr->e_ident[EI_MAG0] == ELFMAG0);
   assert(Ehdr->e_ident[EI_MAG1] == ELFMAG1);
