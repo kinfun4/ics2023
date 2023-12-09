@@ -37,6 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
                  Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
+      printf("%d\n",i);
       char buf[Phdr->p_filesz];
       ramdisk_read(buf, Phdr->p_offset, Phdr->p_filesz);
       memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
@@ -53,5 +54,4 @@ void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
-  printf("1\n");
 }
