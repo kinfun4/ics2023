@@ -1,4 +1,5 @@
 #include <common.h>
+#include <stdio.h>
 
 void init_mm(void);
 void init_device(void);
@@ -29,6 +30,7 @@ int main() {
 
   Log("Finish initialization");
 
+  printf("1\n");
 #ifdef HAS_CTE
   yield();
 #endif
