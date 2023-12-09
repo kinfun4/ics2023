@@ -14,7 +14,7 @@
 #elif defined(__ISA_RISCV32__)
 #define EXPECT_TYPE EM_RISCV
 #else
-#error Unsupported ISA
+#define EXPECT_TYPE EM_NONE
 #endif
 
 size_t ramdisk_read(void *buf, size_t offset, size_t len);
@@ -28,9 +28,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(Ehdr->e_ident[EI_MAG1] == ELFMAG1);
   assert(Ehdr->e_ident[EI_MAG2] == ELFMAG2);
   assert(Ehdr->e_ident[EI_MAG3] == ELFMAG3);
-
   assert(Ehdr->e_machine == EXPECT_TYPE);
-
   assert(Ehdr->e_phoff != 0 && Ehdr->e_phnum != 0);
 
   Elf_Phdr Phdr[1];
