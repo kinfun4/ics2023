@@ -16,6 +16,11 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   Elf32_Ehdr Ehdr[1];
   ramdisk_read(Ehdr, 0, sizeof(Elf32_Ehdr));
 
+  assert(Ehdr[0].e_ident[EI_MAG0] == ELFMAG0);
+  assert(Ehdr[0].e_ident[EI_MAG1] == ELFMAG1);
+  assert(Ehdr[0].e_ident[EI_MAG2] == ELFMAG2);
+  assert(Ehdr[0].e_ident[EI_MAG3] == ELFMAG3);
+
   Elf32_Addr e_entry = Ehdr[0].e_entry;
   Elf32_Off e_phoff = Ehdr[0].e_phoff;
   uint16_t e_phnum = Ehdr[0].e_phnum;
