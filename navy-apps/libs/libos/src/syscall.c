@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -69,8 +70,17 @@ int _write(int fd, void *buf, size_t count) {
   return _syscall_(SYS_write, fd, (intptr_t)buf, count);
 }
 
+extern uintptr_t end;
+static uint32_t *p_brk = NULL;
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+  if(p_brk == NULL) p_brk = &end;
+  if(_syscall_(SYS_brk,(uintptr_t)p_brk + increment, 0, 0) == 0){
+    p_brk += increment;
+    return (void *)p_brk - increment;
+  }
+  else {  
+    return (void *)-1;
+  }
 }
 
 int _read(int fd, void *buf, size_t count) {
