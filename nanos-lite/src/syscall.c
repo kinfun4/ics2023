@@ -17,7 +17,6 @@ static size_t sys_write(int fd, void *buf, size_t cnt) {
     break;
   default: panic("Invalid fd = %d\n",fd);
   }
-  printf("\nret = %d\n",ret);
   return ret;
 }
 void do_syscall(Context *c) {

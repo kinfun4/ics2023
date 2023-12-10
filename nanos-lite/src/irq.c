@@ -11,6 +11,7 @@ static Context* do_event(Event e, Context* c) {
     default: panic("Unhandled event ID = %d", e.event);break;
   }
 
+  printf("After Syscall: ret = %d\n", c->GPRx );
   return c;
 }
 
