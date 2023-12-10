@@ -2,11 +2,10 @@
 #include "am.h"
 #include "debug.h"
 #include <common.h>
-#include <stdint.h>
 
 static size_t sys_write(int fd, void *buf, size_t cnt) {
   char *_buf = buf;
-  size_t ret;
+  size_t ret = 0;
   switch (fd) {
   case 1:
     for (ret = 0; ret < cnt; ret++)
@@ -45,5 +44,5 @@ void do_syscall(Context *c) {
     panic("Unhandled syscall ID = %d", a[0]);
   }
 
-  // printf("After Syscall: ID = %d, ret = %d\n", a[0], c->GPRx );
+  printf("After Syscall: ID = %d, ret = %d\n", a[0], c->GPRx );
 }
