@@ -5,7 +5,7 @@
 
 static size_t sys_write(int fd, void *buf, size_t cnt) {
   char *_buf = buf;
-  size_t ret = 0;
+  size_t ret;
   switch (fd) {
   case 1:
     for (ret = 0; ret < cnt; ret++)
@@ -26,8 +26,8 @@ void do_syscall(Context *c) {
   a[2] = c->GPR3;
   a[3] = c->GPR4;
 
-  printf("Before Syscall: ID = %d, GPR2 = %d, GPR3 = %d, GPR4 = %d\n", a[0],
-  a[1], a[2], a[3]);
+  // printf("Before Syscall: ID = %d, GPR2 = %d, GPR3 = %d, GPR4 = %d\n", a[0],
+  // a[1], a[2], a[3]);
 
   switch (a[0]) {
   case SYS_exit:
@@ -44,5 +44,5 @@ void do_syscall(Context *c) {
     panic("Unhandled syscall ID = %d", a[0]);
   }
 
-  printf("After Syscall: ID = %d, ret = %d\n", a[0], c->GPRx );
+  // printf("After Syscall: ID = %d, ret = %d\n", a[0], c->GPRx );
 }
