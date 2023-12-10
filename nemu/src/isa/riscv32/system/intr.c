@@ -18,7 +18,7 @@
 
 int csrs[1<<12];
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
-  printf("NO=0x%08x  epc=0x%08x\n",NO,epc);
+  // printf("NO=0x%08x  epc=0x%08x\n",NO,epc);
   CSR(MEPC) = epc;
   CSR(MCAUSE) = NO;
   return CSR(MTVEC);
