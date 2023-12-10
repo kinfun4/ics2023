@@ -2,20 +2,23 @@
 #include "am.h"
 #include "debug.h"
 #include <common.h>
+#include <stdint.h>
 
-static void sys_write(int fd, void *buf, size_t cnt) {
+static size_t sys_write(int fd, void *buf, size_t cnt) {
   char *_buf = buf;
+  size_t ret;
   switch (fd) {
   case 1:
-    for (int i = 0; i < cnt; i++)
-      putch(*(_buf + i));
+    for (ret = 0; ret < cnt; ret++)
+      putch(*(_buf + ret));
     break;
   case 2:
-    for (int i = 0; i < cnt; i++)
-      putch(*(_buf + i));
+    for (ret = 0; ret < cnt; ret++)
+      putch(*(_buf + ret));
     break;
   default: panic("Invalid fd = %d\n",fd);
   }
+  return ret;
 }
 void do_syscall(Context *c) {
   uintptr_t a[4];
@@ -33,13 +36,14 @@ void do_syscall(Context *c) {
     break;
   case SYS_yield:
     yield();
+    c->GPRx = 0;
     break;
   case SYS_write:
-    sys_write(a[1], (void *)a[2], a[3]);
+    c->GPRx = sys_write(a[1], (void *)a[2], a[3]);
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
   }
 
-  // printf("After Syscall: ID = %d, GPRX = %d\n", a[0], c->GPRx);
+  // printf("After Syscall: ID = %d, ret = %d\n", a[0], c->GPRx );
 }
