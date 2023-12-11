@@ -141,6 +141,7 @@ endif
 
 ### Build order control
 app: $(APP)
+	@cp $^ $(NANO_HOME)/build/ramdisk.img
 archive: $(ARCHIVE)
 .PHONY: app archive libs
 
