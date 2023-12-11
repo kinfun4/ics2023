@@ -70,3 +70,4 @@ __am_asm_trap:
 
   addi sp, sp, CONTEXT_SIZE
   mret
+.size	__am_asm_trap, .-__am_asm_trap
