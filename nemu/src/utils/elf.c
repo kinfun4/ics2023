@@ -108,6 +108,7 @@ int find_func(word_t pc){
 }
 
 void func_call(word_t pc, word_t dnpc){
+  return;
   #ifndef CONFIG_FTRACE
     return;
   #endif /* ifndef CONFIG_FTRACE */
@@ -123,6 +124,7 @@ void func_call(word_t pc, word_t dnpc){
 }
 
 void func_ret(word_t pc, word_t dnpc){
+  return;
   #ifndef CONFIG_FTRACE
     return;
   #endif /* ifndef CONFIG_FTRACE */
