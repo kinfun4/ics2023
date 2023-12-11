@@ -83,7 +83,7 @@ void init_elf(char **elf_file, int elf_cnt) {
     fseek(fp, symtab_section.sh_offset, SEEK_SET);
     for(int i=0;i<symtab_num; i++){
       Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
-        printf("name = %20s, type = %d", str_tab + Symbol.st_name, Symbol.st_info);
+        printf("name = %20s, type = %d\n", str_tab + Symbol.st_name, Symbol.st_info);
       if(Symbol.st_info == RISCV_32_NEMU_FUNC){
         strcpy(func_tab[func_cnt].name, str_tab + Symbol.st_name);
         func_tab[func_cnt].st = Symbol.st_value;
