@@ -37,57 +37,58 @@ static int stack[1000];
 struct func{
   char *name;
   word_t st,en;
-} func_tab[100];
+} func_tab[1000];
 
-void init_elf(const char *elf_file) {
+void init_elf(char **elf_file, int elf_cnt) {
   #ifndef CONFIG_FTRACE
     return;
   #endif /* ifndef CONFIG_FTRACE */
-  if (elf_file == NULL)return;
+  while(elf_cnt>0){
+    char *elf = elf_file[--elf_cnt];
 
-  func_cnt=0;
-  depth=0;
+    if (elf == NULL)return;
 
-  elf_fp = fopen(elf_file, "rb");
-  Assert(elf_fp, "Can not read '%s'", elf_file);
-  FILE *fp =elf_fp;
+    elf_fp = fopen(elf, "rb");
+    Assert(elf_fp, "Can not read '%s'", elf);
+    FILE *fp =elf_fp;
 
-  Assert(fread(&Header, sizeof(Elf32_Ehdr), 1, fp)==1, "Can not read ELF Header");
-  Assert(Header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
+    Assert(fread(&Header, sizeof(Elf32_Ehdr), 1, fp)==1, "Can not read ELF Header");
+    Assert(Header.e_shstrndx!=SHN_UNDEF, "There is no String and Symble Table ");
 
-  // get section header string table
-  fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize, SEEK_SET);
-  Assert(fread(&shstr_section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read shstr_section");
-  fseek(fp, shstr_section.sh_offset, SEEK_SET);
-  Assert(fread(shstr_tab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
+    // get section header string table
+    fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize, SEEK_SET);
+    Assert(fread(&shstr_section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read shstr_section");
+    fseek(fp, shstr_section.sh_offset, SEEK_SET);
+    Assert(fread(shstr_tab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
 
-  fseek(fp, Header.e_shoff, SEEK_SET);
-  for(int i=0;i<Header.e_shnum;i++){
-    Assert(fread(&Section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read Section Table");
-    if(Section.sh_type == SHT_SYMTAB && strcmp(shstr_tab+Section.sh_name, ".symtab")==0){
-      symtab_section = Section;
-      symtab_ndx=i;
-      symtab_num = Section.sh_size /Section.sh_entsize;
+    fseek(fp, Header.e_shoff, SEEK_SET);
+    for(int i=0;i<Header.e_shnum;i++){
+      Assert(fread(&Section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read Section Table");
+      if(Section.sh_type == SHT_SYMTAB && strcmp(shstr_tab+Section.sh_name, ".symtab")==0){
+        symtab_section = Section;
+        symtab_ndx=i;
+        symtab_num = Section.sh_size /Section.sh_entsize;
+      }
+      if(Section.sh_type == SHT_STRTAB && strcmp(shstr_tab+Section.sh_name, ".strtab")==0){
+        strtab_section = Section;
+        strtab_ndx=i;
+      }
     }
-    if(Section.sh_type == SHT_STRTAB && strcmp(shstr_tab+Section.sh_name, ".strtab")==0){
-      strtab_section = Section;
-      strtab_ndx=i;
-    }
-  }
-  Assert(symtab_ndx!= 0 , "Can not get symtab_section");
-  Assert(strtab_ndx!= 0 , "Can not get strtab_section");
+    Assert(symtab_ndx!= 0 , "Can not get symtab_section");
+    Assert(strtab_ndx!= 0 , "Can not get strtab_section");
 
-  fseek(fp, strtab_section.sh_offset, SEEK_SET);
-  Assert(fread(str_tab, sizeof(char), strtab_section.sh_size, fp)==strtab_section.sh_size, "Can not read str Table");
-  
-  fseek(fp, symtab_section.sh_offset, SEEK_SET);
-  for(int i=0;i<symtab_num; i++){
-    Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
-    if(Symbol.st_info == RISCV_32_NEMU_FUNC){
-      func_tab[func_cnt].name = str_tab+ Symbol.st_name;
-      func_tab[func_cnt].st = Symbol.st_value;
-      func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
-      func_cnt++;
+    fseek(fp, strtab_section.sh_offset, SEEK_SET);
+    Assert(fread(str_tab, sizeof(char), strtab_section.sh_size, fp)==strtab_section.sh_size, "Can not read str Table");
+    
+    fseek(fp, symtab_section.sh_offset, SEEK_SET);
+    for(int i=0;i<symtab_num; i++){
+      Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
+      if(Symbol.st_info == RISCV_32_NEMU_FUNC){
+        func_tab[func_cnt].name = str_tab+ Symbol.st_name;
+        func_tab[func_cnt].st = Symbol.st_value;
+        func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
+        func_cnt++;
+      }
     }
   }
   return;
