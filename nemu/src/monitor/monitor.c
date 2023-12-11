@@ -20,7 +20,7 @@
 void init_rand();
 void init_log(const char *log_file);
 void init_mem();
-void init_elf(char **elf_file,int elf_cnt);
+void init_elf(char **elf_file, int elf_cnt);
 void init_difftest(char *ref_so_file, long img_size, int port);
 void init_device();
 void init_sdb();
@@ -44,7 +44,7 @@ static void welcome() {
 void sdb_set_batch_mode();
 
 static char *log_file = NULL;
-static char **elf_file;
+static char *elf_file[10];
 static int elf_cnt;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
