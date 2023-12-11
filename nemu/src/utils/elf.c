@@ -15,7 +15,6 @@
 
 #include "debug.h"
 #include <alloca.h>
-#include <assert.h>
 #include <common.h>
 #include <elf.h>
 #include <stdint.h>
@@ -36,7 +35,7 @@ static uint32_t func_cnt;
 static int depth;
 static int stack[10000];
 struct func{
-  char *name;
+  char name[100];
   word_t st,en;
 } func_tab[10000];
 
@@ -85,7 +84,7 @@ void init_elf(char **elf_file, int elf_cnt) {
     for(int i=0;i<symtab_num; i++){
       Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
       if(Symbol.st_info == RISCV_32_NEMU_FUNC){
-        func_tab[func_cnt].name = str_tab+ Symbol.st_name;
+        strcpy(func_tab[func_cnt].name, str_tab+ Symbol.st_name);
         func_tab[func_cnt].st = Symbol.st_value;
         func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
         printf("name = %20s, st = %#x, en = %#x\n", func_tab[func_cnt].name, func_tab[func_cnt].st, func_tab[func_cnt].en);
