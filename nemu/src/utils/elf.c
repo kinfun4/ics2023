@@ -35,7 +35,7 @@ static uint32_t func_cnt;
 static int depth;
 static int stack[10000];
 struct func{
-  char name[100];
+  char name[20];
   word_t st,en;
 } func_tab[10000];
 
