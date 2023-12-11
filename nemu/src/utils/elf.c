@@ -127,7 +127,7 @@ void func_ret(word_t pc, word_t dnpc){
   #endif /* ifndef CONFIG_FTRACE */
   if(elf_fp==NULL)return;
   int func1=find_func(pc),func2=find_func(dnpc);
-  assert(func2 != -1);
+  Assert(func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
 
   printf("0x%08x: ",pc);
   for(int j=0;j<depth;j++)
