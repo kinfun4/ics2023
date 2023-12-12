@@ -48,8 +48,9 @@ static Finfo file_table[] __attribute__((used)) = {
 };
 
 void init_fs() {
-  // TODO: initialize the size of /dev/fb
   file_cnt = LENGTH(file_table); 
+  printf("file_cnt = %d\n",file_cnt);
+    assert(0);
   rec_offset = malloc(file_cnt);
   memset(rec_offset, 0, file_cnt);
   for(int i = FD_FB; i < file_cnt; i++){
