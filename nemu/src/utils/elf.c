@@ -22,6 +22,13 @@
 #include <string.h>
 
 #define RISCV_32_NEMU_FUNC 18
+#define PRINT_FUNC(type, pc , depth, name, dnpc) \
+do{\
+  printf("0x%08x: ", pc); \
+  for (int j = 0; j < depth; j++) \
+    printf(" "); \
+  printf("%-4s [%s@0x%08x]\n", type, name, dnpc);\
+} while(0)
 
 static FILE *elf_fp = NULL;
 static char *shstr_tab;
@@ -127,35 +134,26 @@ void func_call(word_t pc, word_t dnpc) {
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
-  if (elf_fp == NULL)
-    return;
+  if (elf_fp == NULL)return;
+
   int func1 = find_func(pc);
   int func2 = find_func(dnpc);
   Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
+
   if (dnpc == func_tab[func2].st) {
-    printf("0x%08x: ", pc);
-    for (int j = 0; j < depth; j++)
-      printf(" ");
-    printf("call [%s@0x%08x]\n", func_tab[func2].name, dnpc);
+    PRINT_FUNC("call", pc, depth, func_tab[func2].name, dnpc);
     stack[depth++] = func1;
   }
 }
 
-#define PRINT_FUNC(type, pc , depth, name, dnpc) \
-do{\
-  printf("0x%08x: ", pc); \
-  for (int j = 0; j < depth; j++) \
-    printf(" "); \
-  printf("%-4s  [%s@0x%08x]\n", type, name, dnpc);\
-} while(0)
 
 
 void func_ret(word_t pc, word_t dnpc) {
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
-  if (elf_fp == NULL)
-    return;
+  if (elf_fp == NULL)return;
+
   int func1 = find_func(pc);
   int func2 = find_func(dnpc);
   Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
