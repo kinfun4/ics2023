@@ -52,7 +52,7 @@ void do_syscall(Context *c) {
     break;
   case SYS_gettimeofday:
     c->GPRx = 0;
-    // get_time((void *)a[1]); 
+    get_time((void *)a[1]); 
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
