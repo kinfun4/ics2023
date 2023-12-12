@@ -146,7 +146,7 @@ do{\
   printf("0x%08x: ", pc); \
   for (int j = 0; j < depth; j++) \
     printf(" "); \
-  printf("%4s  [%s@0x%08x]\n", type, name, dnpc);\
+  printf("%-4s  [%s@0x%08x]\n", type, name, dnpc);\
 } while(0)
 
 
