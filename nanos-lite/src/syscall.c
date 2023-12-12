@@ -1,6 +1,4 @@
 #include "syscall.h"
-#include "am.h"
-#include "debug.h"
 #include <common.h>
 
 static size_t sys_write(int fd, void *buf, size_t cnt) {
