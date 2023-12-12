@@ -24,8 +24,8 @@
 #define RISCV_32_NEMU_FUNC 18
 
 static FILE *elf_fp = NULL;
-static char shstr_tab[10000];
-static char str_tab [10000];
+static char *shstr_tab;
+static char *str_tab;
 static Elf32_Ehdr Header;
 static Elf32_Shdr Section;
 static Elf32_Shdr shstr_section, symtab_section, strtab_section;
@@ -35,7 +35,7 @@ static uint32_t func_cnt;
 static int depth;
 static int stack[1000];
 struct func{
-  char name[50];
+  char *name;
   word_t st,en;
 } func_tab[1000];
 
@@ -59,6 +59,7 @@ void init_elf(char **elf_file, int elf_cnt) {
     fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize, SEEK_SET);
     Assert(fread(&shstr_section, sizeof(Elf32_Shdr), 1, fp)==1, "Can not read shstr_section");
     fseek(fp, shstr_section.sh_offset, SEEK_SET);
+    shstr_tab = malloc(sizeof(char) * shstr_section.sh_size);
     Assert(fread(shstr_tab, sizeof(char), shstr_section.sh_size, fp)==shstr_section.sh_size, "Can not read shstr Table");
 
     fseek(fp, Header.e_shoff, SEEK_SET);
@@ -78,12 +79,14 @@ void init_elf(char **elf_file, int elf_cnt) {
     Assert(strtab_ndx!= 0 , "Can not get strtab_section");
 
     fseek(fp, strtab_section.sh_offset, SEEK_SET);
+    str_tab = malloc(sizeof(char) * strtab_section.sh_size);
     Assert(fread(str_tab, sizeof(char), strtab_section.sh_size, fp)==strtab_section.sh_size, "Can not read str Table");
     
     fseek(fp, symtab_section.sh_offset, SEEK_SET);
     for(int i=0;i<symtab_num; i++){
       Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp)==1, "Can not read symbol Table");
       if(ELF32_ST_TYPE(Symbol.st_info) == STT_FUNC){
+        func_tab[func_cnt].name = malloc(sizeof(char) * 50);
         strcpy(func_tab[func_cnt].name, str_tab + Symbol.st_name);
         func_tab[func_cnt].st = Symbol.st_value;
         func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
@@ -91,6 +94,8 @@ void init_elf(char **elf_file, int elf_cnt) {
         func_cnt++;
       }
     }
+    free(shstr_tab);
+    free(str_tab);
   }
   return;
 }
