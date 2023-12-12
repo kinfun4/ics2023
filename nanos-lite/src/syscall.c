@@ -1,4 +1,5 @@
 #include "syscall.h"
+#include <bits/types/struct_timeval.h>
 #include <common.h>
 
 int fs_open(const char *pathname, int flags, int mode);
@@ -42,6 +43,13 @@ void do_syscall(Context *c) {
     break;
   case SYS_brk:
     c->GPRx = 0;
+    break;
+  case SYS_gettimeofday:
+    c->GPRx = 0;
+    struct timeval *t = (void *)a[1];
+    t->tv_usec = io_read(AM_TIMER_UPTIME).us;
+    t->tv_sec = t->tv_usec / 1000000;
+    t->tv_usec %= 1000000;
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
