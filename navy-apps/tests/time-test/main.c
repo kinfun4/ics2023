@@ -1,13 +1,12 @@
-#include "sys/time.h"
 #include <stdio.h>
+#include "NDL.h"
 int main() {
-  struct timeval time;
-  gettimeofday(&time, NULL);
-  long rec = time.tv_usec + time.tv_sec * 1000000;
+  uint32_t rec = NDL_GetTicks(); 
+  printf("1\n");
   while(1){
-    gettimeofday(&time, NULL);
-    if(time.tv_sec * 1000000 + time.tv_usec - rec > 500000){
-      rec = time.tv_sec * 1000000 + time.tv_usec;
+    uint32_t new = NDL_GetTicks();
+    if(new - rec > 500000){
+      rec = new;
       printf("Hello!\n");
     }
   }
