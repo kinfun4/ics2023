@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "../../libs/libndl/include/NDL.h"
 int main() {
-  printf("1\n");
   uint32_t rec = NDL_GetTicks(); 
+  printf("1\n");
   while(1){
     uint32_t new = NDL_GetTicks();
     if(new - rec > 500000){
