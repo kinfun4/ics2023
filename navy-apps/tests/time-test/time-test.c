@@ -1,6 +1,5 @@
-#include <stdint.h>
 #include <stdio.h>
-#include "../../libs/libndl/include/NDL.h"
+#include <NDL.h>
 int main() {
   uint32_t rec = NDL_GetTicks(); 
   while(1){
