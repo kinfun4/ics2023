@@ -69,7 +69,7 @@ int fs_open(const char *pathname, int flags, int mode) {
 size_t fs_read(int fd, void *buf, size_t len){
   size_t offset = file_table[fd].disk_offset + file_offset[fd];
   if(fd >= FD_FB)file_offset[fd] += len;
-  printf("offset = %d\n", file_offset[fd]);
+  printf("len = %d, offset = %d\n", len, file_offset[fd]);
   assert(file_offset[fd] <= file_table[fd].size);
   return file_table[fd].read((char *)buf, offset, len);
 }
@@ -98,7 +98,6 @@ size_t fs_lseek(int fd, size_t offset, int whence){
       file_offset[fd] = file_table[fd].size + offset;
       break;
   }
-  printf("offset = %d\n", file_offset[fd]);
   assert(file_offset[fd] >= 0 && file_offset[fd] <= file_table[fd].size);
   return file_offset[fd];
 }
