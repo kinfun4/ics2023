@@ -3,7 +3,7 @@ RAMDISK_FILE = build/ramdisk.img
 
 NAME = nanos-lite
 SRCS = $(shell find -L ./src/ -name "*.c" -o -name "*.cpp" -o -name "*.S")
-ELF_FILE = $(abspath $(shell find -L ./build/ -name "ramdisk.img" -o -name "*.elf"))
+ELF_FILE  += $(abspath $(shell find -L ./build/ -name "*.elf"))
 include $(AM_HOME)/Makefile
 
 ifeq ($(ARCH),native)
@@ -34,4 +34,5 @@ update:
 .PHONY: update urun
 
 urun: update run
+
 endif
