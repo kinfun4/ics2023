@@ -40,11 +40,11 @@ static Elf32_Sym Symbol;
 static uint32_t symtab_ndx, strtab_ndx, symtab_num;
 static uint32_t func_cnt;
 static int depth;
-static int stack[1000];
+static int stack[10000];
 struct func {
   char *name;
   word_t st, en;
-} func_tab[1000];
+} func_tab[10000];
 
 void init_elf(char **elf_file, int elf_cnt) {
 #ifndef CONFIG_FTRACE
