@@ -8,6 +8,12 @@ size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
 
+void get_time(struct timeval *t){
+  t->tv_usec = io_read(AM_TIMER_UPTIME).us;
+  t->tv_sec = t->tv_usec / 1000000;
+  t->tv_usec %= 1000000;
+}
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -45,11 +51,8 @@ void do_syscall(Context *c) {
     c->GPRx = 0;
     break;
   case SYS_gettimeofday:
+    get_time((void *)a[1]); 
     c->GPRx = 0;
-    struct timeval *t = (void *)a[1];
-    t->tv_usec = io_read(AM_TIMER_UPTIME).us;
-    t->tv_sec = t->tv_usec / 1000000;
-    t->tv_usec %= 1000000;
     break;
   default:
     panic("Unhandled syscall ID = %d", a[0]);
