@@ -150,7 +150,7 @@ install: app
 	@echo + INSTALL "->" $(NAME)
 	@mkdir -p $(NAVY_HOME)/fsimg/bin
 	@cp $(APP) $(NAVY_HOME)/fsimg/bin/$(NAME)
-	@ln -sf $(NAVY_HOME)/fsimg/bin/$(NAME)/$(APP) $(NANO_HOME)/build/$(addsuffix .elf,$(APP))
+	cp $(APP)  $(NANO_HOME)/build/$(notdir $(APP)).elf
 
 .PHONY: install
 
