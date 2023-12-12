@@ -1,4 +1,5 @@
 #include <fs.h>
+#include <stdio.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -62,6 +63,7 @@ int fs_open(const char *pathname, int flags, int mode) {
 
 size_t fs_read(int fd, void *buf, size_t len) {
   size_t offset = file_table[fd].disk_offset + file_offset[fd];
+  printf("offset = %d\n", offset);
   if (fd >= FD_FB){
     if(len > file_table[fd].size - file_offset[fd])
         len = file_table[fd].size - file_offset[fd];
