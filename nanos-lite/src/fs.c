@@ -69,7 +69,7 @@ int fs_open(const char *pathname, int flags, int mode) {
 
 size_t fs_read(int fd, void *buf, size_t len){
   size_t offset = file_table[fd].disk_offset + rec_offset[fd];
-  rec_offset[fd] += len;
+  if(fd >= FD_FB)rec_offset[fd] += len;
   assert(rec_offset[fd] <= file_table[fd].size);
   return file_table[fd].read((char *)buf, offset, len);
 }
@@ -77,7 +77,7 @@ size_t fs_read(int fd, void *buf, size_t len){
 
 size_t fs_write(int fd, void *buf, size_t len) {
   size_t offset = file_table[fd].disk_offset + rec_offset[fd];
-  rec_offset[fd] += len;
+  if(fd >= FD_FB)rec_offset[fd] += len;
   assert(rec_offset[fd] <= file_table[fd].size);
   return file_table[fd].write((char *)buf, offset, len);
 }
