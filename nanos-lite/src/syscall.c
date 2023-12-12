@@ -51,7 +51,7 @@ void do_syscall(Context *c) {
     c->GPRx = 0;
     break;
   case SYS_gettimeofday:
-    get_time((void *)a[1]); 
+    // get_time((void *)a[1]); 
     c->GPRx = 0;
     break;
   default:
