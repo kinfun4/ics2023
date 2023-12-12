@@ -77,6 +77,7 @@ size_t fs_read(int fd, void *buf, size_t len){
 size_t fs_write(int fd, void *buf, size_t len) {
   size_t offset = file_table[fd].disk_offset + file_offset[fd];
   if(fd >= FD_FB)file_offset[fd] += len;
+  printf("offset = %d\n", file_offset[fd]);
   assert(file_offset[fd] <= file_table[fd].size);
   return file_table[fd].write((char *)buf, offset, len);
 }
