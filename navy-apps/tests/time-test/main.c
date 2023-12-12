@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "NDL.h"
+#include <NDL.h>
 int main() {
   uint32_t rec = NDL_GetTicks(); 
   printf("1\n");
