@@ -61,9 +61,8 @@ void _exit(int status) {
   while (1);
 }
 
-int _open(const char *path, int flags, mode_t mode) {
-  _exit(SYS_open);
-  return 0;
+int _open(const char *file, int flags, mode_t mode) {
+  return _syscall_(SYS_open, (intptr_t)file, flags, mode);
 }
 
 int _write(int fd, void *buf, size_t count) {
@@ -72,6 +71,7 @@ int _write(int fd, void *buf, size_t count) {
 
 extern uintptr_t end;
 static uint32_t *p_brk = NULL;
+
 void *_sbrk(intptr_t increment) {
   if(p_brk == NULL) p_brk = &end;
   if(_syscall_(SYS_brk,(uintptr_t)p_brk + increment, 0, 0) == 0){
@@ -84,8 +84,7 @@ void *_sbrk(intptr_t increment) {
 }
 
 int _read(int fd, void *buf, size_t count) {
-  _exit(SYS_read);
-  return 0;
+  return _syscall_(SYS_read, fd, (intptr_t)buf, count);
 }
 
 int _close(int fd) {
