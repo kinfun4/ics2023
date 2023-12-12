@@ -1,4 +1,5 @@
 #include <elf.h>
+#include <fs.h>
 #include <proc.h>
 
 #ifdef __LP64__
@@ -17,12 +18,16 @@
 #define EXPECT_TYPE EM_NONE
 #endif
 
-size_t ramdisk_read(void *buf, size_t offset, size_t len);
-size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+int fs_open(const char *pathname, int flags, int mode);
+size_t fs_read(int fd, void *buf, size_t len);
+size_t fs_write(int fd, const void *buf, size_t len);
+size_t fs_lseek(int fd, size_t offset, int whence);
+int fs_close(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
+  int fd = fs_open(filename, 0, 0);
   Elf_Ehdr Ehdr[1];
-  ramdisk_read(Ehdr, 0, sizeof(Elf_Ehdr));
+  fs_read(fd, Ehdr, sizeof(Elf_Ehdr));
 
   assert(Ehdr->e_ident[EI_MAG0] == ELFMAG0);
   assert(Ehdr->e_ident[EI_MAG1] == ELFMAG1);
@@ -33,12 +38,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
   Elf_Phdr Phdr[1];
   for (int i = 0; i < Ehdr->e_phnum; i++) {
-    ramdisk_read(Phdr, Ehdr->e_phoff + i * Ehdr->e_phentsize,
-                 Ehdr->e_phentsize);
+    fs_lseek(fd, Ehdr->e_phoff + i * Ehdr->e_phentsize, SEEK_SET);
+    fs_read(fd, Phdr, Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
       char buf[Phdr->p_filesz];
-      ramdisk_read(buf, Phdr->p_offset, Phdr->p_filesz);
+      fs_lseek(fd, Phdr->p_offset, SEEK_SET);
+      fs_read(fd, buf, Phdr->p_filesz);
       memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
       if (Phdr->p_memsz > Phdr->p_filesz)
         memset((void *)Phdr->p_vaddr + Phdr->p_filesz, 0,

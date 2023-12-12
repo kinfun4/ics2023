@@ -14,7 +14,7 @@ typedef struct {
   WriteFn write;
 } Finfo;
 
-size_t *rec_offset;
+size_t *file_offset;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
 
@@ -49,10 +49,8 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   file_cnt = LENGTH(file_table); 
-  printf("file_cnt = %d\n",file_cnt);
-    assert(0);
-  rec_offset = malloc(file_cnt);
-  memset(rec_offset, 0, file_cnt);
+  file_offset = malloc(file_cnt);
+  memset(file_offset, 0, file_cnt);
   for(int i = FD_FB; i < file_cnt; i++){
       file_table[i].read = ramdisk_read;
       file_table[i].write = ramdisk_write;
@@ -69,17 +67,36 @@ int fs_open(const char *pathname, int flags, int mode) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len){
-  size_t offset = file_table[fd].disk_offset + rec_offset[fd];
-  if(fd >= FD_FB)rec_offset[fd] += len;
-  assert(rec_offset[fd] <= file_table[fd].size);
+  size_t offset = file_table[fd].disk_offset + file_offset[fd];
+  if(fd >= FD_FB)file_offset[fd] += len;
+  assert(file_offset[fd] <= file_table[fd].size);
   return file_table[fd].read((char *)buf, offset, len);
 }
 
 
 size_t fs_write(int fd, void *buf, size_t len) {
-  size_t offset = file_table[fd].disk_offset + rec_offset[fd];
-  if(fd >= FD_FB)rec_offset[fd] += len;
-  assert(rec_offset[fd] <= file_table[fd].size);
+  size_t offset = file_table[fd].disk_offset + file_offset[fd];
+  if(fd >= FD_FB)file_offset[fd] += len;
+  assert(file_offset[fd] <= file_table[fd].size);
   return file_table[fd].write((char *)buf, offset, len);
 }
 
+int fs_close(int fd){
+  return 0;
+}
+
+size_t fs_lseek(int fd, size_t offset, int whence){
+  switch (whence) {
+    case SEEK_SET:
+      file_offset[fd] = offset;
+      break;
+    case SEEK_CUR:
+      file_offset[fd] += offset;
+      break;
+    case SEEK_END:
+      file_offset[fd] += file_table[fd].size + offset;
+      break;
+  }
+  assert(file_offset[fd] >= 0 && file_offset[fd] <= file_table[fd].size);
+  return file_offset[fd];
+}
