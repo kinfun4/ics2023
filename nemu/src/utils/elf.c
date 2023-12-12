@@ -141,6 +141,15 @@ void func_call(word_t pc, word_t dnpc) {
   }
 }
 
+#define PRINT_FUNC(type, pc , depth, name, dnpc) \
+do{\
+  printf("0x%08x: ", pc); \
+  for (int j = 0; j < depth; j++) \
+    printf(" "); \
+  printf("%4s  [%s@0x%08x]\n", type, name, dnpc);\
+} while(0)
+
+
 void func_ret(word_t pc, word_t dnpc) {
 #ifndef CONFIG_FTRACE
   return;
@@ -151,20 +160,11 @@ void func_ret(word_t pc, word_t dnpc) {
   int func2 = find_func(dnpc);
   Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
 
-  printf("0x%08x: ", pc);
-  for (int j = 0; j < depth; j++)
-    printf(" ");
-  printf("cur  [%s@0x%08x]\n", func_tab[func1].name, pc);
+  PRINT_FUNC("cur", pc, depth, func_tab[func1].name, pc);
 
   while (stack[--depth] != func2) {
-    printf("0x%08x: ", pc);
-    for (int j = 0; j < depth; j++)
-      printf(" ");
-    printf("ret  [%s@0x%08x]\n", func_tab[stack[depth]].name,
-           func_tab[stack[depth]].en);
+    PRINT_FUNC("ret", pc, depth, func_tab[stack[depth]].name, func_tab[stack[depth]].en);
   }
-  printf("0x%08x: ", pc);
-  for (int j = 0; j < depth; j++)
-    printf(" ");
-  printf("ret  [%s@0x%08x]\n", func_tab[func2].name, dnpc);
+
+  PRINT_FUNC("ret", pc, depth, func_tab[func2].name, dnpc);
 }
