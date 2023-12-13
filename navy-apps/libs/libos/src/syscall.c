@@ -69,7 +69,7 @@ int _write(int fd, void *buf, size_t count) {
   return _syscall_(SYS_write, fd, (intptr_t)buf, count);
 }
 
-extern uintptr_t end;
+extern uint32_t end;
 static uint32_t *p_brk = NULL;
 
 void *_sbrk(intptr_t increment) {
