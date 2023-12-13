@@ -123,7 +123,7 @@ void init_elf(char **elf_file, int elf_cnt) {
 int find_func(word_t pc) {
   for (int i = 0; i < func_cnt; i++) {
     if (func_tab[i].st <= pc && pc < func_tab[i].en) {
-      printf("pc = %#x, st = %#x, en = %#x\n", pc, func_tab[i].st, func_tab[i].en);
+      printf("pc = %#x, st = %#x, en = %#x\n, name = %s", pc, func_tab[i].st, func_tab[i].en, func_tab[i].name);
       return i;
     }
   }
