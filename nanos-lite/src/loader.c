@@ -1,7 +1,6 @@
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
-#include <stdlib.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -43,7 +42,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     fs_read(fd, Phdr, Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
-      char *buf = malloc(Phdr->p_filesz * sizeof(char));
+      char buf[Phdr->p_filesz];
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
       fs_read(fd, buf, Phdr->p_filesz);
       memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
