@@ -38,11 +38,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
   Elf_Phdr Phdr[1];
   for (int i = 0; i < Ehdr->e_phnum; i++) {
+    printf("1\n");
     fs_lseek(fd, Ehdr->e_phoff + i * Ehdr->e_phentsize, SEEK_SET);
     fs_read(fd, Phdr, Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
       char buf[Phdr->p_filesz];
+      printf("1\n");
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
       fs_read(fd, buf, Phdr->p_filesz);
       memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
