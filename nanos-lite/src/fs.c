@@ -86,7 +86,7 @@ size_t fs_write(int fd, void *buf, size_t len) {
 int fs_close(int fd) { return 0; }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
-  printf("1\n");
+  printf("offset = %d\n", offset);
   switch (whence) {
   case SEEK_SET:
     file_offset[fd] = offset;
@@ -97,8 +97,8 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   case SEEK_END:
     file_offset[fd] = file_table[fd].size + offset;
     break;
+  default: assert(0);
   }
-  printf("2\n");
   assert(file_offset[fd] >= 0 && file_offset[fd] <= file_table[fd].size);
   return file_offset[fd];
 }
