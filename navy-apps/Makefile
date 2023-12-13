@@ -141,7 +141,6 @@ endif
 
 ### Build order control
 app: $(APP)
-	@cp $^ $(NANO_HOME)/build/ramdisk.img
 archive: $(ARCHIVE)
 .PHONY: app archive libs
 
@@ -150,7 +149,6 @@ install: app
 	@echo + INSTALL "->" $(NAME)
 	@mkdir -p $(NAVY_HOME)/fsimg/bin
 	@cp $(APP) $(NAVY_HOME)/fsimg/bin/$(NAME)
-	cp $(APP)  $(NANO_HOME)/build/$(notdir $(APP)).elf
 
 .PHONY: install
 
