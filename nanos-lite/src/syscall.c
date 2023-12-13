@@ -1,5 +1,5 @@
 #include "syscall.h"
-#include <bits/types/struct_timeval.h>
+#include <sys/time.h>
 #include <common.h>
 
 int fs_open(const char *pathname, int flags, int mode);
@@ -36,6 +36,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_open((char *)a[1], a[2], a[3]);
     break;
   case SYS_read:
+    printf("%p\n", a[2]);
     c->GPRx = fs_read(a[1], (void *)a[2], a[3]);
     break;
   case SYS_write:
