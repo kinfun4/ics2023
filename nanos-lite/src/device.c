@@ -28,7 +28,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE)
     return 0;
   if (ev.keydown)
-    strcpy(_buf, "kd ");
+    memcpy(_buf, "kd ", 10);
   else
     strcpy(_buf, "ku ");
   // strcpy(_buf + 3, keyname[ev.keycode]);
