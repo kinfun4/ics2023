@@ -89,7 +89,7 @@ int fs_close(int fd) { return 0; }
 size_t fs_lseek(int fd, size_t offset, int whence) {
   switch (whence) {
   case SEEK_SET:
-    printf("fd = %d, offset = %d, whence = %d\n", fd, offset, whence);
+    printf("addr = %p, fd = %d, offset = %d, whence = %d\n", file_offset, fd, offset, whence);
     file_offset[fd] = offset;
     break;
   case SEEK_CUR:

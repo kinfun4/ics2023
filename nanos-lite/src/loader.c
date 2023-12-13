@@ -37,7 +37,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(Ehdr->e_phoff != 0 && Ehdr->e_phnum != 0);
 
   Elf_Phdr Phdr[1];
-  printf("Phdr = %d\n",sizeof(Elf_Phdr));
   for (int i = 0; i < Ehdr->e_phnum; i++) {
     printf("i = %d\n",i);
     fs_lseek(fd, Ehdr->e_phoff + i * Ehdr->e_phentsize, SEEK_SET);
