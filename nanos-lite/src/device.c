@@ -27,10 +27,10 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
   if (ev.keycode == AM_KEY_NONE)
     return 0;
-  if (ev.keydown)
-    memcpy(_buf, "kd ", 10);
-  else
-    strcpy(_buf, "ku ");
+  // if (ev.keydown)
+  //   strcpy(_buf, "kd ");
+  // else
+  //   strcpy(_buf, "ku ");
   // strcpy(_buf + 3, keyname[ev.keycode]);
   while (_buf[ret] != '\0')
     ret++;
