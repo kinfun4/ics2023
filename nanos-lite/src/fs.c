@@ -1,4 +1,5 @@
 #include <fs.h>
+#include <stddef.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -45,7 +46,7 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   file_cnt = LENGTH(file_table);
-  file_offset = malloc(file_cnt);
+  file_offset = malloc(file_cnt * sizeof(size_t));
   memset(file_offset, 0, file_cnt * sizeof(size_t));
   for (int i = FD_FB; i < file_cnt; i++) {
     file_table[i].read = ramdisk_read;
@@ -86,10 +87,8 @@ size_t fs_write(int fd, void *buf, size_t len) {
 int fs_close(int fd) { return 0; }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
-    printf("file-offset = %d\n", file_offset[fd]);
   switch (whence) {
   case SEEK_SET:
-    printf("fd = %d, offset = %d, whence = %d\n", fd, offset, whence);
     file_offset[fd] = offset;
     break;
   case SEEK_CUR:
