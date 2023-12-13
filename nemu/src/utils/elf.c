@@ -160,9 +160,9 @@ void func_ret(word_t pc, word_t dnpc) {
 
   PRINT_FUNC("cur", pc, depth, func_tab[func1].name, pc);
 
-  while (stack[--depth] != func2) {
-    PRINT_FUNC("ret", pc, depth, func_tab[stack[depth]].name, func_tab[stack[depth]].en);
-  }
+  // while (stack[--depth] != func2) {
+  //   PRINT_FUNC("ret", pc, depth, func_tab[stack[depth]].name, func_tab[stack[depth]].en);
+  // }
 
   PRINT_FUNC("ret", pc, depth, func_tab[func2].name, dnpc);
 }
