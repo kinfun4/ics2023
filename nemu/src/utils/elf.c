@@ -123,6 +123,7 @@ void init_elf(char **elf_file, int elf_cnt) {
 int find_func(word_t pc) {
   for (int i = 0; i < func_cnt; i++) {
     if (func_tab[i].st <= pc && pc < func_tab[i].en) {
+      PRINT_FUNC("", 0, 0, func_tab[i].name, pc);
       return i;
     }
   }
@@ -130,7 +131,6 @@ int find_func(word_t pc) {
 }
 
 void func_call(word_t pc, word_t dnpc) {
-  return;
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
@@ -149,7 +149,6 @@ void func_call(word_t pc, word_t dnpc) {
 
 
 void func_ret(word_t pc, word_t dnpc) {
-  return;
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
