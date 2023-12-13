@@ -32,6 +32,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   else
     strcpy(_buf, "ku ");
   strcpy(_buf + 3, keyname[ev.keycode]);
+  printf("buf = %s\n", _buf);
   while (_buf[ret] != '\0')
     ret++;
   return ret;
