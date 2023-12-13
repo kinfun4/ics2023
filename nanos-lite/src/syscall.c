@@ -15,7 +15,6 @@ static void get_time(struct timeval *t){
 }
 
 void do_syscall(Context *c) {
-  printf("Before Syscall\n");
   uintptr_t a[4];
   a[0] = c->GPR1;
   a[1] = c->GPR2;
