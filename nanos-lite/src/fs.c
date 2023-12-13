@@ -1,6 +1,5 @@
 #include <fs.h>
 #include <stddef.h>
-#include <stdio.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);

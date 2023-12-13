@@ -1,5 +1,4 @@
 #include <common.h>
-#include <stdio.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -45,7 +44,6 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   AM_GPU_CONFIG_T config = io_read(AM_GPU_CONFIG);
   width = config.width;
   height = config.height;
-  printf("w = %d, h = %d\n", width, height);
   sprintf(_buf, "WIDTH:%d\nHEIGHT:%d", width, height);
   while (_buf[ret] != '\0')
     ret++;
@@ -55,6 +53,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset % width;
   int y = offset / width;
+  printf("x = %d, y = %d, len = %d\n", x, y, len);
   io_write(AM_GPU_FBDRAW, x, y, buf, len, 1, true);
   return len;
 }
