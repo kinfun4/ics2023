@@ -35,7 +35,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   printf("_buf = %p, buf = %p\n", _buf, buf);
   while (_buf[ret] != '\0')
     ret++;
-  return ret;
+  return ret+1;
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) { return 0; }
