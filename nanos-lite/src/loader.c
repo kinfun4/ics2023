@@ -43,6 +43,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
     if (Phdr->p_type == PT_LOAD) {
       char buf[Phdr->p_filesz];
+      printf("buf = %d\n", sizeof(buf));
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
       fs_read(fd, buf, Phdr->p_filesz);
       memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
