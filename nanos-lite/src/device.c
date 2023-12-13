@@ -1,4 +1,5 @@
 #include <common.h>
+#include <stdio.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -28,18 +29,24 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE)
     return 0;
   if (ev.keydown)
-    sprintf(_buf, "kd %s\n", keyname[ev.keycode]);
+    sprintf(buf, "kd %s\n", keyname[ev.keycode]);
   else
-    sprintf(_buf, "ku %s\n", keyname[ev.keycode]);
+    sprintf(buf, "ku %s\n", keyname[ev.keycode]);
   while (_buf[ret] != '\0')
     ret++;
-  return ret+1;
+  return ret + 1;
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) { 
-  // int width = io_read(AM_GPU_CONFIG).width;
-  // int height = io_write(AM_GPU_CONFIG).height;
-  return 0;
+  char *_buf = buf;
+  int ret = 0;
+  AM_GPU_CONFIG_T config = io_read(AM_GPU_CONFIG);
+  int width = config.width;
+  int height = config.height;
+  sprintf(_buf, "WIDTH:%d\nHEIGHT:%d", width, height);
+  while (_buf[ret] != '\0')
+    ret++;
+  return ret + 1;
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) { return 0; }
