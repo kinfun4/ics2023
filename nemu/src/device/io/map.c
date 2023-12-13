@@ -58,9 +58,8 @@ void init_map() {
 
 word_t map_read(paddr_t addr, int len, IOMap *map) {
   assert(len >= 1 && len <= 8);
-  // printf("1\n");
 #ifdef CONFIG_DTRACE
-  // printf("Read Device :%10s    len=%-4d addr=%#x\n",map->name,len,addr);
+  printf("Read Device :%10s    len=%-4d addr=%#x\n",map->name,len,addr);
 #endif /* ifdef CONFIG_DTRACE */
   check_bound(map, addr);
   paddr_t offset = addr - map->low;
@@ -71,7 +70,7 @@ word_t map_read(paddr_t addr, int len, IOMap *map) {
 
 void map_write(paddr_t addr, int len, word_t data, IOMap *map) {
   assert(len >= 1 && len <= 8);
-   printf("1\n");
+  printf("addr = %#x, data = %#x, len = %d\n", addr, data, len);
 #ifdef CONFIG_DTRACE
   // printf("Write Devtce:%10s    len=%-4d addr=%#x\n",map->name,len,addr);
 #endif /* ifdef CONFIG_DTRACE */
