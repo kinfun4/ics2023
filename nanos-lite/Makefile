@@ -3,7 +3,7 @@ RAMDISK_FILE = build/ramdisk.img
 
 NAME = nanos-lite
 SRCS = $(shell find -L ./src/ -name "*.c" -o -name "*.cpp" -o -name "*.S")
-ELF_FILE  += $(abspath $(shell find -L ./build/ -name "*.elf"))
+ELF_FILE  += $(abspath $(shell find -L ./build/ -name "time-test"))
 include $(AM_HOME)/Makefile
 
 ifeq ($(ARCH),native)
