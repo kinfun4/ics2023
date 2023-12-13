@@ -44,7 +44,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
     if (Phdr->p_type == PT_LOAD) {
       char *buf = malloc(Phdr->p_filesz);
-      printf("buf = %x\n", sizeof(buf));
+      printf("buf = %x\n", Phdr->p_filesz);
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
       fs_read(fd, buf, Phdr->p_filesz);
       memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
