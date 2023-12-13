@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <NDL.h>
-
 char buf[64];
 int main() {
   NDL_Init(0);
