@@ -70,8 +70,8 @@ size_t fs_read(int fd, void *buf, size_t len) {
         len = file_table[fd].size - file_offset[fd];
     file_offset[fd] += len;
   }
-  int ret = file_table[fd].read(buf, offset, len);
     printf("addr1 = %p\n", file_offset);
+  int ret = file_table[fd].read(buf, offset, len);
   return ret;
 }
 
@@ -90,7 +90,6 @@ int fs_close(int fd) { return 0; }
 size_t fs_lseek(int fd, size_t offset, int whence) {
   switch (whence) {
   case SEEK_SET:
-    printf("addr2 = %p\n", file_offset);
     file_offset[fd] = offset;
     break;
   case SEEK_CUR:
