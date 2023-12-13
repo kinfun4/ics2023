@@ -31,9 +31,9 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if(ev.keycode == AM_KEY_NONE)return 0;
   if(ev.keydown) strcpy(_buf, "kd ");
   else strcpy(_buf, "ku ");
-  strcpy(_buf+sizeof(_buf) - 1, keyname[ev.keycode]);
-  strcpy(_buf+sizeof(_buf) - 1, "\n");
-  return sizeof(_buf);
+  strcpy(_buf + 3, keyname[ev.keycode]);
+  strcpy(_buf + 3 + sizeof(keyname[ev.keycode]), "\n");
+  return 4 + sizeof(keyname[ev.keycode]);
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
