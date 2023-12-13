@@ -20,7 +20,7 @@ typedef struct {
 
 size_t *file_offset;
 
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB };
+enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_FB };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
