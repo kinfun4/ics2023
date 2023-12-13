@@ -1,5 +1,6 @@
 #include "klib-macros.h"
 #include <common.h>
+#include <stdio.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 # define MULTIPROGRAM_YIELD() yield()
@@ -32,6 +33,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if(ev.keydown) strcpy(_buf, "kd ");
   else strcpy(_buf, "ku ");
   strcpy(_buf + 3, keyname[ev.keycode]);
+  printf("%s\n", keyname[ev.keycode]);
   strcpy(_buf + 3 + sizeof(keyname[ev.keycode]), "\n");
   return 4 + sizeof(keyname[ev.keycode]);
 }
