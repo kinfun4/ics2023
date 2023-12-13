@@ -28,16 +28,19 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE)
     return 0;
   if (ev.keydown)
-    strcpy(_buf, "kd ");
+    sprintf(_buf, "kd %s\n", keyname[ev.keycode]);
   else
-    strcpy(_buf, "ku ");
-  strcpy(_buf + 3, keyname[ev.keycode]);
+    sprintf(_buf, "ku %s\n", keyname[ev.keycode]);
   while (_buf[ret] != '\0')
     ret++;
   return ret+1;
 }
 
-size_t dispinfo_read(void *buf, size_t offset, size_t len) { return 0; }
+size_t dispinfo_read(void *buf, size_t offset, size_t len) { 
+  // int width = io_read(AM_GPU_CONFIG).width;
+  // int height = io_write(AM_GPU_CONFIG).height;
+  return 0;
+}
 
 size_t fb_write(const void *buf, size_t offset, size_t len) { return 0; }
 
