@@ -1,5 +1,4 @@
-#include "sys/time.h"
-#include <bits/types/struct_timeval.h>
+#include <sys/time.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,10 +10,10 @@ static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
 uint32_t NDL_GetTicks() {
-  struct timeval *t = malloc(sizeof(struct timeval));
-  printf("addr = %p", t);
-  gettimeofday(t, NULL);
-  return t->tv_sec * 1000 + t->tv_usec / 1000;
+  struct timeval t;
+  printf("addr = %p", &t);
+  gettimeofday(&t, NULL);
+  return t.tv_sec * 1000 + t.tv_usec / 1000;
 }
 
 int NDL_PollEvent(char *buf, int len) {
