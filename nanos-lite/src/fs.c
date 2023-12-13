@@ -64,6 +64,7 @@ int fs_open(const char *pathname, int flags, int mode) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
+    printf("addr1 = %p\n", file_offset);
   size_t offset = file_table[fd].disk_offset + file_offset[fd];
   if (fd >= FD_FB){
     if(len > file_table[fd].size - file_offset[fd])
@@ -89,7 +90,7 @@ int fs_close(int fd) { return 0; }
 size_t fs_lseek(int fd, size_t offset, int whence) {
   switch (whence) {
   case SEEK_SET:
-    printf("addr = %p", file_offset);
+    printf("addr2 = %p\n", file_offset);
     file_offset[fd] = offset;
     break;
   case SEEK_CUR:
