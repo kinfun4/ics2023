@@ -130,6 +130,7 @@ int find_func(word_t pc) {
 }
 
 void func_call(word_t pc, word_t dnpc) {
+  return;
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
@@ -148,6 +149,7 @@ void func_call(word_t pc, word_t dnpc) {
 
 
 void func_ret(word_t pc, word_t dnpc) {
+  return;
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
@@ -156,7 +158,6 @@ void func_ret(word_t pc, word_t dnpc) {
   int func1 = find_func(pc);
   int func2 = find_func(dnpc);
   Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
-  PRINT_FUNC("", pc, 1, func_tab[func2].name, dnpc);
 
   PRINT_FUNC("cur", pc, depth, func_tab[func1].name, pc);
 
