@@ -90,6 +90,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   switch (whence) {
   case SEEK_SET:
     file_offset[fd] = offset;
+    printf("1\n");
     break;
   case SEEK_CUR:
     file_offset[fd] += offset;
