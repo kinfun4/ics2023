@@ -68,7 +68,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
         len = file_table[fd].size - file_offset[fd];
     file_offset[fd] += len;
   }
-  return file_table[fd].read((char *)buf, offset, len);
+  return file_table[fd].read(buf, offset, len);
 }
 
 size_t fs_write(int fd, void *buf, size_t len) {
