@@ -42,10 +42,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     fs_read(fd, Phdr, Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
-      char *buf = malloc(Phdr->p_filesz);
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
-      fs_read(fd, buf, Phdr->p_filesz);
-      memcpy((void *)Phdr->p_vaddr, buf, Phdr->p_filesz);
+      fs_read(fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
       if (Phdr->p_memsz > Phdr->p_filesz)
         memset((void *)Phdr->p_vaddr + Phdr->p_filesz, 0,
                Phdr->p_memsz - Phdr->p_filesz);
@@ -60,4 +58,5 @@ void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
+
 }
