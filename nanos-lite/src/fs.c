@@ -47,6 +47,7 @@ void init_fs() {
   file_offset = malloc(file_cnt);
   memset(file_offset, 0, file_cnt);
   for (int i = FD_FB; i < file_cnt; i++) {
+      printf("i = %d, offset = %d\n",i, file_offset[i]);
     file_table[i].read = ramdisk_read;
     file_table[i].write = ramdisk_write;
   }
