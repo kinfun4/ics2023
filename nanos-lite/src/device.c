@@ -1,5 +1,6 @@
 #include <common.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -52,6 +53,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(void *buf, size_t offset, size_t len) {
+  offset /= sizeof(uint32_t);
   int x = offset % width;
   int y = offset / width;
   io_write(AM_GPU_FBDRAW, x, y, buf, len/sizeof(uint32_t), 1, true);

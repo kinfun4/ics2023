@@ -1,5 +1,6 @@
 #include <fs.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -57,7 +58,7 @@ void init_fs() {
   AM_GPU_CONFIG_T config = io_read(AM_GPU_CONFIG);
   int width = config.width;
   int height = config.height;
-  file_table[FD_FB].size = width * height;
+  file_table[FD_FB].size = width * height * sizeof(uint32_t);
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
