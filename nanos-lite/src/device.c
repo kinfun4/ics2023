@@ -1,3 +1,4 @@
+#include "klib-macros.h"
 #include <common.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
@@ -30,7 +31,8 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if(ev.keycode == AM_KEY_NONE)return 0;
   if(ev.keydown) strcpy(_buf, "kd ");
   else strcpy(_buf, "ku ");
-  strcpy(_buf+3, keyname[ev.keycode]);
+  strcpy(_buf+sizeof(_buf), keyname[ev.keycode]);
+  strcpy(_buf+sizeof(_buf), "\n");
   return sizeof(_buf);
 }
 
