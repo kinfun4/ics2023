@@ -64,7 +64,6 @@ int fs_open(const char *pathname, int flags, int mode) {
 }
 
 size_t fs_read(int fd, void *buf, size_t len) {
-    printf("addr1 = %p\n", file_offset);
   size_t offset = file_table[fd].disk_offset + file_offset[fd];
   if (fd >= FD_FB){
     if(len > file_table[fd].size - file_offset[fd])
@@ -72,6 +71,7 @@ size_t fs_read(int fd, void *buf, size_t len) {
     file_offset[fd] += len;
   }
   int ret = file_table[fd].read(buf, offset, len);
+    printf("addr1 = %p\n", file_offset);
   return ret;
 }
 
