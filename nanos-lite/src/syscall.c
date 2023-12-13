@@ -8,7 +8,7 @@ size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
 
-void get_time(struct timeval *t){
+static void get_time(struct timeval *t){
   t->tv_usec = io_read(AM_TIMER_UPTIME).us;
   t->tv_sec = t->tv_usec / 1000000;
   t->tv_usec %= 1000000;
