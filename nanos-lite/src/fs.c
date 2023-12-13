@@ -56,6 +56,7 @@ int fs_open(const char *pathname, int flags, int mode) {
   for (int i = FD_FB; i < file_cnt; i++) {
     if (strcmp(pathname, file_table[i].name) == 0) {
       return i;
+      printf("i=%d\n",i);
     }
   }
   return -1;
