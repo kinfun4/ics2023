@@ -69,7 +69,6 @@ size_t fs_read(int fd, void *buf, size_t len) {
     file_offset[fd] += len;
   }
   int ret = file_table[fd].read(buf, offset, len);
-  if(fd == FD_EVENT && ret) printf("buf2 = %p\n", buf);
   return ret;
 }
 
