@@ -15,14 +15,12 @@
 
 #include "debug.h"
 #include <alloca.h>
-#include <assert.h>
 #include <common.h>
 #include <elf.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-#define RISCV_32_NEMU_FUNC 18
 #define PRINT_FUNC(type, pc , depth, name, dnpc) \
 do{\
   printf("0x%08x: ", pc); \
@@ -41,11 +39,11 @@ static Elf32_Sym Symbol;
 static uint32_t symtab_ndx, strtab_ndx, symtab_num;
 static uint32_t func_cnt;
 static int depth;
-static int stack[10000];
+static int stack[1000];
 struct func {
   char *name;
   word_t st, en;
-} func_tab[10000];
+} func_tab[1000];
 
 void init_elf(char **elf_file, int elf_cnt) {
 #ifndef CONFIG_FTRACE
@@ -158,6 +156,7 @@ void func_ret(word_t pc, word_t dnpc) {
   int func1 = find_func(pc);
   int func2 = find_func(dnpc);
   Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
+  PRINT_FUNC("", pc, 1, func_tab[func2].name, dnpc);
 
   PRINT_FUNC("cur", pc, depth, func_tab[func1].name, pc);
 
