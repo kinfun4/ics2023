@@ -46,7 +46,7 @@ static Finfo file_table[] __attribute__((used)) = {
 void init_fs() {
   file_cnt = LENGTH(file_table);
   file_offset = malloc(file_cnt);
-  memset(file_offset, 0, sizeof(file_offset));
+  memset(file_offset, 0, file_cnt * sizeof(size_t));
   for (int i = FD_FB; i < file_cnt; i++) {
     file_table[i].read = ramdisk_read;
     file_table[i].write = ramdisk_write;
