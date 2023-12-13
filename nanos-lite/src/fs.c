@@ -41,6 +41,7 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
     [FD_EVENT] = {"/dev/events", 0, 0, events_read, invalid_write},
     [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write},
+    [FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write},
 #include "files.h"
 };
 
@@ -48,10 +49,15 @@ void init_fs() {
   file_cnt = LENGTH(file_table);
   file_offset = malloc(file_cnt * sizeof(size_t));
   memset(file_offset, 0, file_cnt * sizeof(size_t));
-  for (int i = FD_FB; i < file_cnt; i++) {
+  for (int i = FD_FB + 1; i < file_cnt; i++) {
     file_table[i].read = ramdisk_read;
     file_table[i].write = ramdisk_write;
   }
+  // init fb
+  AM_GPU_CONFIG_T config = io_read(AM_GPU_CONFIG);
+  int width = config.width;
+  int height = config.height;
+  file_table[FD_FB].size = width * height;
 }
 
 int fs_open(const char *pathname, int flags, int mode) {

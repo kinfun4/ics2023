@@ -1,3 +1,4 @@
+#include <bits/types/stack_t.h>
 #include <sys/time.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -22,6 +23,8 @@ int NDL_PollEvent(char *buf, int len) {
   return ret;
 }
 
+static int width, height;
+
 void NDL_OpenCanvas(int *w, int *h) {
   if (getenv("NWM_APP")) {
     int fbctl = 4;
@@ -40,15 +43,24 @@ void NDL_OpenCanvas(int *w, int *h) {
     }
     close(fbctl);
   }
+  char buf[64];
+  FILE* fp = fopen("/proc/dispinfo", "r");
+  fscanf(fp, "%s", buf);
+  sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
+  fclose(fp);
   if(*w == 0 && *h == 0){
-    char buf[64];
-    FILE* fp = fopen("/proc/dispinfo", "r");
-    fscanf(fp, "%s", buf);
-    sscanf(buf, "WIDTH:%d\nHEIGHT:%d", w, h);
+    *w = width;
+    *h = height;
   }
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  FILE* fp = fopen("/dev/fb", "w");
+  for(int i = 0 ; i < h ; i++){
+    fseek(fp, (y+i)*width + x, SEEK_SET);
+    fwrite(pixels, sizeof(uint32_t), w, fp);
+  }
+  fclose(fp);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
