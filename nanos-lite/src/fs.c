@@ -1,5 +1,5 @@
 #include <fs.h>
-#include <stdio.h>
+#include <stddef.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -45,7 +45,7 @@ static Finfo file_table[] __attribute__((used)) = {
 void init_fs() {
   file_cnt = LENGTH(file_table);
   file_offset = malloc(file_cnt);
-  memset(file_offset, 0, file_cnt);
+  memset(file_offset, 0, file_cnt * sizeof(size_t));
   for (int i = FD_FB; i < file_cnt; i++) {
       printf("i = %d, offset = %d\n",i, file_offset[i]);
     file_table[i].read = ramdisk_read;
