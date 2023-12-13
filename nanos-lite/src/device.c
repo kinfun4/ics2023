@@ -46,6 +46,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   width = config.width;
   height = config.height;
   sprintf(_buf, "WIDTH:%d\nHEIGHT:%d", width, height);
+  printf("width = %d, height = %d\n", width, height);
   while (_buf[ret] != '\0')
     ret++;
   return ret + 1;
