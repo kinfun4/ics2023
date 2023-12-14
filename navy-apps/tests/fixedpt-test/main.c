@@ -14,28 +14,28 @@ int main() {
   INIT(3.2, -3.2);
 
   ia =  INT(fixedpt_muli(a, 3));
-  CHEKC(ia , 3.2 * 3);
+  CHECK(ia , 3.2 * 3);
 
   ia =  INT(fixedpt_mul(a, b));
-  CHEKC(ia , 3.2 * -3.2);
+  CHECK(ia , 3.2 * -3.2);
 
   ia =  INT(fixedpt_divi(a, 2));
-  CHEKC(ia , 3.2 / 2);
+  CHECK(ia , 3.2 / 2);
 
   ia =  INT(fixedpt_div(a, b));
-  CHEKC(ia , 3.2 / -3.2);
+  CHECK(ia , 3.2 / -3.2);
 
   ia =  INT(fixedpt_floor(a));
-  CHEKC(ia , 3);
+  CHECK(ia , 3);
 
   ia =  INT(fixedpt_floor(b));
-  CHEKC(ia , -4);
+  CHECK(ia , -4);
 
   ia =  INT(fixedpt_ceil(a));
-  CHEKC(ia , 4);
+  CHECK(ia , 4);
 
   ia =  INT(fixedpt_ceil(b));
-  CHEKC(ia , -3);
+  CHECK(ia , -3);
 
   printf("PASS\n");
   return 0;
