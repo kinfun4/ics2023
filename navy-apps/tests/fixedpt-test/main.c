@@ -3,7 +3,7 @@
 #include <fixedptc.h>
 #define CHECK(x, y)\
   printf("get = %8d, want = %8d\n", (int)x, (int)(y));\
-  assert((int)(x) == (int)(y));
+  assert((int)(x) == (int)(y))
 #define INT(x) fixedpt_toint(x)
 #define INIT(x, y) \
   fixedpt a = fixedpt_rconst(x);\
