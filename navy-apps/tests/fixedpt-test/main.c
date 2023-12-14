@@ -11,10 +11,9 @@ int main() {
   INIT(3.2, -3.2)
   int ia;
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
-  assert(ia == (int)3.2 * 3);
+  assert(ia == (int)(3.2 * 3));
   ia =  fixedpt_toint(fixedpt_mul(a, b));
-  PRINT(ia, -3.2)
-  PRINT(ia, -3.9)
+  PRINT(ia, 3.2 * -3.2)
   assert(ia == (int)(3.2 * -3.2));
   ia =  fixedpt_toint(fixedpt_divi(a, 2));
   assert(ia == (int)3.2 / 2);
