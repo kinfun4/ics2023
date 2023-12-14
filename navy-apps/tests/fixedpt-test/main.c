@@ -19,6 +19,14 @@ int main() {
   assert(ia == (int)3.2 / 2);
   ia =  fixedpt_toint(fixedpt_div(a, b));
   assert(ia == (int)(3.2 / -3.2));
+  ia =  fixedpt_toint(fixedpt_floor(a));
+  assert(ia == 3);
+  ia =  fixedpt_toint(fixedpt_floor(b));
+  assert(ia == -4);
+  ia =  fixedpt_toint(fixedpt_ceil(a));
+  assert(ia == 4);
+  ia =  fixedpt_toint(fixedpt_ceil(b));
+  assert(ia == -3);
   printf("PASS\n");
   return 0;
 }
