@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <bits/types/stack_t.h>
 #include <sys/time.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,9 +19,9 @@ uint32_t NDL_GetTicks() {
 }
 
 int NDL_PollEvent(char *buf, int len) {
-  FILE* fp = fopen("/dev/events", "r");
-  int ret = fread(buf, 1, len, fp);
-  fclose(fp);
+  int fd = open("/dev/events", O_RDONLY);
+  int ret = read(fd, buf, len);
+  close(fd);
   return ret;
 }
 
@@ -45,10 +46,10 @@ void NDL_OpenCanvas(int *w, int *h) {
     close(fbctl);
   }
   char buf[64];
-  FILE* fp = fopen("/proc/dispinfo", "r");
-  assert(fread(buf, 1, sizeof(buf), fp) == 64);
+  int fd = open("/proc/dispinfo", O_RDWR);
+  assert(read(fd, buf, sizeof(buf)));
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
-  fclose(fp);
+  close(fd);
   if(*w == 0 && *h == 0){
     *w = width;
     *h = height;
@@ -56,12 +57,12 @@ void NDL_OpenCanvas(int *w, int *h) {
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-  FILE* fp = fopen("/dev/fb", "w");
+  int fd = open("/dev/fb", O_WRONLY);
   for(int i = 0 ; i < h ; i++){
-    fseek(fp, ((y + i) * width + x) * sizeof(uint32_t), SEEK_SET);
-    fwrite(pixels + i*w, sizeof(uint32_t), w, fp);
+    lseek(fd, ((y + i) * width + x) * sizeof(uint32_t), SEEK_SET);
+    write(fd, pixels + i * w, sizeof(uint32_t) * w);
   }
-  fclose(fp);
+  close(fd);
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
