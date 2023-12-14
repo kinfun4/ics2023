@@ -8,22 +8,22 @@
   fixedpt b = fixedpt_rconst(y);
 
 int main() {
-  INIT(3, -3)
+  INIT(3.2, -3.2)
   int ia;
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
-  assert(ia == (int)(3 * 3));
+  assert(ia == (int)(3.2 * 3));
   ia =  fixedpt_toint(fixedpt_mul(a, b));
-  assert(ia == -9);
+  assert(ia == (int)(3.2 * -3.2));
   ia =  fixedpt_toint(fixedpt_divi(a, 2));
-  assert(ia == (int)3 / 2);
+  assert(ia == (int)3.2 / 2);
   ia =  fixedpt_toint(fixedpt_div(a, b));
-  assert(ia == (int)(3 / -3));
+  assert(ia == (int)(3.2 / -3.2));
   ia =  fixedpt_toint(fixedpt_floor(a));
   assert(ia == 3);
   ia =  fixedpt_toint(fixedpt_floor(b));
-  assert(ia == -3);
+  assert(ia == -4);
   ia =  fixedpt_toint(fixedpt_ceil(a));
-  assert(ia == 3);
+  assert(ia == 4);
   ia =  fixedpt_toint(fixedpt_ceil(b));
   PRINT(ia , -3);
   assert(ia == -3);

@@ -107,7 +107,7 @@ typedef	__uint128_t fixedptud;
 
 #define fixedpt_rconst(R) ((fixedpt)((R) * FIXEDPT_ONE + ((R) >= 0 ? 0.5 : -0.5)))
 #define fixedpt_fromint(I) ((fixedptd)(I) << FIXEDPT_FBITS)
-#define fixedpt_toint(F) ((F) >> FIXEDPT_FBITS)
+#define fixedpt_toint(F) ((F) >= 0 ? (F) >> FIXEDPT_FBITS : (F) >> FIXEDPT_FBITS + 1)
 #define fixedpt_add(A,B) ((A) + (B))
 #define fixedpt_sub(A,B) ((A) - (B))
 #define fixedpt_fracpart(A) ((fixedpt)(A) & FIXEDPT_FMASK)
