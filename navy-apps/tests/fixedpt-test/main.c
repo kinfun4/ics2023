@@ -22,6 +22,7 @@ int main() {
   ia =  fixedpt_toint(fixedpt_floor(a));
   assert(ia == 3);
   ia =  fixedpt_toint(fixedpt_floor(b));
+  PRINT(ia, -4)
   assert(ia == -4);
   ia =  fixedpt_toint(fixedpt_ceil(a));
   assert(ia == 4);
