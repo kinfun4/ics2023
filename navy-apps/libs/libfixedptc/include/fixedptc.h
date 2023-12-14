@@ -152,11 +152,11 @@ static inline fixedpt fixedpt_abs(fixedpt A) {
 }
 
 static inline fixedpt fixedpt_floor(fixedpt A) {
-  return (A) >= 0 || fixedpt_fracpart(A) == 0 ? fixedpt_intpart(A) : fixedpt_intpart(A - FIXEDPT_ONE);
+  return ((A) >= 0 || fixedpt_fracpart(A) == 0) ? fixedpt_intpart(A) : fixedpt_intpart(A - FIXEDPT_ONE);
 }
 
 static inline fixedpt fixedpt_ceil(fixedpt A) {
-  return (A) < 0 || fixedpt_fracpart(A) == 0 ? fixedpt_intpart(A) : fixedpt_intpart(A + FIXEDPT_ONE);
+  return ()(A) < 0 || fixedpt_fracpart(A) == 0) ? fixedpt_intpart(A) : fixedpt_intpart(A + FIXEDPT_ONE);
 }
 
 /*
