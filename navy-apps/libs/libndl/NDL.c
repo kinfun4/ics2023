@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <bits/types/stack_t.h>
 #include <sys/time.h>
 #include <stdint.h>
@@ -33,7 +34,7 @@ void NDL_OpenCanvas(int *w, int *h) {
     char buf[64];
     int len = sprintf(buf, "%d %d", screen_w, screen_h);
     // let NWM resize the window and create the frame buffer
-    write(fbctl, buf, len);
+    assert(write(fbctl, buf, len) == len);
     while (1) {
       // 3 = evtdev
       int nread = read(3, buf, sizeof(buf) - 1);
@@ -45,7 +46,7 @@ void NDL_OpenCanvas(int *w, int *h) {
   }
   char buf[64];
   FILE* fp = fopen("/proc/dispinfo", "r");
-  fread(buf, sizeof(char), 64, fp);
+  assert(fread(buf, 1, sizeof(buf), fp) == 64);
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
   fclose(fp);
   if(*w == 0 && *h == 0){
