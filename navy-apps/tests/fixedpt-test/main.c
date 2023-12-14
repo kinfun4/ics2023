@@ -5,7 +5,7 @@
 #define PRINT(x,y) printf("get = %d, want = %d\n", (int)x, (int)(y));
 #define INIT(x,y) \
   fixedpt a = fixedpt_rconst(x);\
-  fixedpt b = fixedpt_fromint(y);
+  fixedpt b = fixedpt_rconst(y);
 
 int main() {
   INIT(3.2, -3.2)
@@ -21,9 +21,7 @@ int main() {
   assert(ia == (int)(3.2 / -3.2));
   ia =  fixedpt_toint(fixedpt_floor(a));
   assert(ia == 3);
-  ia =  b;
-  printf("%x\n",ia);
-  // PRINT(ia, -4)
+  ia =  fixedpt_toint(fixedpt_floor(b));
   assert(ia == -4);
   ia =  fixedpt_toint(fixedpt_ceil(a));
   assert(ia == 4);
