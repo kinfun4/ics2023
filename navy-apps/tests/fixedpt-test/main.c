@@ -25,6 +25,7 @@ int main() {
   ia =  fixedpt_toint(fixedpt_ceil(a));
   assert(ia == 4);
   ia =  fixedpt_toint(fixedpt_ceil(b));
+  PRINT(ia , -3);
   assert(ia == -3);
   printf("PASS\n");
   return 0;
