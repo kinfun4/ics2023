@@ -3,9 +3,12 @@
 #include <fixedptc.h>
 #define CHECK(a,b) assert((int)(a) == (int)(b));
 #define PRINT(a,b) printf("get = %d, want = %d\n", (int)a, (int)(b));
+#define INIT(a,b) \
+  fixedpt a = fixedpt_rconst(a);\
+  fixedpt b = fixedpt_fromint(b);
+
 int main() {
-  fixedpt a = fixedpt_rconst(3.2);
-  fixedpt b = fixedpt_fromint(-3.2);
+  INIT(3.2, -3.2);
   int ia;
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
   assert(ia == (int)3.2 * 3);
