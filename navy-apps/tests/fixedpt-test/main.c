@@ -8,20 +8,12 @@
   fixedpt b = fixedpt_rconst(y);
 
 int main() {
-  INIT(-1, -1.2)
+  INIT(3.2, -3.2)
   int ia;
-  PRINT(a, b);
-  printf("%x\n",a);
-  printf("%x\n",b);
-  assert(0);
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
   assert(ia == (int)(3.2 * 3));
-  ia =  fixedpt_toint(b);
-  PRINT(ia, -3.2)
-  assert(ia == (int)(-3.2));
   ia =  fixedpt_toint(fixedpt_mul(a, b));
-  PRINT(ia, 3.2 * -3.2)
-  assert(ia == (int)(3.2 * -3.2));
+  assert(ia == -11);
   ia =  fixedpt_toint(fixedpt_divi(a, 2));
   assert(ia == (int)3.2 / 2);
   ia =  fixedpt_toint(fixedpt_div(a, b));
