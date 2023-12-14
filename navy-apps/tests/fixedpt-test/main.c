@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <assert.h>
 #include <fixedptc.h>
-#define CHECK(a,b) assert((int)(a) == (int)(b));
-#define PRINT(a,b) printf("get = %d, want = %d\n", (int)a, (int)(b));
-#define INIT(a,b) \
-  fixedpt a = fixedpt_rconst(a);\
-  fixedpt b = fixedpt_fromint(b);
+#define CHECK(x,y) assert((int)(x) == (int)(y));
+#define PRINT(x,y) printf("get = %d, want = %d\n", (int)x, (int)(y));
+#define INIT(x,y) \
+  fixedpt a = fixedpt_rconst(x);\
+  fixedpt b = fixedpt_fromint(y);
 
 int main() {
   INIT(3.2, -3.2);
