@@ -8,7 +8,7 @@
   fixedpt b = fixedpt_fromint(y);
 
 int main() {
-  INIT(3.2, -3.2);
+  INIT(3.2, -3.2)
   int ia;
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
   assert(ia == (int)3.2 * 3);
@@ -17,6 +17,8 @@ int main() {
   assert(ia == (int)(3.2 * -3.2));
   ia =  fixedpt_toint(fixedpt_divi(a, 2));
   assert(ia == (int)3.2 / 2);
+  ia =  fixedpt_toint(fixedpt_div(a, b));
+  assert(ia == (int)(3.2 / -3.2));
   printf("PASS\n");
   return 0;
 }
