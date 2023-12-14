@@ -11,6 +11,7 @@ int main() {
   INIT(-1, -1.2)
   int ia;
   PRINT(a, b);
+  printf("%x\n",a);
   printf("%x\n",b);
   assert(0);
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
