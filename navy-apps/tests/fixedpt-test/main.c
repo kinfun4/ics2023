@@ -8,9 +8,10 @@
   fixedpt b = fixedpt_rconst(y);
 
 int main() {
-  INIT(-1, -1.1)
+  INIT(-1, -1.2)
   int ia;
   PRINT(a, b);
+  printf("%x\n",b);
   assert(0);
   ia =  fixedpt_toint(fixedpt_muli(a, 3));
   assert(ia == (int)(3.2 * 3));
