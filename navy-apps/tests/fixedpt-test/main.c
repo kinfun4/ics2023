@@ -21,7 +21,7 @@ int main() {
   assert(ia == (int)(3.2 / -3.2));
   ia =  fixedpt_toint(fixedpt_floor(a));
   assert(ia == 3);
-  ia =  (int)fixedpt_fracpart(a);
+  ia =  b;
   PRINT(ia, -4)
   assert(ia == -4);
   ia =  fixedpt_toint(fixedpt_ceil(a));
