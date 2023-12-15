@@ -43,7 +43,7 @@ static int stack[1000];
 struct func {
   char *name;
   word_t st, en;
-} func_tab[1000];
+} static func_tab[2000];
 
 void init_elf(char **elf_file, int elf_cnt) {
 #ifndef CONFIG_FTRACE
