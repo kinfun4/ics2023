@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdio.h>
 #include <assert.h>
 #include <fixedptc.h>
@@ -27,16 +26,16 @@ int main() {
   CHECK(ia , 3.2 / -3.2);
 
   ia =  INT(fixedpt_floor(a));
-  CHECK(ia , floor(3.2));
+  CHECK(ia , 3);
 
   ia =  INT(fixedpt_floor(b));
-  CHECK(ia , floor(-3.2));
+  CHECK(ia , -4);
 
   ia =  INT(fixedpt_ceil(a));
-  CHECK(ia , ceil(3.2));
+  CHECK(ia , 4);
 
   ia =  INT(fixedpt_ceil(b));
-  CHECK(ia , ceil(-3.2));
+  CHECK(ia , -3);
 
   printf("PASS\n");
   return 0;
