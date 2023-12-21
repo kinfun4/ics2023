@@ -75,7 +75,7 @@ static uint8_t *p_brk = NULL;
 
 void *_sbrk(intptr_t increment) {
   if(p_brk == NULL) p_brk = &end;
-  if(_syscall_(SYS_brk,(uintptr_t)p_brk + increment, 0, 0) == 0){
+  if(_syscall_(SYS_brk,(uintptr_t)(p_brk + increment), 0, 0) == 0){
     p_brk += increment;
     return (void *)(p_brk - increment);
   }
