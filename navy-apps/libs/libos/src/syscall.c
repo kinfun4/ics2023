@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <assert.h>
@@ -77,10 +76,10 @@ void *_sbrk(intptr_t increment) {
   if(p_brk == NULL) p_brk = &end;
   if(_syscall_(SYS_brk,(uintptr_t)p_brk + increment, 0, 0) == 0){
     p_brk += increment;
+    printf("1\n");
     return (void *)p_brk - increment;
   }
   else {  
-    printf("1\n");
     return (void *)-1;
   }
 }
