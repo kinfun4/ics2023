@@ -1,4 +1,5 @@
 #include "syscall.h"
+#include <stdio.h>
 #include <sys/time.h>
 #include <common.h>
 
@@ -49,6 +50,7 @@ void do_syscall(Context *c) {
     break;
   case SYS_brk:
     c->GPRx = 0;
+      printf("1\n");
     break;
   case SYS_gettimeofday:
     c->GPRx = 0;
