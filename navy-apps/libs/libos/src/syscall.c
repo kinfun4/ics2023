@@ -70,8 +70,8 @@ int _write(int fd, void *buf, size_t count) {
   return _syscall_(SYS_write, fd, (intptr_t)buf, count);
 }
 
-extern uint32_t end;
-static uint32_t *p_brk = NULL;
+extern uint8_t end;
+static uint8_t *p_brk = NULL;
 
 void *_sbrk(intptr_t increment) {
   if(p_brk == NULL) p_brk = &end;
