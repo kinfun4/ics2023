@@ -20,7 +20,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
   assert(buf);
   for (int i = 0; i < h; i++)
     for (int j = 0; j < w; j++)
-      buf[i * w + j] = src->pixels[(sy + i) * sw + (sx + j)];
+      buf[i * w + j] = *((uint32_t *)(src->pixels) + (sy + i) * sw + (sx + j));
 
   dx = dstrect == NULL ? 0 : dstrect->x;
   dy = dstrect == NULL ? 0 : dstrect->y;
