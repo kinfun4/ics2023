@@ -20,7 +20,7 @@ typedef struct {
   WriteFn write;
 } Finfo;
 
-size_t *file_offset;
+static size_t *file_offset;
 
 enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB };
 
@@ -64,6 +64,7 @@ void init_fs() {
 int fs_open(const char *pathname, int flags, int mode) {
   for (int i = FD_STDIN; i < file_cnt; i++) {
     if (strcmp(pathname, file_table[i].name) == 0) {
+      file_offset[i] = 0;
       return i;
     }
   }
