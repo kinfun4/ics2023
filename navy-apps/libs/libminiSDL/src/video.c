@@ -1,5 +1,6 @@
 #include <NDL.h>
 #include <assert.h>
+#include <cstdint>
 #include <sdl-video.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -9,37 +10,36 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
                      SDL_Rect *dstrect) {
   assert(dst && src);
   assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
-  int sx, sy, dx, dy, sw, sh, w, h;
+  int sx, sy, dx, dy, sw, sh, w, h, dw, dh;
   sx = srcrect == NULL ? 0 : srcrect->x;
   sy = srcrect == NULL ? 0 : srcrect->y;
   sw = src->w;
   sh = src->h;
   w = srcrect == NULL ? sw : srcrect->w;
   h = srcrect == NULL ? sh : srcrect->h;
-  uint32_t *buf = malloc(w * h * sizeof(uint32_t));
-  assert(buf);
-  for (int i = 0; i < h; i++)
-    for (int j = 0; j < w; j++)
-      buf[i * w + j] = *((uint32_t *)(src->pixels) + (sy + i) * sw + (sx + j));
-
+  dw = dst->w;
+  dh = dst->h;
   dx = dstrect == NULL ? 0 : dstrect->x;
   dy = dstrect == NULL ? 0 : dstrect->y;
-  NDL_DrawRect(buf, dx, dy, w, h);
-  free(buf);
+  uint32_t *dpixels = (uint32_t *)dst->pixels;
+  uint32_t *spixels = (uint32_t *)src->pixels;
+  for (int i = 0; i < h; i++)
+    for (int j = 0; j < w; j++)
+      dpixels[(dy + i) * dw + (dx + j)] = spixels[(sy + i) * sw + (sx + j)];
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-  int x, y, w, h;
-  x = dstrect == NULL ? 0 : dstrect->x;
-  y = dstrect == NULL ? 0 : dstrect->y;
+  int dx, dy, w, h, dw, dh;
+  dx = dstrect == NULL ? 0 : dstrect->x;
+  dy = dstrect == NULL ? 0 : dstrect->y;
   w = dstrect == NULL ? dst->w : dstrect->w;
   h = dstrect == NULL ? dst->h : dstrect->h;
-  uint32_t *buf = malloc(w * h * sizeof(uint32_t));
-  assert(buf);
-  for (int i = 0; i < w * h; i++)
-    buf[i] = color;
-  NDL_DrawRect(buf, x, y, w, h);
-  free(buf);
+  dw = dst->w;
+  dh = dst->h;
+  uint32_t *dpixels = (uint32_t *)dst->pixels;
+  for (int i = 0; i < h; i++)
+    for (int j = 0; j < w; j++)
+      dpixels[(dy + i) * dw + (dx + j)] = color;
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
