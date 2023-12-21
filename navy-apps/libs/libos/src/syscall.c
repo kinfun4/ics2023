@@ -80,6 +80,7 @@ void *_sbrk(intptr_t increment) {
     return (void *)p_brk - increment;
   }
   else {  
+    printf("1\n");
     return (void *)-1;
   }
 }
