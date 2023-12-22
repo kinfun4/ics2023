@@ -1,11 +1,11 @@
 #include <NDL.h>
 #include <assert.h>
-#include <complex.h>
 #include <sdl-video.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define min(a,b) ((a) < (b) ? (a) : (b))
 
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
                      SDL_Rect *dstrect) {
@@ -22,6 +22,10 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
   dh = dst->h;
   dx = dstrect == NULL ? 0 : dstrect->x;
   dy = dstrect == NULL ? 0 : dstrect->y;
+  w = min(w, min(sw - sx, dw - dx));
+  h = min(h, min(sh - sy, dh - dy));
+  dstrect->w = w;
+  dstrect->h = h;
   if (dst->format->BitsPerPixel == 32) {
     uint32_t *dpixels = (uint32_t *)dst->pixels;
     uint32_t *spixels = (uint32_t *)src->pixels;
@@ -54,26 +58,33 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
       dpixels[(dy + i) * dw + (dx + j)] = color;
 }
 
+static int width = 400, height = 300;
+
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
+  int sw = s->w, sh = s->h;
   if (x == 0 && y == 0 && w == 0 && h == 0) {
     w = s->w;
     h = s->h;
   }
+  uint32_t *buf = malloc(w * h * sizeof(uint32_t));
+  assert(buf);
   if (s->format->BitsPerPixel == 32) {
-    assert(0);
-    NDL_DrawRect((uint32_t *)s->pixels, x, y, w, h);
+    for (int i = 0; i < h; i++)
+      for (int j = 0; j < w; j++) {
+        uint32_t *spixels = (uint32_t *)s->pixels;
+        buf[i * w + j] = spixels[(y + i) * sw + (x + j)];
+    }
   } else if (s->format->BitsPerPixel == 8) {
     assert(s->format->palette);
-    uint32_t *buf = malloc(w * h * sizeof(uint32_t));
-    assert(buf);
-    for (int i = 0; i < w * h; i++) {
-      uint8_t idx = s->pixels[i];
-      buf[i] = s->format->palette->colors[idx].val;
+    for (int i = 0; i < h; i++)
+      for (int j = 0; j < w; j++) {
+      uint8_t idx = s->pixels[(y + i) * sw + (x + j)];
+      buf[i * w + j] = s->format->palette->colors[idx].val;
     }
-    NDL_DrawRect(buf, x, y, w, h);
-    free(buf);
   } else
     assert(0);
+  NDL_DrawRect(buf, x + (width - sw) / 2, y + (height - sh) / 2, w, h);
+  free(buf);
 }
 
 // APIs below are already implemented.
@@ -137,8 +148,8 @@ SDL_Surface *SDL_CreateRGBSurface(uint32_t flags, int width, int height,
 
   if (!(flags & SDL_PREALLOC)) {
     s->pixels = malloc(s->pitch * height);
-    memset(s->pixels, 0, s->pitch * height);
     assert(s->pixels);
+    memset(s->pixels, 0, s->pitch * height);
   }
 
   return s;

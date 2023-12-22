@@ -56,8 +56,6 @@ void NDL_OpenCanvas(int *w, int *h) {
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
-  x = (width - w) / 2;
-  y = (height - h) / 2;
   for (int i = 0; i < h; i++) {
     lseek(fb_fd, ((y + i) * width + x) * sizeof(uint32_t), SEEK_SET);
     assert(write(fb_fd, pixels + i * w, sizeof(uint32_t) * w) == sizeof(uint32_t) * w);
