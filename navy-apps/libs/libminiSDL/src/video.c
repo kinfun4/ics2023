@@ -64,6 +64,8 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     NDL_DrawRect((uint32_t *)s->pixels, x, y, w, h);
   } else if (s->format->BitsPerPixel == 8) {
     assert(s->format->palette);
+    for(int i=0;i<w*h;i++)
+      printf("pixels = %x\n", s->pixels[i]);
     uint32_t *buf = malloc(w * h * sizeof(uint32_t));
     assert(buf);
     for (int i = 0; i < w * h; i++) {
@@ -217,7 +219,7 @@ void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors,
   if (s->flags & SDL_HWSURFACE) {
     assert(ncolors == 256);
     for (int i = 0; i < ncolors; i++) {
-      printf("color = %#x\n", colors[i].val);
+      // printf("color = %#x\n", colors[i].val);
       uint8_t r = colors[i].r;
       uint8_t g = colors[i].g;
       uint8_t b = colors[i].b;
