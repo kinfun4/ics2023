@@ -1,5 +1,6 @@
 #include <NDL.h>
 #include <assert.h>
+#include <complex.h>
 #include <sdl-video.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -67,7 +68,6 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     assert(buf);
     for (int i = 0; i < w * h; i++) {
       uint8_t idx = s->pixels[i];
-      printf("pixels = %x\n", idx);
       buf[i] = s->format->palette->colors[idx].val;
     }
     NDL_DrawRect(buf, x, y, w, h);
@@ -217,6 +217,7 @@ void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors,
   if (s->flags & SDL_HWSURFACE) {
     assert(ncolors == 256);
     for (int i = 0; i < ncolors; i++) {
+      printf("color = %#x\n", colors[i].val);
       uint8_t r = colors[i].r;
       uint8_t g = colors[i].g;
       uint8_t b = colors[i].b;
