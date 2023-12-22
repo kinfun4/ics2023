@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <bits/types/struct_timeval.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
