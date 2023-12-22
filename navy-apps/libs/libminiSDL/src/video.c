@@ -65,12 +65,9 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     assert(s->format->palette);
     uint32_t *buf = malloc(w * h * sizeof(uint32_t));
     assert(buf);
-    SDL_Color *color = s->format->palette->colors;
-    assert(color);
     for (int i = 0; i < w * h; i++) {
       uint8_t idx = s->pixels[i];
-      printf("idx = %d\n",idx);
-      buf[i] = color[idx].val;
+      buf[i] = s->format->palette->colors[idx].val;
     }
     NDL_DrawRect(buf, x, y, w, h);
     free(buf);
