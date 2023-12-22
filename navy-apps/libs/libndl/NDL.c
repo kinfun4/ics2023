@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <bits/types/struct_timeval.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -11,11 +12,13 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 static int fb_fd, event_fd, dispinfo_fd;
+static uint32_t init_t;
+static struct timeval t;
 
 uint32_t NDL_GetTicks() {
-  struct timeval t;
   gettimeofday(&t, NULL);
-  return t.tv_sec * 1000 + t.tv_usec / 1000;
+  uint32_t ticks = t.tv_sec * 1000 + t.tv_usec / 1000 - init_t;
+  return ticks;
 }
 
 int NDL_PollEvent(char *buf, int len) {
@@ -75,6 +78,8 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  gettimeofday(&t, NULL);
+  init_t = t.tv_sec * 1000 + t.tv_usec / 1000;
   fb_fd = open("/dev/fb", O_WRONLY);
   event_fd = open("/dev/events", O_RDONLY);
   dispinfo_fd = open("/proc/dispinfo", O_RDWR);

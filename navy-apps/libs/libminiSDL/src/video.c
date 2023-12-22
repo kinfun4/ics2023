@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define min(a,b) ((a) < (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
 
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
                      SDL_Rect *dstrect) {
@@ -24,8 +24,10 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
   dy = dstrect == NULL ? 0 : dstrect->y;
   w = min(w, min(sw - sx, dw - dx));
   h = min(h, min(sh - sy, dh - dy));
-  dstrect->w = w;
-  dstrect->h = h;
+  if (dstrect != NULL) {
+    dstrect->w = w;
+    dstrect->h = h;
+  }
   if (dst->format->BitsPerPixel == 32) {
     uint32_t *dpixels = (uint32_t *)dst->pixels;
     uint32_t *spixels = (uint32_t *)src->pixels;
@@ -44,7 +46,6 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-  assert(dst->format->BitsPerPixel == 32);
   int dx, dy, w, h, dw, dh;
   dx = dstrect == NULL ? 0 : dstrect->x;
   dy = dstrect == NULL ? 0 : dstrect->y;
@@ -52,10 +53,18 @@ void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   h = dstrect == NULL ? dst->h : dstrect->h;
   dw = dst->w;
   dh = dst->h;
-  uint32_t *dpixels = (uint32_t *)dst->pixels;
-  for (int i = 0; i < h; i++)
-    for (int j = 0; j < w; j++)
-      dpixels[(dy + i) * dw + (dx + j)] = color;
+  if(dst->format->BitsPerPixel == 32){
+    uint32_t *dpixels = (uint32_t *)dst->pixels;
+    for (int i = 0; i < h; i++)
+      for (int j = 0; j < w; j++)
+        dpixels[(dy + i) * dw + (dx + j)] = color;
+  }
+  else if(dst->format->BitsPerPixel == 8){
+    uint8_t *dpixels = dst->pixels;
+    for (int i = 0; i < h; i++)
+      for (int j = 0; j < w; j++)
+        dpixels[(dy + i) * dw + (dx + j)] = (uint8_t)color;
+  }
 }
 
 static int width = 400, height = 300;
@@ -73,14 +82,14 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
       for (int j = 0; j < w; j++) {
         uint32_t *spixels = (uint32_t *)s->pixels;
         buf[i * w + j] = spixels[(y + i) * sw + (x + j)];
-    }
+      }
   } else if (s->format->BitsPerPixel == 8) {
     assert(s->format->palette);
     for (int i = 0; i < h; i++)
       for (int j = 0; j < w; j++) {
-      uint8_t idx = s->pixels[(y + i) * sw + (x + j)];
-      buf[i * w + j] = s->format->palette->colors[idx].val;
-    }
+        uint8_t idx = s->pixels[(y + i) * sw + (x + j)];
+        buf[i * w + j] = s->format->palette->colors[idx].val;
+      }
   } else
     assert(0);
   NDL_DrawRect(buf, x + (width - sw) / 2, y + (height - sh) / 2, w, h);
