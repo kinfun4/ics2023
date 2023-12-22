@@ -63,6 +63,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
     NDL_DrawRect(buf, x, y, w, h);
   }
   else if(s->format->BitsPerPixel == 8){
+    assert(0);
     assert(s->format->palette);
     uint32_t *buf = malloc(w * h * sizeof(uint32_t));
     assert(buf);
