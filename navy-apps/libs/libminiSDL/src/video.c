@@ -65,7 +65,7 @@ void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
   } else if (s->format->BitsPerPixel == 8) {
     assert(s->format->palette);
     for(int i=0;i<w*h;i++)
-      printf("pixels = %x\n", s->pixels[i]);
+      printf("%x", s->pixels[i]);
     uint32_t *buf = malloc(w * h * sizeof(uint32_t));
     assert(buf);
     for (int i = 0; i < w * h; i++) {
