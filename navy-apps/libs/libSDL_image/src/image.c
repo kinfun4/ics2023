@@ -1,3 +1,4 @@
+#include "sdl-video.h"
 #define SDL_malloc  malloc
 #define SDL_free    free
 #define SDL_realloc realloc
@@ -12,7 +13,18 @@ SDL_Surface* IMG_Load_RW(SDL_RWops *src, int freesrc) {
 }
 
 SDL_Surface* IMG_Load(const char *filename) {
-  return NULL;
+  FILE *fp = fopen(filename, "r");
+  fseek(fp, 0, SEEK_END);
+  long file_size = ftell(fp);
+  assert(file_size);
+  fseek(fp, 0, SEEK_SET);
+  unsigned char *buf = malloc(file_size);
+  assert(buf);
+  assert(fread(buf, sizeof(char), file_size, fp) == file_size);
+  SDL_Surface *surface = STBIMG_LoadFromMemory(buf, file_size);
+  assert(surface);
+  free(buf);
+  return surface;
 }
 
 int IMG_isPNG(SDL_RWops *src) {
