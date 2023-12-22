@@ -60,16 +60,13 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   y = (height - h) / 2;
   for (int i = 0; i < h; i++) {
     lseek(fb_fd, ((y + i) * width + x) * sizeof(uint32_t), SEEK_SET);
-    write(fb_fd, pixels + i * w, sizeof(uint32_t) * w);
+    assert(write(fb_fd, pixels + i * w, sizeof(uint32_t) * w) == sizeof(uint32_t) * w);
   }
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {}
 
 void NDL_CloseAudio() {
-  close(fb_fd);
-  close(event_fd);
-  close(dispinfo_fd);
 }
 
 int NDL_PlayAudio(void *buf, int len) { return 0; }
@@ -86,4 +83,8 @@ int NDL_Init(uint32_t flags) {
   return 0;
 }
 
-void NDL_Quit() {}
+void NDL_Quit() {
+  close(fb_fd);
+  close(event_fd);
+  close(dispinfo_fd);
+}

@@ -1,7 +1,6 @@
 #include <NDL.h>
 #include <assert.h>
 #include <sdl-event.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -49,6 +48,7 @@ int SDL_PollEvent(SDL_Event *ev) {
     }
     assert(0);
   }
+  assert(0);
   return 0;
 }
 
