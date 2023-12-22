@@ -28,11 +28,12 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst,
         dpixels[(dy + i) * dw + (dx + j)] = spixels[(sy + i) * sw + (sx + j)];
   }
   else if(dst->format->BitsPerPixel == 8){
-    uint8_t *dpixels = (uint8_t *)dst->pixels;
-    uint8_t *spixels = (uint8_t *)src->pixels;
+    uint8_t *dpixels = dst->pixels;
+    uint8_t *spixels = src->pixels;
     for (int i = 0; i < h; i++)
       for (int j = 0; j < w; j++)
         dpixels[(dy + i) * dw + (dx + j)] = spixels[(sy + i) * sw + (sx + j)];
+
   }
   else assert(0);
 }
