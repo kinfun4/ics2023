@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 char handle_key(SDL_Event *ev);
+static void sh_printf(const char *format, ...);
 
 void cmd_q(int status){
   exit(status);
@@ -17,8 +18,8 @@ void cmd_r(const char *buf){
   while (*buf != '\n') filename[i++] = *(buf++);
   filename[i] = '\0';
   printf("%s\n", filename);
-  execve(filename, NULL, NULL);
-  assert(0);
+  int ret = execve(filename, NULL, NULL);
+  if(ret == -1) sh_printf("filename error!");
 }
 
 struct handler{
