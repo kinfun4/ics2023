@@ -54,7 +54,9 @@ void do_syscall(Context *c) {
     c->GPRx = 0;
     break;
   case SYS_execve:
-    naive_uload(NULL, (char *)a[1]);
+    if(fs_open((char *)a[1], 0, 0) != -1)
+      naive_uload(NULL, (char *)a[1]);
+    else c->GPRx = -1;
     break;
   case SYS_gettimeofday:
     c->GPRx = 0;
