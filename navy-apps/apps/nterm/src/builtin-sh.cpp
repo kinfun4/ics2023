@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <nterm.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -15,6 +16,7 @@ void cmd_r(const char *buf){
   while (*buf == ' ') buf++;
   while (*buf != '\n') filename[i++] = *(buf++);
   filename[i] = '\0';
+  printf("%s\n", filename);
   execve(filename, NULL, NULL);
   assert(0);
 }
