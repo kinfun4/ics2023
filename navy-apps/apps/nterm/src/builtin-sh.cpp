@@ -5,6 +5,28 @@
 
 char handle_key(SDL_Event *ev);
 
+void cmd_q(int status){
+  exit(status);
+}
+
+void cmd_r(const char *buf){
+  char filename[20];
+  int i = 0;
+  while (*buf == ' ') buf++;
+  while (*buf != '\n') filename[i++] = *(buf++);
+  filename[i] = '\0';
+  execve(filename, NULL, NULL);
+  assert(0);
+}
+
+struct handler{
+  char name[10];
+  void *handler;
+} cmd_handler[] = {
+  {"q", (void *)cmd_q},
+  {"r", (void *)cmd_r}
+};
+
 static void sh_printf(const char *format, ...) {
   static char buf[256] = {};
   va_list ap;
@@ -23,6 +45,11 @@ static void sh_prompt() {
 }
 
 static void sh_handle_cmd(const char *cmd) {
+  switch (cmd[0]) {
+    case 'q': cmd_q(0);break;
+    case 'r': cmd_r(cmd);break;
+    default: break;
+  }
 }
 
 void builtin_sh_run() {
