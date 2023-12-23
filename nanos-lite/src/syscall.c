@@ -2,8 +2,6 @@
 #include <proc.h>
 #include <stdio.h>
 #include <sys/time.h>
-#include <common.h>
-#include <wchar.h>
 
 int fs_open(const char *pathname, int flags, int mode);
 size_t fs_read(int fd, void *buf, size_t len);
