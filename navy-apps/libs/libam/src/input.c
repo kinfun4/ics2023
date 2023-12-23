@@ -1,11 +1,9 @@
 #include <am.h>
-#include <NDL.h>
-#define KEYDOWN_MASK 0x8000
+#include <SDL.h>
 
 void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
-
-  NDL_PollEvent(char *buf, int len)
-  kbd->keycode = ;
-  kbd->keydown = (kbd->keycode & KEYDOWN_MASK) ? 1 : 0;
-  kbd->keycode = kbd->keycode & ~KEYDOWN_MASK;
+  SDL_Event ev;
+  SDL_PollEvent(&ev);
+  kbd->keycode = ev.key.keysym.sym;
+  kbd->keydown = (ev.key.type == SDL_KEYDOWN);
 }
