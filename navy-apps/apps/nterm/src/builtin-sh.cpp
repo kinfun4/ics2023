@@ -19,7 +19,7 @@ void cmd_r(const char *buf){
   filename[i] = '\0';
   printf("%s\n", filename);
   int ret = execve(filename, NULL, NULL);
-  if(ret == -1) sh_printf("filename error!");
+  if(ret == -1) sh_printf("filename error!\n");
 }
 
 struct handler{
