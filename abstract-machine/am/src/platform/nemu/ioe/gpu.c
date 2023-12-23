@@ -30,7 +30,6 @@ void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
   int w = ctl->w, h = ctl->h;
   int i, j;
   int offset_addr;
-  printf("x = %d, y = %d, w = %d, h =%d\n", x, y, w, h);
   for (i = 0; i < h; i++)
     for (j = 0; j < w; j++) {
       offset_addr = ((y + i) * width + (x + j)) * 4;
