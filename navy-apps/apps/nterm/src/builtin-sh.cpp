@@ -49,7 +49,7 @@ static void sh_prompt() {
 static void sh_handle_cmd(const char *cmd) {
   switch (cmd[0]) {
     case 'q': cmd_q(0);break;
-    case 'r': cmd_r(cmd);break;
+    case 'r': cmd_r(cmd + 1);break;
     default: break;
   }
 }
