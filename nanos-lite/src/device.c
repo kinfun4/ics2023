@@ -32,9 +32,9 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   if (ev.keycode == AM_KEY_NONE)
     return 0;
   if (ev.keydown)
-    sprintf(buf, "kd %s\n", keyname[ev.keycode]);
+    sprintf(buf, "kd %s %d\n", keyname[ev.keycode], ev.keycode);
   else
-    sprintf(buf, "ku %s\n", keyname[ev.keycode]);
+    sprintf(buf, "ku %s %d\n", keyname[ev.keycode], ev.keycode);
   while (_buf[ret] != '\0')
     ret++;
   return ret + 1;

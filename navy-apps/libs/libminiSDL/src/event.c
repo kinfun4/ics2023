@@ -25,11 +25,13 @@ int SDL_PollEvent(SDL_Event *ev) {
   if(strncmp(buf, "ku", 2) == 0){
     ev->key.type = SDL_KEYUP;
     char name[10];
-    sscanf(buf, "ku %s", name);
+    int keycode;
+    sscanf(buf, "ku %s %d", name, &keycode);
     for(int i=0;i < SDLK_NUM; i++){
       if(strcmp(name, keyname[i]) == 0){
         ev->key.keysym.sym = i;
         keystate[i] = 0;
+        assert(keycode == i);
         return 1;
       }
     }

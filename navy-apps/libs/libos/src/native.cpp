@@ -58,7 +58,7 @@ static inline void get_fsimg_path(char *newpath, const char *path) {
   _(UP) _(DOWN) _(LEFT) _(RIGHT) _(INSERT) _(DELETE) _(HOME) _(END) _(PAGEUP) _(PAGEDOWN)
 
 #define COND(k) \
-  if (scancode == SDL_SCANCODE_##k) name = #k;
+  if (scancode == SDL_SCANCODE_##k) name = #k;\
 
 static void update_screen() {
   SDL_UpdateTexture(texture, NULL, fb, disp_w * sizeof(Uint32));
@@ -202,7 +202,7 @@ ssize_t read(int fd, void *buf, size_t count) {
 
       const char *name = NULL;
       _KEYS(COND);
-      if (name) return snprintf((char *)buf, count, "k%c %s\n", keydown ? 'd' : 'u', name);
+      if (name) return snprintf((char *)buf, count, "k%c %s %d\n", keydown ? 'd' : 'u', name, );
     }
     return 0;
   } else if (fd == sbctl_fd) {
