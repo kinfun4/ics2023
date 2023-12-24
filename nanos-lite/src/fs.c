@@ -107,7 +107,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
   default: assert(0);
   }
     printf("fd = %d, offset = %x\n",fd,  file_offset[fd]);
-  assert(fd>=FD_FB && file_offset[fd]>=0 && file_offset[fd] < file_table[fd].size);
+  assert(file_offset[fd]>=0 && file_offset[fd] <= file_table[fd].size);
   if(file_offset[fd] < 0) file_offset[fd] = 0;
   if(file_offset[fd] > file_table[fd].size) file_offset[fd] = file_table[fd].size;
   return file_offset[fd];
