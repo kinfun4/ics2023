@@ -1,6 +1,4 @@
 #include <fs.h>
-#include <stddef.h>
-#include <stdint.h>
 
 typedef size_t (*ReadFn)(void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void *buf, size_t offset, size_t len);
@@ -107,6 +105,7 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
     break;
   default: assert(0);
   }
+  assert(file_offset[fd]>=0 && file_offset[fd] < file_table[fd].size);
   if(file_offset[fd] < 0) file_offset[fd] = 0;
   if(file_offset[fd] > file_table[fd].size) file_offset[fd] = file_table[fd].size;
   return file_offset[fd];
