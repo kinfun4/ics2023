@@ -11,12 +11,12 @@ static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 static int fb_fd, event_fd, dispinfo_fd;
-static uint32_t init_t;
+static uint32_t start_time;
 static struct timeval t;
 
 uint32_t NDL_GetTicks() {
   gettimeofday(&t, NULL);
-  uint32_t ticks = t.tv_sec * 1000 + t.tv_usec / 1000 - init_t;
+  uint32_t ticks = t.tv_sec * 1000 + t.tv_usec / 1000 - start_time;
   return ticks;
 }
 
@@ -48,9 +48,6 @@ void NDL_OpenCanvas(int *w, int *h) {
     }
     close(fbctl);
   }
-  char buf[64];
-  assert(read(dispinfo_fd, buf, sizeof(buf)));
-  sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
   if (*w == 0 && *h == 0) {
     *w = width;
     *h = height;
@@ -77,8 +74,18 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  // init time
   gettimeofday(&t, NULL);
-  init_t = t.tv_sec * 1000 + t.tv_usec / 1000;
+  start_time = t.tv_sec * 1000 + t.tv_usec / 1000;
+  // init fb
+  char buf[64];
+  assert(read(dispinfo_fd, buf, sizeof(buf)));
+  sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
+  uint32_t *buffer = malloc(sizeof(uint32_t) * width * height);
+  memset(buffer, 0, sizeof(uint32_t) * width * height);
+  NDL_DrawRect(buffer, 0, 0, width, height);
+  free(buffer);
+  // init file
   fb_fd = open("/dev/fb", O_WRONLY);
   event_fd = open("/dev/events", O_RDONLY);
   dispinfo_fd = open("/proc/dispinfo", O_RDWR);
