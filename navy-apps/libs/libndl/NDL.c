@@ -74,6 +74,10 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  // init file
+  fb_fd = open("/dev/fb", O_WRONLY);
+  event_fd = open("/dev/events", O_RDONLY);
+  dispinfo_fd = open("/proc/dispinfo", O_RDWR);
   // init time
   gettimeofday(&t, NULL);
   start_time = t.tv_sec * 1000 + t.tv_usec / 1000;
@@ -85,10 +89,6 @@ int NDL_Init(uint32_t flags) {
   memset(buffer, 0, sizeof(uint32_t) * width * height);
   NDL_DrawRect(buffer, 0, 0, width, height);
   free(buffer);
-  // init file
-  fb_fd = open("/dev/fb", O_WRONLY);
-  event_fd = open("/dev/events", O_RDONLY);
-  dispinfo_fd = open("/proc/dispinfo", O_RDWR);
   return 0;
 }
 
