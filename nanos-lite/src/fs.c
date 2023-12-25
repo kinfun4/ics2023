@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <fs.h>
 #include <stdio.h>
 
@@ -10,6 +11,9 @@ size_t serial_write(const void *buf, size_t offset, size_t len);
 size_t events_read(void *buf, size_t offset, size_t len);
 size_t dispinfo_read(void *buf, size_t offset, size_t len);
 size_t fb_write(const void *buf, size_t offset, size_t len);
+size_t sbctl_read(void *buf, size_t offset, size_t len);
+size_t sbctl_write(const void *buf, size_t offset, size_t len);
+size_t sb_write(const void *buf, size_t offset, size_t len);
 
 typedef struct {
   char *name;
@@ -21,7 +25,7 @@ typedef struct {
 
 static size_t *file_offset;
 
-enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_DISPINFO, FD_FB };
+enum { FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_SBCTL, FD_SB, FD_DISPINFO, FD_FB };
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -40,6 +44,8 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
     [FD_EVENT] = {"/dev/events", 0, 0, events_read, invalid_write},
+    [FD_SBCTL] = {"/dev/sbctl", 0, 0, sbctl_read, sbctl_write},
+    [FD_SB] = {"/dev/sb", 0, 0, invalid_read, sb_write},
     [FD_DISPINFO] = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write},
     [FD_FB] = {"/dev/fb", 0, 0, invalid_read, fb_write},
 #include "files.h"
@@ -67,6 +73,7 @@ int fs_open(const char *pathname, int flags, int mode) {
       return i;
     }
   }
+  assert(0);
   return -1;
 }
 
@@ -94,6 +101,7 @@ size_t fs_write(int fd, void *buf, size_t len) {
 int fs_close(int fd) { return 0; }
 
 size_t fs_lseek(int fd, size_t offset, int whence) {
+  assert(fd >= FD_FB);
   switch (whence) {
   case SEEK_SET:
     file_offset[fd] = offset;

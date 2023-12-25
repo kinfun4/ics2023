@@ -1,4 +1,8 @@
+#include "am.h"
+#include "amdev.h"
+#include <assert.h>
 #include <common.h>
+#include <cstddef>
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -57,6 +61,36 @@ size_t fb_write(void *buf, size_t offset, size_t len) {
   int x = offset % width;
   int y = offset / width;
   io_write(AM_GPU_FBDRAW, x, y, buf, len/sizeof(uint32_t), 1, true);
+  return len;
+}
+
+size_t sbctl_read(void *buf, size_t offset, size_t len) {
+  assert(len == sizeof(int));
+  assert(offset == 0);
+  int *_buf = buf;
+  AM_AUDIO_STATUS_T stat = io_read(AM_AUDIO_STATUS);
+  *_buf = stat.count;
+  return sizeof(int);
+}
+
+size_t sbctl_write(void *buf, size_t offset, size_t len) {
+  assert(len == 3*sizeof(int));
+  assert(offset == 0);
+  int *_buf = buf;
+  AM_AUDIO_CTRL_T ctrl;
+  ctrl.freq = _buf[0];
+  ctrl.channels = _buf[1];
+  ctrl.samples = _buf[2];
+  ioe_write(AM_AUDIO_CTRL, &ctrl);
+  return 3*sizeof(int);
+}
+
+size_t sb_write(const void *buf, size_t offset, size_t len){
+  assert(offset == 0);
+  AM_AUDIO_PLAY_T ctl;
+  ctl.buf.start = (void *)buf;
+  ctl.buf.end = (void *)buf + len;
+  ioe_write(AM_AUDIO_PLAY, &ctl);
   return len;
 }
 

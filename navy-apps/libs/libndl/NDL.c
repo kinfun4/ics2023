@@ -10,7 +10,7 @@
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
-static int fb_fd, event_fd, dispinfo_fd;
+static int fb_fd, event_fd, dispinfo_fd, sb_fd, sbctl_fd;
 static uint32_t start_time;
 static struct timeval t;
 
@@ -61,14 +61,26 @@ void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
   }
 }
 
-void NDL_OpenAudio(int freq, int channels, int samples) {}
+void NDL_OpenAudio(int freq, int channels, int samples) {
+  int buf[3];
+  buf[0] = freq;
+  buf[1] = channels;
+  buf[2] = samples;
+  write(sbctl_fd, buf, sizeof(int) * 3);
+}
 
 void NDL_CloseAudio() {
 }
 
-int NDL_PlayAudio(void *buf, int len) { return 0; }
+int NDL_PlayAudio(void *buf, int len) {
+  return write(sb_fd, buf, len);
+}
 
-int NDL_QueryAudio() { return 0; }
+int NDL_QueryAudio() {
+  int count;
+  assert(read(sbctl_fd, &count, sizeof(int)) == sizeof(int));
+  return count;
+}
 
 int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
@@ -78,6 +90,8 @@ int NDL_Init(uint32_t flags) {
   fb_fd = open("/dev/fb", O_WRONLY);
   event_fd = open("/dev/events", O_RDONLY);
   dispinfo_fd = open("/proc/dispinfo", O_RDWR);
+  sbctl_fd = open("/dev/sbctl", O_RDWR);
+  sb_fd = open("/dev/sb", O_WRONLY);
   // init time
   gettimeofday(&t, NULL);
   start_time = t.tv_sec * 1000 + t.tv_usec / 1000;
@@ -97,4 +111,6 @@ void NDL_Quit() {
   close(fb_fd);
   close(event_fd);
   close(dispinfo_fd);
+  close(sbctl_fd);
+  close(sb_fd);
 }
