@@ -29,7 +29,7 @@ void do_syscall(Context *c) {
   switch (a[0]) {
   case SYS_exit:
     assert(a[1] == 0);
-    naive_uload(NULL, "/bin/nterm");
+    naive_uload(NULL, "/bin/menu");
     break;
   case SYS_yield:
     yield();
