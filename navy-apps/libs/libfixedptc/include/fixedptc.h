@@ -144,7 +144,7 @@ static inline fixedpt fixedpt_mul(fixedpt A, fixedpt B) {
 
 /* Divides two fixedpt numbers, returns the result. */
 static inline fixedpt fixedpt_div(fixedpt A, fixedpt B) {
-	return (A) / (B) * FIXEDPT_ONE;
+	return (A) * FIXEDPT_ONE / (B);
 }
 
 static inline fixedpt fixedpt_abs(fixedpt A) {

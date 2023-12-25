@@ -1,4 +1,5 @@
 #include <vorbis.h>
+#include <stdio.h>
 #include <fixedptc.h>
 // global configuration settings (e.g. set these in the project/makefile),
 // or just set them in this file at the top (although ideally the first few

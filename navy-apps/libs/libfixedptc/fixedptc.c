@@ -1,4 +1,6 @@
 #include "fixedptc.h"
+#include "include/fixedptc.h"
+#include <stdio.h>
 
 /**
  * Convert the given fixedpt number to a decimal string.
@@ -158,6 +160,7 @@ fixedpt fixedpt_exp(fixedpt fp) {
 		k = FIXEDPT_ONE >> (-k >> FIXEDPT_FBITS);
 	else
 		k = FIXEDPT_ONE << (k >> FIXEDPT_FBITS);
+
 	return (fixedpt_mul(k, xp));
 }
 
