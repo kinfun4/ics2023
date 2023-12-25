@@ -66,7 +66,7 @@ void NDL_OpenAudio(int freq, int channels, int samples) {
   buf[0] = freq;
   buf[1] = channels;
   buf[2] = samples;
-  assert(write(sbctl_fd, buf, sizeof(int) * 3) == sizeof(int) * 3);
+  write(sbctl_fd, buf, sizeof(int) * 3);
 }
 
 void NDL_CloseAudio() {
@@ -78,7 +78,7 @@ int NDL_PlayAudio(void *buf, int len) {
 
 int NDL_QueryAudio() {
   int count;
-  assert(read(sbctl_fd, &count, sizeof(int)) == sizeof(int));
+  read(sbctl_fd, &count, sizeof(int));
   return count;
 }
 

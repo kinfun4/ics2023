@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include <NDL.h>
 #include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 static SDL_AudioCallback callback;
@@ -17,6 +16,8 @@ void CheckCallback(){
   if(cur_time - last_time > interval){
     last_time = cur_time;
     int len = samples * byte_per_data * channels;
+    int count = NDL_QueryAudio();
+    len = len > count ? count : len;
     printf("%d\n", len);
     uint8_t *buf = malloc(len);
     assert(buf);
@@ -35,7 +36,7 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
   samples = desired->samples;
   channels = desired->channels;
   userdata = desired->userdata;
-  interval = desired->samples * 1000 / desired->freq /5 ;
+  interval = desired->samples * 1000 / desired->freq / 3 ;
   NDL_OpenAudio(desired->freq, desired->channels, desired->samples);
   return 0;
 }
