@@ -82,6 +82,7 @@ int NDL_Init(uint32_t flags) {
   gettimeofday(&t, NULL);
   start_time = t.tv_sec * 1000 + t.tv_usec / 1000;
   // init fb
+  printf("%d\n",__LINE__);
   char buf[64];
   assert(read(dispinfo_fd, buf, sizeof(buf)));
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
@@ -89,6 +90,7 @@ int NDL_Init(uint32_t flags) {
   memset(buffer, 0, sizeof(uint32_t) * width * height);
   NDL_DrawRect(buffer, 0, 0, width, height);
   free(buffer);
+
   return 0;
 }
 
