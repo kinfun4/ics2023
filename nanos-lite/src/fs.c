@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <fs.h>
 #include <stdio.h>
 

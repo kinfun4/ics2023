@@ -66,7 +66,7 @@ void NDL_OpenAudio(int freq, int channels, int samples) {
   buf[0] = freq;
   buf[1] = channels;
   buf[2] = samples;
-  write(sbctl_fd, buf, sizeof(int) * 3);
+  assert(write(sbctl_fd, buf, sizeof(int) * 3) == sizeof(int) * 3);
 }
 
 void NDL_CloseAudio() {

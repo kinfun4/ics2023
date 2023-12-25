@@ -6,6 +6,8 @@
 
 #define keyname(k) #k,
 
+void CheckCallback();
+
 static const char *keyname[] = {
   "NONE",
   _KEYS(keyname)
@@ -20,6 +22,7 @@ int SDL_PushEvent(SDL_Event *ev) {
 
 int SDL_PollEvent(SDL_Event *ev) {
   char buf[64];
+  CheckCallback();
   if(NDL_PollEvent(buf, sizeof(buf)) == 0)
     return 0;
   if(strncmp(buf, "ku", 2) == 0){

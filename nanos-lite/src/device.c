@@ -1,10 +1,5 @@
 #include "am.h"
-#include "amdev.h"
-#include <assert.h>
 #include <common.h>
-#include <cstddef>
-#include <stdint.h>
-#include <sys/types.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -69,7 +64,7 @@ size_t sbctl_read(void *buf, size_t offset, size_t len) {
   assert(offset == 0);
   int *_buf = buf;
   AM_AUDIO_STATUS_T stat = io_read(AM_AUDIO_STATUS);
-  *_buf = stat.count;
+  _buf[0] = stat.count;
   return sizeof(int);
 }
 

@@ -1,13 +1,16 @@
 #ifndef __SDL_AUDIO_H__
 #define __SDL_AUDIO_H__
 
+#include <stdint.h>
+typedef void (*SDL_AudioCallback)(void *userdata, uint8_t *stream, int len);
+
 typedef struct {
   int freq;
   uint16_t format;
   uint8_t channels;
   uint16_t samples;
   uint32_t size;
-  void (*callback)(void *userdata, uint8_t *stream, int len);
+  SDL_AudioCallback callback;
   void *userdata;
 } SDL_AudioSpec;
 
