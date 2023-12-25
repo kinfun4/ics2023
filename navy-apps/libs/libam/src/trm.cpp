@@ -1,7 +1,5 @@
 #include <am.h>
-#include <cstdio>
 #include <stdlib.h>
-#include <unistd.h>
 
 Area heap;
 
