@@ -50,9 +50,7 @@
 #else
 /* Include the standard compiler builtin headers we use functionality from. */
 #  include <limits.h>
-#  include <stdint.h>
 #  include <stdbool.h>
-#  include <float.h>
 #endif
 
 /* Include the commonly used internal type definitions. */
