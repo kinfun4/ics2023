@@ -14,11 +14,10 @@ void CheckCallback(){
   if(!stat)return;
   uint32_t cur_time = SDL_GetTicks();
   if(cur_time - last_time > interval){
-    last_time = cur_time;
     int len = samples * byte_per_data * channels;
     int free_size = NDL_QueryAudio();
-    printf("%d\n", free_size);
-    len = len > free_size ? free_size : len;
+    if(free_size < 16 * len)return;
+    last_time = cur_time;
     uint8_t *buf = malloc(len);
     assert(buf);
     callback(userdata, buf, len);
