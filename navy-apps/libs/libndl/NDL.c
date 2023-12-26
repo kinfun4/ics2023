@@ -80,6 +80,7 @@ int NDL_QueryAudio() {
   char buf[8];
   int count;
   read(sbctl_fd, buf, sizeof(buf));
+  printf("%s\n", buf);
   sscanf(buf, "%d", &count);
   return count;
 }
