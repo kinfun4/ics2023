@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <NDL.h>
 #include <assert.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -62,13 +63,49 @@ void SDL_PauseAudio(int pause_on) {
 }
 
 void SDL_MixAudio(uint8_t *dst, uint8_t *src, uint32_t len, int volume) {
+  assert(!(len&1));
+  len = len/2;
+  int16_t *_dst = (int16_t *)dst;
+  int16_t *_src = (int16_t *)src;
+  int tmp;
+  for (int i=0; i<len; i++) {
+    tmp = (int)_dst[i] + _src[i] * volume / SDL_MIX_MAXVOLUME;
+    if(tmp > INT16_MAX) tmp = INT16_MAX;
+    if(tmp < INT16_MIN) tmp = INT16_MIN;
+    _dst[i] = (int16_t) tmp;
+  }
 }
 
 SDL_AudioSpec *SDL_LoadWAV(const char *file, SDL_AudioSpec *spec, uint8_t **audio_buf, uint32_t *audio_len) {
-  return NULL;
+  FILE* fp = fopen(file, "r");
+  assert(fp);
+  RIFF_header header;
+  assert(fread(&header, sizeof(RIFF_header), 1, fp) == 1);
+  assert(header.ChunkID == 0x46464952);
+  assert(header.Format == 0x45564157);
+  WAV_fmt fmt;
+  assert(fread(&fmt, sizeof(WAV_fmt), 1, fp) == 1);
+  assert(fmt.SubchunkID == 0x20746d66);
+  assert(fmt.SubchunkSize == 16);
+  assert(fmt.AduioFormat == 1);
+  WAV_data data;
+  assert(fread(&data, sizeof(WAV_data), 1, fp) == 1);
+  assert(data.SubchunkID == 0x61746164);
+  assert(fmt.BitsPerSample == AUDIO_S16SYS);
+  spec->freq = fmt.SampleRate;
+  spec->format = fmt.BitsPerSample;
+  spec->channels = fmt.NumChannels;
+  spec->samples = 4096;
+  *audio_buf = malloc(data.SubchunkSize);
+  assert(*audio_buf);
+  assert(fread(*audio_buf, data.SubchunkSize, 1, fp) == 1);
+  *audio_len = data.SubchunkSize;
+  fclose(fp);
+  return spec;
 }
 
 void SDL_FreeWAV(uint8_t *audio_buf) {
+  free(audio_buf);
 }
 
 void SDL_LockAudio() {

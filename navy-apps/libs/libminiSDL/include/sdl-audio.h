@@ -14,6 +14,28 @@ typedef struct {
   void *userdata;
 } SDL_AudioSpec;
 
+typedef struct {
+  uint32_t ChunkID;
+  int ChunkSize;
+  uint32_t Format;
+} RIFF_header;
+
+typedef struct {
+  uint32_t SubchunkID;
+  int SubchunkSize;
+  uint16_t AduioFormat;
+  uint16_t NumChannels;
+  uint32_t SampleRate;
+  uint32_t ByteRate;
+  uint16_t BlockAlign;
+  uint16_t BitsPerSample;
+} WAV_fmt;
+
+typedef struct {
+  uint32_t SubchunkID;
+  uint32_t SubchunkSize;
+} WAV_data;
+
 #define AUDIO_U8 8
 #define AUDIO_S16 16
 #define AUDIO_S16SYS AUDIO_S16
