@@ -44,9 +44,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
     if (Phdr->p_type == PT_LOAD) {
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
       fs_read(fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
-      if (Phdr->p_memsz > Phdr->p_filesz)
-        memset((void *)Phdr->p_vaddr + Phdr->p_filesz, 0,
-               Phdr->p_memsz - Phdr->p_filesz);
+      memset((void *)Phdr->p_vaddr + Phdr->p_filesz, 0,
+             Phdr->p_memsz - Phdr->p_filesz);
     }
   }
   fs_close(fd);
