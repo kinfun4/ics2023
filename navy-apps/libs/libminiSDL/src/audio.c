@@ -16,12 +16,18 @@ void CheckCallback(){
   if(cur_time - last_time > interval){
     last_time = cur_time;
     int len = samples * byte_per_data * channels;
-    int count = NDL_QueryAudio();
-    len = len > count ? count : len;
+    int free_size = NDL_QueryAudio();
+    printf("%d\n", free_size);
+    len = len > free_size ? free_size : len;
     uint8_t *buf = malloc(len);
     assert(buf);
     callback(userdata, buf, len);
-    NDL_PlayAudio(buf, len);
+    int count = 0;
+    while(count< len){
+      int ret = NDL_PlayAudio(buf + count, len - count);
+      if(ret == -1) ret = 0;
+      count += ret;
+    }
     free(buf);
   }
 }
@@ -37,12 +43,12 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
     obtained->userdata = desired->userdata;
     obtained->freq = desired->freq;
   }
-  byte_per_data = 2;
+  byte_per_data = desired->format / 8;
   callback = desired->callback;
   samples = desired->samples;
   channels = desired->channels;
   userdata = desired->userdata;
-  interval = desired->samples * 1000 / desired->freq /3 ;
+  interval = desired->samples * 1000 / desired->freq / 3 ;
   NDL_OpenAudio(desired->freq, desired->channels, desired->samples);
   return 0;
 }

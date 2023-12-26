@@ -59,17 +59,15 @@ size_t fb_write(void *buf, size_t offset, size_t len) {
 }
 
 size_t sbctl_read(void *buf, size_t offset, size_t len) {
-  assert(len == sizeof(int));
   assert(offset == 0);
   int *_buf = buf;
   AM_AUDIO_STATUS_T stat = io_read(AM_AUDIO_STATUS);
   AM_AUDIO_CONFIG_T cfg = io_read(AM_AUDIO_CONFIG);
   _buf[0] = cfg.bufsize - stat.count;
-  return sizeof(int);
+  return len;
 }
 
 size_t sbctl_write(void *buf, size_t offset, size_t len) {
-  assert(len == 3*sizeof(int));
   assert(offset == 0);
   int *_buf = buf;
   AM_AUDIO_CTRL_T ctrl;
@@ -77,7 +75,7 @@ size_t sbctl_write(void *buf, size_t offset, size_t len) {
   ctrl.channels = _buf[1];
   ctrl.samples = _buf[2];
   ioe_write(AM_AUDIO_CTRL, &ctrl);
-  return 3*sizeof(int);
+  return len;
 }
 
 size_t sb_write(const void *buf, size_t offset, size_t len){

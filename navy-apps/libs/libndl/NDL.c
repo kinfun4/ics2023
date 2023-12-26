@@ -77,8 +77,10 @@ int NDL_PlayAudio(void *buf, int len) {
 }
 
 int NDL_QueryAudio() {
+  char buf[8];
   int count;
-  read(sbctl_fd, &count, sizeof(int));
+  read(sbctl_fd, buf, sizeof(buf));
+  sscanf(buf, "%d", &count);
   return count;
 }
 
