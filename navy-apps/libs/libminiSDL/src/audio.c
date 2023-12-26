@@ -33,24 +33,24 @@ void CheckCallback(){
 }
 
 int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
-  assert(desired);
-  assert(desired->format == AUDIO_S16SYS);
-  if(obtained != NULL){
-    obtained->format = desired->format;
-    obtained->callback = desired->callback;
-    obtained->samples = desired->samples;
-    obtained->channels = desired->channels;
-    obtained->userdata = desired->userdata;
-    obtained->freq = desired->freq;
-  }
-  byte_per_data = desired->format / 8;
-  callback = desired->callback;
-  samples = desired->samples;
-  channels = desired->channels;
-  userdata = desired->userdata;
-  interval = desired->samples * 1000 / desired->freq / 3 ;
-  frame_size = samples * byte_per_data * channels;
-  NDL_OpenAudio(desired->freq, desired->channels, desired->samples);
+  // assert(desired);
+  // assert(desired->format == AUDIO_S16SYS);
+  // if(obtained != NULL){
+  //   obtained->format = desired->format;
+  //   obtained->callback = desired->callback;
+  //   obtained->samples = desired->samples;
+  //   obtained->channels = desired->channels;
+  //   obtained->userdata = desired->userdata;
+  //   obtained->freq = desired->freq;
+  // }
+  // byte_per_data = desired->format / 8;
+  // callback = desired->callback;
+  // samples = desired->samples;
+  // channels = desired->channels;
+  // userdata = desired->userdata;
+  // interval = desired->samples * 1000 / desired->freq / 3 ;
+  // frame_size = samples * byte_per_data * channels;
+  // NDL_OpenAudio(desired->freq, desired->channels, desired->samples);
   return 0;
 }
 
@@ -58,7 +58,7 @@ void SDL_CloseAudio() {
 }
 
 void SDL_PauseAudio(int pause_on) {
-  stat = (pause_on==0);
+  // stat = (pause_on==0);
 }
 
 void SDL_MixAudio(uint8_t *dst, uint8_t *src, uint32_t len, int volume) {
