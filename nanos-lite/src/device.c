@@ -1,4 +1,5 @@
 #include <common.h>
+#include <stdio.h>
 
 #if defined(MULTIPROGRAM) && !defined(TIME_SHARING)
 #define MULTIPROGRAM_YIELD() yield()
@@ -60,9 +61,10 @@ size_t fb_write(void *buf, size_t offset, size_t len) {
 
 size_t sbctl_read(void *buf, size_t offset, size_t len) {
   assert(offset == 0);
-  int *_buf = buf;
+  char *_buf = buf;
   AM_AUDIO_STATUS_T stat = io_read(AM_AUDIO_STATUS);
   AM_AUDIO_CONFIG_T cfg = io_read(AM_AUDIO_CONFIG);
+  snprintf(buf, len, "%d", cfg.bufsize - stat.count);
   _buf[0] = cfg.bufsize - stat.count;
   return len;
 }
