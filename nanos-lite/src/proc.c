@@ -22,7 +22,7 @@ void hello_fun(void *arg) {
 void init_proc() {
   switch_boot_pcb();
   Log("Initializing processes...");
-  naive_uload(NULL, "/bin/nplayer");
+  naive_uload(NULL, "/bin/nterm");
   // load program here
 }
 
