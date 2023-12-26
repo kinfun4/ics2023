@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <NDL.h>
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 static SDL_AudioCallback callback;
@@ -16,7 +17,7 @@ void CheckCallback(){
   uint32_t cur_time = SDL_GetTicks();
   if(cur_time - last_time > interval){
     int free_size = NDL_QueryAudio();
-    if(free_size < 16 * frame_size)return;
+    if(free_size < frame_size)return;
     last_time = cur_time;
     uint8_t *buf = malloc(frame_size);
     assert(buf);
