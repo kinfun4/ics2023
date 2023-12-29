@@ -1,4 +1,5 @@
 #include <proc.h>
+#include <stdint.h>
 
 #define MAX_NR_PROC 4
 
@@ -10,8 +11,14 @@ void switch_boot_pcb() {
   current = &pcb_boot;
 }
 
-void context_kload(PCB *p, void (*entry)(void *), int arg){
-  p->cp = kcontext((Area) { p->stack, p + 1 }, entry, (void *)arg);
+void context_kload(PCB *p, void (*entry)(void *), void * arg){
+  p->cp = kcontext((Area) { p->stack, p + 1 }, entry, arg);
+}
+
+intptr_t uload(PCB *pcb, const char *filename);
+void context_uload(PCB *p, const char *filename){
+  intptr_t entry = uload(p, filename);
+  p->cp = ucontext(&p->as, (Area) { p->stack, p + 1 }, (void *)entry);
 }
 
 void hello_fun(void *arg) {
@@ -24,8 +31,8 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, 0);
-  context_kload(&pcb[1], hello_fun, 1);
+  context_kload(&pcb[0], hello_fun, (void *)0);
+  context_uload(&pcb[1], "/bin/pal");
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
