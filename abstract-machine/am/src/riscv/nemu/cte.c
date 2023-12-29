@@ -32,8 +32,15 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
   return true;
 }
 
+#define SP 2
+
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+  Context *c = (Context *)kstack.end - 1;
+  c->gpr[SP] = (uintptr_t)kstack.end;
+  c->mepc = (uintptr_t)entry;
+  c->mcause = 0x0;
+  c->mstatus = 0x1800;
+  return c;
 }
 
 void yield() {
