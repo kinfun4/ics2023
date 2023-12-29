@@ -11,7 +11,8 @@ void switch_boot_pcb() {
 }
 
 void context_kload(PCB *p, void (*entry)(void *), int arg){
-  p->cp = kcontext((Area) { pcb[0].stack, &pcb[0] + 1 }, entry, (void *)arg);
+  p->cp = kcontext((Area) { p->stack, p + 1 }, entry, (void *)arg);
+  assert(p->cp);
 }
 
 void hello_fun(void *arg) {
