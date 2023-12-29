@@ -2,7 +2,6 @@
 #define AM_H__
 
 #include <stdint.h>
-// #include <stddef.h>
 #include <stdbool.h>
 #include ARCH_H // this macro is defined in $CFLAGS
                 // examples: "arch/x86-qemu.h", "arch/native.h", ...
