@@ -10,6 +10,10 @@ void switch_boot_pcb() {
   current = &pcb_boot;
 }
 
+void context_kload(PCB *p, void (*entry)(void *), int arg){
+  p->cp = kcontext((Area) { pcb[0].stack, &pcb[0] + 1 }, entry, (void *)arg);
+}
+
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
@@ -20,12 +24,16 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
+  context_kload(&pcb[0], hello_fun, 0);
+  context_kload(&pcb[1], hello_fun, 1);
   switch_boot_pcb();
   Log("Initializing processes...");
-  naive_uload(NULL, "/bin/nterm");
+  // naive_uload(NULL, "/bin/nterm");
   // load program here
 }
 
 Context* schedule(Context *prev) {
-  return NULL;
+  current->cp = prev;
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  return current->cp;
 }
