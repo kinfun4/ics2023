@@ -23,6 +23,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   char *sp = (char *)new_page(PG_PER_STACK);
 
+  printf("%d\n",__LINE__);
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
@@ -31,6 +32,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
 
+  printf("%d\n",__LINE__);
   for (int i = 0; i < envc; i++) {
     int len = strlen(*(envp + i)) + 1;
     len = (len & ~3) + (len & 3 ? 4 : 0);
@@ -46,6 +48,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     strncpy(_argv[i], *(argv + i), len);
   }
 
+  printf("%d\n",__LINE__);
   _envp[envc] = NULL;
   sp -= (envc + 1) * sizeof(char *);
   memcpy(sp, _envp, (envc + 1) * sizeof(char *));
@@ -56,6 +59,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   sp -= sizeof(int);
   *(int *)sp = argc;
+  printf("%d\n",__LINE__);
 
   pcb->cp->GPRx = (intptr_t) sp;
 }
@@ -80,7 +84,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/menu";
+  char *filename = "/bin/nterm";
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
