@@ -64,6 +64,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
   context_uload(&pcb[1], filename, argv, envp);
   printf("1:%p\n", pcb[1].cp->mepc);
   yield();
+  if(pcb[1].cp != NULL)printf("2: %p\n", pcb[1].cp->mepc);
   return -1;
 }
 
