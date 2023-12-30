@@ -64,8 +64,8 @@ int fs_open(const char *pathname, int flags, int mode);
 int execve(const char *filename, char *const argv[], char *const envp[]){
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
   assert(fs_open(filename, 0, 0) != -1);
-  printf("%s\n", filename);
   context_uload(p, filename, argv, envp);
+  printf("%d\n", __LINE__);
   yield();
   return -1;
 }
