@@ -84,12 +84,10 @@ void init_proc() {
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
-  // load program here
 }
 
 Context* schedule(Context *prev) {
   current->cp = prev;
   current = (current == &pcb_boot ? &pcb[0] : &pcb[1]);
-  printf("%p\n", current->cp->GPRx);
   return current->cp;
 }
