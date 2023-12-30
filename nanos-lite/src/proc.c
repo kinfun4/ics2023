@@ -29,7 +29,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
-  printf("argv = %p, envp = %p\n",argv, envp);
+  printf("argc = %d, envc = %d\n",argc, envc);
 
   printf("%d\n",__LINE__);
   for (int i = 0; i < envc; i++) {
