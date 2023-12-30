@@ -21,7 +21,6 @@ intptr_t uload(PCB *pcb, const char *filename);
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
   intptr_t entry = uload(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
-  printf("%p\n", entry);
 
   char *sp = (char *)new_page(PG_PER_STACK);
 
@@ -63,6 +62,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
   context_uload(&pcb[1], filename, argv, envp);
+  printf("%p\n", pcb[1].cp->mepc);
   yield();
   return -1;
 }
