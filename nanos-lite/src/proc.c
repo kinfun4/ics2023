@@ -62,7 +62,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
   context_uload(&pcb[1], filename, argv, envp);
-  printf("%p\n", pcb[1].cp->mepc);
+  printf("1:%p\n", pcb[1].cp->mepc);
   yield();
   return -1;
 }
@@ -89,6 +89,6 @@ void init_proc() {
 Context* schedule(Context *prev) {
   current->cp = prev;
   current = (current == &pcb_boot ? &pcb[0] : &pcb[1]);
-  if(pcb[1].cp != NULL)printf("%p\n", pcb[1].cp->mepc);
+  if(pcb[1].cp != NULL)printf("2: %p\n", pcb[1].cp->mepc);
   return current->cp;
 }
