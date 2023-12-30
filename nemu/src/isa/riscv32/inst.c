@@ -15,6 +15,7 @@
 
 #include "common.h"
 #include "local-include/reg.h"
+#include "macro.h"
 #include <cpu/cpu.h>
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
@@ -22,8 +23,8 @@
 
 void func_call(word_t pc, word_t dnpc);
 void func_ret(word_t pc, word_t dnpc);
-#define CALL func_call
-#define RET func_ret
+#define CALL(a,b) MUXDEF(CONFIG_FTRACE, func_call(a,b), (void)0)
+#define RET(a,b) MUXDEF(CONFIG_FTRACE, func_ret(a,b), (void)0)
 #define INTR isa_raise_intr
 
 #define R(i) gpr(i)
