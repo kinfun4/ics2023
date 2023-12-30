@@ -21,9 +21,9 @@ intptr_t uload(PCB *pcb, const char *filename);
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
   intptr_t entry = uload(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
+  printf("%p\n", pcb->cp);
 
   char *sp = (char *)new_page(PG_PER_STACK);
-  // printf("%p\n", sp);
 
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
@@ -90,6 +90,5 @@ void init_proc() {
 Context* schedule(Context *prev) {
   current->cp = prev;
   current = (current == &pcb_boot ? &pcb[0] : &pcb[1]);
-  printf("%p\n", current->cp);
   return current->cp;
 }
