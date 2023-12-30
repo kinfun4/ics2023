@@ -34,10 +34,10 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   printf("%d\n",__LINE__);
   for (int i = 0; i < envc; i++) {
+  printf("sp = %p\n",sp);
     int len = strlen(*(envp + i)) + 1;
     len = (len & ~3) + (len & 3 ? 4 : 0);
     sp -= len;
-  printf("sp = %p\n",sp);
     _envp[i] = sp;
     strncpy(_envp[i], *(envp + i), len);
   }
