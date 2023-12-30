@@ -72,6 +72,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 int fs_open(const char *pathname, int flags, int mode);
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
+  printf("argv = %p, envp = %p\n",argv, envp);
+  printf("*envp = %p\n", *envp);
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
   assert(fs_open(filename, 0, 0) != -1);
   context_uload(p, filename, argv, envp);
