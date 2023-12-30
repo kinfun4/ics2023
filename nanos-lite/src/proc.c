@@ -1,5 +1,4 @@
 #include <proc.h>
-#include <stdint.h>
 
 #define MAX_NR_PROC 4
 
@@ -38,6 +37,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   for (int i = 0; i< argc; i++){
     int len = strlen(*(argv + i)) + 1;
     len = (len & ~3) + (len & 3 ? 4 : 0);
+    printf("%d\n", len);
     sp -= len;
     _argv[i] = sp;
     strncpy(_argv[i], *(argv + i), len);
