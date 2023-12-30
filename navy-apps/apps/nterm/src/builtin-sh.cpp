@@ -30,11 +30,11 @@ void cmd_r(const char *buf) {
       buf++;
   }
   printf("%s\n", filename);
+  argv[0] = filename;
+  argv[argc] = NULL;
   for (int i=0 ; i<argc;i++) {
   printf("%s\n", argv[i]);
   }
-  argv[0] = filename;
-  argv[argc] = NULL;
   char *empty[] = {NULL};
   int ret = execvp(filename, argv);
   if (ret == -1)
