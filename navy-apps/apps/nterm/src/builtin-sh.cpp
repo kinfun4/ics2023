@@ -12,15 +12,22 @@ void cmd_q(int status){
 
 void cmd_r(const char *buf){
   char filename[20];
+  const char **argv;
+  int argc =0;
   int i = 0;
   while (*buf == ' ') buf++;
-  while (*buf != '\n') filename[i++] = *(buf++);
+  while (*buf != '\n' && *buf != ' ') filename[i++] = *(buf++);
   filename[i] = '\0';
+  while(*buf != '\n'){
+    while(*buf == ' '){
+      buf++;
+    }
+    if(*buf != '\n')argv[argc++] = buf;
+    while(*buf != '\n' && *buf != ' ')buf++;
+  }
   printf("%s\n", filename);
   char *empty[] = {NULL};
-  printf("environ = %p\n", environ);
-  printf("*environ = %p\n", *environ);
-  int ret = execvp(filename, empty);
+  int ret = execvp(filename, (char * const *)argv);
   if(ret == -1) sh_printf("filename error!\n");
 }
 
