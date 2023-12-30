@@ -20,17 +20,11 @@ intptr_t uload(PCB *pcb, const char *filename);
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
   assert(argv);
   assert(envp);
-  intptr_t entry = uload(pcb, filename);
-  pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
-
   char *sp = (char *)new_page(PG_PER_STACK);
 
-  printf("argv = %p, envp = %p\n",argv, envp);
   int envc = 0,argc = 0;
-  printf("*envp = %p\n", *envp);
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
-  printf("argc = %d, envc = %d\n",argc, envc);
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
@@ -66,14 +60,15 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   sp -= sizeof(int);
   *(int *)sp = argc;
 
+  intptr_t entry = uload(pcb, filename);
+  pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
+
   pcb->cp->GPRx = (intptr_t) sp;
 }
 
 int fs_open(const char *pathname, int flags, int mode);
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
-  printf("argv = %p, envp = %p\n",argv, envp);
-  printf("*envp = %p\n", *envp);
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
   assert(fs_open(filename, 0, 0) != -1);
   context_uload(p, filename, argv, envp);
