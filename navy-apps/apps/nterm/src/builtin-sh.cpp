@@ -1,3 +1,4 @@
+#include "sys/unistd.h"
 #include <cstdio>
 #include <nterm.h>
 #include <stdarg.h>
@@ -19,7 +20,7 @@ void cmd_r(const char *buf){
   filename[i] = '\0';
   printf("%s\n", filename);
   char *empty[] = {NULL};
-  int ret = execvp(filename, empty);
+  int ret = execvpe(filename, empty, environ);
   if(ret == -1) sh_printf("filename error!\n");
 }
 
