@@ -30,7 +30,7 @@ void do_syscall(Context *c) {
   case SYS_exit:
     assert(a[1] == 0);
       // halt(0);
-    char **empty = {NULL};
+    char *empty[] = {NULL};
     execve("/bin/nterm", empty, empty);
     naive_uload(NULL, "/bin/nterm");
     break;
