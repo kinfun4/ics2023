@@ -1,6 +1,7 @@
 #include <proc.h>
 
 #define MAX_NR_PROC 4
+#define PG_PER_STACK 8
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
@@ -19,7 +20,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   intptr_t entry = uload(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
-  char *sp = (char *)pcb->cp->GPRx;
+  char *sp = (char *)new_page(PG_PER_STACK);
 
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
@@ -31,21 +32,23 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   for (int i = 0; i < envc; i++) {
     int len = strlen(*(envp + i)) + 1;
     len = (len & ~3) + (len & 3 ? 4 : 0);
+    sp -= len;
     _envp[i] = sp;
     strncpy(_envp[i], *(envp + i), len);
   }
   for (int i = 0; i< argc; i++){
     int len = strlen(*(argv + i)) + 1;
     len = (len & ~3) + (len & 3 ? 4 : 0);
-    printf("%d\n", len);
     sp -= len;
     _argv[i] = sp;
     strncpy(_argv[i], *(argv + i), len);
   }
+
   _envp[envc] = NULL;
-  _argv[argc] = NULL;
   sp -= (envc + 1) * sizeof(char *);
   memcpy(sp, _envp, (envc + 1) * sizeof(char *));
+
+  _argv[argc] = NULL;
   sp -= (argc + 1) * sizeof(char *);
   memcpy(sp, _argv, (argc + 1) * sizeof(char *));
 

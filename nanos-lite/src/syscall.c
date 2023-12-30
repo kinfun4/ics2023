@@ -16,6 +16,12 @@ static void get_time(struct timeval *t){
   t->tv_usec %= 1000000;
 }
 
+static int execve(const char *filename, char *const argv[], char *const envp[]){
+  if(fs_open(filename, 0, 0) != -1)
+    naive_uload(NULL, filename);
+  return -1;
+}
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -54,9 +60,7 @@ void do_syscall(Context *c) {
     c->GPRx = 0;
     break;
   case SYS_execve:
-    if(fs_open((char *)a[1], 0, 0) != -1)
-      naive_uload(NULL, (char *)a[1]);
-    else c->GPRx = -1;
+    c->GPRx = execve((char *)a[1], (char **)a[2], (char **)a[3]);
     break;
   case SYS_gettimeofday:
     c->GPRx = 0;
