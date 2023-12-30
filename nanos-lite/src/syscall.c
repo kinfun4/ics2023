@@ -1,6 +1,5 @@
 #include "syscall.h"
 #include <proc.h>
-#include <stdio.h>
 #include <sys/time.h>
 
 int fs_open(const char *pathname, int flags, int mode);
