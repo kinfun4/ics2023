@@ -23,14 +23,13 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   char *sp = (char *)new_page(PG_PER_STACK);
 
-  printf("%d\n",__LINE__);
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
-  printf("%d\n",__LINE__);
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
+  printf("argc = %d, envc = %d\n",argc, envc);
 
   printf("%d\n",__LINE__);
   for (int i = 0; i < envc; i++) {
@@ -59,7 +58,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   sp -= sizeof(int);
   *(int *)sp = argc;
-  printf("%d\n",__LINE__);
 
   pcb->cp->GPRx = (intptr_t) sp;
 }
