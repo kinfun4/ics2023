@@ -37,6 +37,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   for (int i = 0; i< argc; i++){
     int len = strlen(*(argv + i)) + 1;
     sp -= len;
+    printf("args = %p\n",sp);
     _argv[i] = sp;
     strncpy(_argv[i], *(argv + i), len);
   }
