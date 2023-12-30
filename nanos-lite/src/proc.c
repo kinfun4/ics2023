@@ -1,5 +1,7 @@
 #include <proc.h>
-#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define MAX_NR_PROC 4
 
@@ -11,14 +13,47 @@ void switch_boot_pcb() {
   current = &pcb_boot;
 }
 
-void context_kload(PCB *p, void (*entry)(void *), void * arg){
-  p->cp = kcontext((Area) { p->stack, p + 1 }, entry, arg);
+void context_kload(PCB *pcb, void (*entry)(void *), void * arg){
+  pcb->cp = kcontext((Area) { pcb->stack, pcb + 1 }, entry, arg);
 }
 
 intptr_t uload(PCB *pcb, const char *filename);
-void context_uload(PCB *p, const char *filename){
-  intptr_t entry = uload(p, filename);
-  p->cp = ucontext(&p->as, (Area) { p->stack, p + 1 }, (void *)entry);
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
+  intptr_t entry = uload(pcb, filename);
+  pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
+
+  char *sp = (char *)pcb->cp->GPRx;
+
+  int envc = 0,argc = 0;
+  while(*(envp + envc) != NULL)envc++;
+  while(*(argv + argc) != NULL)argc++;
+
+  char **_envp = malloc((envc + 1) * sizeof(char *));
+  char **_argv = malloc((argc + 1) * sizeof(char *));
+
+  for (int i = 0; i < envc; i++) {
+    int len = strlen(*(envp + i)) + 1;
+    sp -= len;
+    _envp[i] = sp;
+    strncpy(_envp[i], *(envp + i), len);
+  }
+  for (int i = 0; i< argc; i++){
+    int len = strlen(*(argv + i)) + 1;
+    sp -= len;
+    _argv[i] = sp;
+    strncpy(_argv[i], *(argv + i), len);
+  }
+  _envp[envc] = NULL;
+  _argv[argc] = NULL;
+  sp -= (envc + 1) * sizeof(char *);
+  memcpy(sp, _envp, (envc + 1) * sizeof(char *));
+  sp -= (argc + 1) * sizeof(char *);
+  memcpy(sp, _argv, (argc + 1) * sizeof(char *));
+
+  sp -= sizeof(int);
+  *(int *)sp = argc;
+
+  pcb->cp->GPRx = (intptr_t) sp;
 }
 
 void hello_fun(void *arg) {
@@ -31,9 +66,10 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  // context_kload(&pcb[0], hello_fun, (void *)0);
-  context_uload(&pcb[0], "/bin/hello");
-  context_uload(&pcb[1], "/bin/pal");
+  context_kload(&pcb[0], hello_fun, (void *)0);
+  char *argv[] = {"--skip", NULL};
+  char *envp[] = {NULL};
+  context_uload(&pcb[1], "/bin/pal", argv, envp);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
