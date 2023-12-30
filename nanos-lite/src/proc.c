@@ -21,7 +21,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   assert(argv);
   assert(envp);
   char *sp = (char *)new_page(PG_PER_STACK);
-  printf("%d\n", __LINE__);
 
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
@@ -63,7 +62,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   intptr_t entry = uload(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
-  printf("%d\n", __LINE__);
 
   pcb->cp->GPRx = (intptr_t) sp;
 }
@@ -75,6 +73,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
   assert(fs_open(filename, 0, 0) != -1);
   printf("%d\n", __LINE__);
   context_uload(p, filename, argv, envp);
+  printf("%d\n", __LINE__);
   yield();
   return -1;
 }
