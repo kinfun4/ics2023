@@ -3,13 +3,14 @@
 static void *pf = NULL;
 
 void* new_page(size_t nr_page) {
+  void *ret = pf;
   pf += nr_page * PGSIZE;
-  return pf;
+  return ret;
 }
 
 #ifdef HAS_VME
 static void* pg_alloc(int n) {
-  return NULL;
+  return new_page(1);
 }
 #endif
 

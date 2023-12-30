@@ -1,3 +1,4 @@
+#include "memory.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
@@ -20,7 +21,7 @@ intptr_t uload(PCB *pcb, const char *filename);
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
   assert(argv);
   assert(envp);
-  char *sp = (char *)new_page(PG_PER_STACK);
+  char *sp = (char *)new_page(PG_PER_STACK) + PG_PER_STACK * PGSIZE;
 
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
