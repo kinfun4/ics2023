@@ -23,6 +23,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   char *sp = (char *)new_page(PG_PER_STACK);
 
+  printf("argv = %p, envp = %p\n",argv, envp);
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
