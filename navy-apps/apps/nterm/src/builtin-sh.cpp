@@ -33,6 +33,7 @@ void cmd_r(const char *buf) {
   for (int i=0 ; i<argc;i++) {
   printf("%s\n", argv[i]);
   }
+  argv[argc] = NULL;
   char *empty[] = {NULL};
   int ret = execvp(filename, argv);
   if (ret == -1)
