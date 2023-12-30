@@ -19,7 +19,7 @@ void cmd_r(const char *buf){
   printf("%s\n", filename);
   char *empty[] = {NULL};
   printf("%p\n", environ);
-  int ret = execvp(filename, empty);
+  int ret = execve(filename, empty, empty);
   if(ret == -1) sh_printf("filename error!\n");
 }
 

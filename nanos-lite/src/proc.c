@@ -18,6 +18,8 @@ void context_kload(PCB *pcb, void (*entry)(void *), void * arg){
 intptr_t uload(PCB *pcb, const char *filename);
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
+  assert(argv);
+  assert(envp);
   intptr_t entry = uload(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
@@ -30,11 +32,11 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
+  assert(_envp);
+  assert(_argv);
   printf("argc = %d, envc = %d\n",argc, envc);
 
-  printf("%d\n",__LINE__);
   for (int i = 0; i < envc; i++) {
-  printf("sp = %p\n",sp);
     int len = strlen(*(envp + i)) + 1;
     len = (len & ~3) + (len & 3 ? 4 : 0);
     sp -= len;
@@ -49,7 +51,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
     strncpy(_argv[i], *(argv + i), len);
   }
 
-  printf("%d\n",__LINE__);
   _envp[envc] = NULL;
   sp -= (envc + 1) * sizeof(char *);
   memcpy(sp, _envp, (envc + 1) * sizeof(char *));
@@ -57,6 +58,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   _argv[argc] = NULL;
   sp -= (argc + 1) * sizeof(char *);
   memcpy(sp, _argv, (argc + 1) * sizeof(char *));
+
+  free(_argv);
+  free(_envp);
 
   sp -= sizeof(int);
   *(int *)sp = argc;
