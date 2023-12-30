@@ -12,19 +12,20 @@ void cmd_q(int status){
 
 void cmd_r(const char *buf){
   char filename[20];
-  // char *argv[10];
-  // int argc =0;
+  char *argv[10];
+  int argc =0;
   int i = 0;
   while (*buf == ' ') buf++;
   while (*buf != '\n' && *buf != ' ') filename[i++] = *(buf++);
   filename[i] = '\0';
-  // while(*buf != '\n'){
-  //   while(*buf == ' '){
-  //     buf++;
-  //   }
-  //   if(*buf != '\n'){argv[argc++] = (char *)buf;}
-  //   while(*buf != '\n' && *buf != ' ')buf++;
-  // }
+  while(*buf != '\n'){
+    while(*buf == ' '){
+      buf++;
+    }
+    if(*buf != '\n'){argv[argc++] = (char *)buf;}
+    while(*buf != '\n' && *buf != ' ')buf++;
+  }
+  printf("%s\n", argv[0]);
   printf("%s\n", filename);
   char *empty[] = {NULL};
   int ret = execvp(filename, empty);
