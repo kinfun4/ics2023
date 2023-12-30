@@ -70,10 +70,10 @@ int fs_open(const char *pathname, int flags, int mode);
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
-  assert(fs_open(filename, 0, 0) != -1);
+  if(fs_open(filename, 0, 0) == -1)return -2;
   context_uload(p, filename, argv, envp);
   yield();
-  return -1;
+  return 0;
 }
 
 void hello_fun(void *arg) {
