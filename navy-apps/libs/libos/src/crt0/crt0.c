@@ -11,6 +11,7 @@ void call_main(uintptr_t *args) {
   char **argv = (char **)args[1];
   char **envp = (char **)args[argc + 2];
   printf("%p\n", args + 1);
+  printf("%p\n", args + argc + 2);
   char *empty[] =  {NULL };
   environ = empty;
   __libc_init_array();
