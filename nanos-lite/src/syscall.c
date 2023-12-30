@@ -32,7 +32,7 @@ void do_syscall(Context *c) {
       // halt(0);
     char *empty[] = {NULL};
     execve("/bin/nterm", empty, empty);
-    naive_uload(NULL, "/bin/nterm");
+    // naive_uload(NULL, "/bin/nterm");
     break;
   case SYS_yield:
     yield();
