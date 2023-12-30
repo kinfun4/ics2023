@@ -18,7 +18,7 @@ void cmd_r(const char *buf){
   filename[i] = '\0';
   printf("%s\n", filename);
   char *empty[] = {NULL};
-  int ret = execvpe(filename, empty, empty);
+  int ret = execvp(filename, empty);
   if(ret == -1) sh_printf("filename error!\n");
 }
 
