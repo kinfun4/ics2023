@@ -1,3 +1,4 @@
+#include "am.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
@@ -16,6 +17,7 @@ void context_kload(PCB *pcb, void (*entry)(void *), void * arg){
 }
 
 intptr_t uload(PCB *pcb, const char *filename);
+
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
   intptr_t entry = uload(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
@@ -58,6 +60,12 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp->GPRx = (intptr_t) sp;
 }
 
+int execve(const char *filename, char *const argv[], char *const envp[]){
+  context_uload(&pcb[1], filename, argv, envp);
+  yield();
+  return -1;
+}
+
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
@@ -68,10 +76,10 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  context_kload(&pcb[0], hello_fun, (void *)0);
-  char *argv[] = {"--skip", NULL};
+  char *filename = "/bin/exec-test";
+  char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[1], "/bin/pal", argv, envp);
+  context_uload(&pcb[0], filename, argv, envp);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
@@ -80,6 +88,6 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
   current->cp = prev;
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = &pcb[1];
   return current->cp;
 }

@@ -1,6 +1,5 @@
 #include "syscall.h"
 #include <proc.h>
-#include <stdio.h>
 #include <sys/time.h>
 
 int fs_open(const char *pathname, int flags, int mode);
@@ -8,7 +7,6 @@ size_t fs_read(int fd, void *buf, size_t len);
 size_t fs_write(int fd, const void *buf, size_t len);
 size_t fs_lseek(int fd, size_t offset, int whence);
 int fs_close(int fd);
-void naive_uload(PCB *pcb, const char *filename);
 
 static void get_time(struct timeval *t){
   t->tv_usec = io_read(AM_TIMER_UPTIME).us;
@@ -16,11 +14,6 @@ static void get_time(struct timeval *t){
   t->tv_usec %= 1000000;
 }
 
-static int execve(const char *filename, char *const argv[], char *const envp[]){
-  if(fs_open(filename, 0, 0) != -1)
-    naive_uload(NULL, filename);
-  return -1;
-}
 
 void do_syscall(Context *c) {
   uintptr_t a[4];
