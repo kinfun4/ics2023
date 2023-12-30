@@ -1,5 +1,3 @@
-#include "sys/unistd.h"
-#include <cstdio>
 #include <nterm.h>
 #include <stdarg.h>
 #include <unistd.h>
