@@ -61,13 +61,8 @@ static void sh_prompt() { sh_printf("sh> "); }
 
 static void sh_handle_cmd(const char *cmd) {
   switch (cmd[0]) {
-  case 'q':
-    cmd_q(0);
-    break;
-  case 'r':
-    cmd_r(cmd + 1);
-    break;
   default:
+    cmd_r(cmd);
     break;
   }
 }
