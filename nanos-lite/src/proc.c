@@ -77,7 +77,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/exec-test";
+  char *filename = "/bin/menu";
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
