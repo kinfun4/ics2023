@@ -1,7 +1,5 @@
-#include <cstdlib>
 #include <nterm.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <SDL.h>
 
