@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <nterm.h>
 #include <stdarg.h>
 #include <unistd.h>
@@ -12,7 +13,7 @@ void cmd_q(int status){
 
 void cmd_r(const char *buf){
   char filename[20];
-  const char **argv;
+  const char *argv[10];
   int argc =0;
   int i = 0;
   while (*buf == ' ') buf++;
