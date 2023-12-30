@@ -1,7 +1,4 @@
 #include <proc.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MAX_NR_PROC 4
 
@@ -47,8 +44,10 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   _argv[argc] = NULL;
   sp -= (envc + 1) * sizeof(char *);
   memcpy(sp, _envp, (envc + 1) * sizeof(char *));
+  printf("envp = %p\n",sp);
   sp -= (argc + 1) * sizeof(char *);
   memcpy(sp, _argv, (argc + 1) * sizeof(char *));
+  printf("argv = %p\n",sp);
 
   sp -= sizeof(int);
   *(int *)sp = argc;
