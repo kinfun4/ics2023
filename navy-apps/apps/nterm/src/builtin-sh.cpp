@@ -1,44 +1,45 @@
+#include <SDL.h>
 #include <nterm.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <SDL.h>
 
 char handle_key(SDL_Event *ev);
 static void sh_printf(const char *format, ...);
 
-void cmd_q(int status){
-  exit(status);
-}
+void cmd_q(int status) { exit(status); }
 
-void cmd_r(const char *buf){
+void cmd_r(const char *buf) {
   char filename[20];
   char *argv[10];
-  int argc =0;
+  int argc = 0;
   int i = 0;
-  while (*buf == ' ') buf++;
-  while (*buf != '\n' && *buf != ' ') filename[i++] = *(buf++);
+  while (*buf == ' ')
+    buf++;
+  while (*buf != '\0' && *buf != ' ')
+    filename[i++] = *(buf++);
   filename[i] = '\0';
-  while(*buf != '\n'){
-    while(*buf == ' '){
+  while (*buf != '\0') {
+    while (*buf == ' ') {
       buf++;
     }
-    if(*buf != '\n'){argv[argc++] = (char *)buf;}
-    while(*buf != '\n' && *buf != ' ')buf++;
+    if (*buf == '\0') {
+      break;
+    }
+    argv[argc++] = (char *)buf;
+    while (*buf != '\0' && *buf != ' ')
+      buf++;
   }
-  printf("%s\n", argv[0]);
   printf("%s\n", filename);
   char *empty[] = {NULL};
-  int ret = execvp(filename, empty);
-  if(ret == -1) sh_printf("filename error!\n");
+  int ret = execvp(filename, argv);
+  if (ret == -1)
+    sh_printf("filename error!\n");
 }
 
-struct handler{
+struct handler {
   char name[10];
   void *handler;
-} cmd_handler[] = {
-  {"q", (void *)cmd_q},
-  {"r", (void *)cmd_r}
-};
+} cmd_handler[] = {{"q", (void *)cmd_q}, {"r", (void *)cmd_r}};
 
 static void sh_printf(const char *format, ...) {
   static char buf[256] = {};
@@ -53,15 +54,18 @@ static void sh_banner() {
   sh_printf("Built-in Shell in NTerm (NJU Terminal)\n\n");
 }
 
-static void sh_prompt() {
-  sh_printf("sh> ");
-}
+static void sh_prompt() { sh_printf("sh> "); }
 
 static void sh_handle_cmd(const char *cmd) {
   switch (cmd[0]) {
-    case 'q': cmd_q(0);break;
-    case 'r': cmd_r(cmd + 1);break;
-    default: break;
+  case 'q':
+    cmd_q(0);
+    break;
+  case 'r':
+    cmd_r(cmd + 1);
+    break;
+  default:
+    break;
   }
 }
 
