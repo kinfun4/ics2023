@@ -18,7 +18,8 @@ void cmd_r(const char *buf){
   while (*buf != '\n') filename[i++] = *(buf++);
   filename[i] = '\0';
   printf("%s\n", filename);
-  int ret = execvp(filename, NULL);
+  char **empty = {NULL};
+  int ret = execvp(filename, empty);
   if(ret == -1) sh_printf("filename error!\n");
 }
 
