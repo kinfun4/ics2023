@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <nterm.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <SDL.h>
 
@@ -13,22 +14,22 @@ void cmd_q(int status){
 
 void cmd_r(const char *buf){
   char filename[20];
-  const char *argv[10];
-  int argc =0;
+  // char *argv[10];
+  // int argc =0;
   int i = 0;
   while (*buf == ' ') buf++;
   while (*buf != '\n' && *buf != ' ') filename[i++] = *(buf++);
   filename[i] = '\0';
-  while(*buf != '\n'){
-    while(*buf == ' '){
-      buf++;
-    }
-    if(*buf != '\n')argv[argc++] = buf;
-    while(*buf != '\n' && *buf != ' ')buf++;
-  }
+  // while(*buf != '\n'){
+  //   while(*buf == ' '){
+  //     buf++;
+  //   }
+  //   if(*buf != '\n'){argv[argc++] = (char *)buf;}
+  //   while(*buf != '\n' && *buf != ' ')buf++;
+  // }
   printf("%s\n", filename);
   char *empty[] = {NULL};
-  int ret = execvp(filename, (char * const *)argv);
+  int ret = execvp(filename, empty);
   if(ret == -1) sh_printf("filename error!\n");
 }
 
