@@ -11,7 +11,7 @@ void cmd_q(int status) { exit(status); }
 void cmd_r(const char *buf) {
   char filename[20];
   char *argv[10];
-  int argc = 0;
+  int argc = 1;
   int i = 0;
   while (*buf == ' ')
     buf++;
@@ -33,6 +33,7 @@ void cmd_r(const char *buf) {
   for (int i=0 ; i<argc;i++) {
   printf("%s\n", argv[i]);
   }
+  argv[0] = filename;
   argv[argc] = NULL;
   char *empty[] = {NULL};
   int ret = execvp(filename, argv);
