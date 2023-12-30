@@ -1,5 +1,6 @@
 #include "syscall.h"
 #include <proc.h>
+#include <stdio.h>
 #include <sys/time.h>
 
 int fs_open(const char *pathname, int flags, int mode);
@@ -29,6 +30,7 @@ void do_syscall(Context *c) {
   case SYS_exit:
     assert(a[1] == 0);
       // halt(0);
+    printf("%d\n",__LINE__);
     naive_uload(NULL, "/bin/nterm");
     break;
   case SYS_yield:
