@@ -20,7 +20,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
   char *sp = (char *)pcb->cp->GPRx;
-  printf("sp = %p\n",sp);
 
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
@@ -31,12 +30,15 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   for (int i = 0; i < envc; i++) {
     int len = strlen(*(envp + i)) + 1;
-    sp -= len;
+    assert(len <= 32);
+    len = 32;
     _envp[i] = sp;
     strncpy(_envp[i], *(envp + i), len);
   }
   for (int i = 0; i< argc; i++){
     int len = strlen(*(argv + i)) + 1;
+    assert(len <= 32);
+    len = 32;
     sp -= len;
     _argv[i] = sp;
     strncpy(_argv[i], *(argv + i), len);
