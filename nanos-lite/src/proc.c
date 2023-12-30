@@ -51,6 +51,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   sp -= (argc + 1) * sizeof(char *);
   memcpy(sp, _argv, (argc + 1) * sizeof(char *));
   printf("argv = %p\n",sp);
+  printf("args = %p\n",_argv[0]);
 
   sp -= sizeof(int);
   *(int *)sp = argc;
