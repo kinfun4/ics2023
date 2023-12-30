@@ -1,3 +1,4 @@
+#include "am.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
@@ -61,7 +62,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
   context_uload(&pcb[1], filename, argv, envp);
-  printf("%s\n", filename);
   yield();
   return -1;
 }
@@ -88,6 +88,6 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
   current->cp = prev;
-  current = &pcb[1];
+  current = (current == &pcb_boot ? &pcb[0] : &pcb[1]);
   return current->cp;
 }
