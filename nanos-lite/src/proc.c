@@ -23,11 +23,11 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
   char *sp = (char *)new_page(PG_PER_STACK);
 
-  printf("%d\n", __LINE__);
   int envc = 0,argc = 0;
+  printf("argv = %p\n", argv);
+  printf("envp = %p\n", envp);
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
-  printf("%d\n", __LINE__);
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
@@ -67,7 +67,6 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
   assert(fs_open(filename, 0, 0) != -1);
   context_uload(p, filename, argv, envp);
-  printf("%d\n", __LINE__);
   yield();
   return -1;
 }
