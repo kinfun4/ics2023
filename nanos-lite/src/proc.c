@@ -29,12 +29,12 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
+  printf("argc = %d, envc = %d\n",argc, envc);
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
   assert(_envp);
   assert(_argv);
-  printf("argc = %d, envc = %d\n",argc, envc);
 
   for (int i = 0; i < envc; i++) {
     int len = strlen(*(envp + i)) + 1;

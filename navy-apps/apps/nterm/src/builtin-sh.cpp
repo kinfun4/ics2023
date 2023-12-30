@@ -19,9 +19,6 @@ void cmd_r(const char *buf){
   printf("%s\n", filename);
   char *empty[] = {NULL};
   printf("%p\n", environ);
-  int envc = 0;
-  while(*(environ + envc) != NULL)envc++;
-  printf("%d\n", envc);
   int ret = execvp(filename, empty);
   if(ret == -1) sh_printf("filename error!\n");
 }
