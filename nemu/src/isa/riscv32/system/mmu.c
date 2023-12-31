@@ -38,16 +38,18 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uintptr_t vpn1 = (uintptr_t)vaddr >> 22;
   uintptr_t vpn0 = BITS((uintptr_t)vaddr, 21, 12); 
   PTE *pte1 = (void *)ptr + vpn1 * PTESIZE;
+  printf("%p\n", pte1);
   assert(*pte1 & PTE_V);
   PTE* pte0 = (void *)GET_PPN((uintptr_t)*pte1) + vpn0 * PTESIZE;
+  printf("%p\n", pte0);
   assert(*pte0 & PTE_V);
   paddr_t paddr = GET_PPN((uintptr_t)*pte0) + READ_LOW(vaddr, 12);
+  printf("vaddr = %#x, paddr = %#x\n", vaddr, paddr);
   return paddr;
 }
 
 paddr_t isa_mmu_execute(vaddr_t vaddr, int len, int type) {
   paddr_t addr = 0;
-  printf("%d\n", __LINE__);
   switch (isa_mmu_check(vaddr, len, type)) {
   case MMU_DIRECT:
     addr = vaddr;
