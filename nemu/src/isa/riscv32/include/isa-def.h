@@ -17,6 +17,7 @@
 #define __ISA_RISCV_H__
 
 #include <common.h>
+#include <stdint.h>
 
 typedef struct {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
@@ -38,6 +39,6 @@ typedef struct {
 #define PTE_U 0x10
 #define PTE_A 0x40
 #define PTE_D 0x80
-typedef uint32_t PTE;
+typedef uintptr_t PTE;
 
 #endif

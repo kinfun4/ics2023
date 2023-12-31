@@ -43,6 +43,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   printf("vpn1 = %#x\n", (uint32_t)vpn1);
   PTE *pte1 = (void *)ptr + vpn1 * PTESIZE;
   printf("&pte1 = %p\n", pte1);
+  printf("pte1 = %x\n", (uint32_t)*pte1);
   assert(*pte1 & PTE_V);
   PTE* pte0 = (void *)GET_PPN((uintptr_t)*pte1) + vpn0 * PTESIZE;
   printf("&pte2 = %p\n", pte0);
