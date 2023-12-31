@@ -17,6 +17,7 @@
 #include <isa.h>
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
+#include <stdint.h>
 
 #define MODE (1 << 31)
 #define READ_HIGH(a, x)     ((a) & (~((1 << (x)) - 1)))
@@ -38,6 +39,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uintptr_t vpn1 = (uintptr_t)vaddr >> 22;
   uintptr_t vpn0 = BITS((uintptr_t)vaddr, 21, 12); 
   printf("vaddr = %#x\n", vaddr);
+  printf("ptr = %#x\n", (uint32_t)ptr);
   PTE *pte1 = (void *)ptr + vpn1 * PTESIZE;
   printf("&pte1 = %p\n", pte1);
   assert(*pte1 & PTE_V);
