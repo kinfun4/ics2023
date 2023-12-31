@@ -37,14 +37,15 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uintptr_t ptr = READ_LOW(satp, 22) << 12;
   uintptr_t vpn1 = (uintptr_t)vaddr >> 22;
   uintptr_t vpn0 = BITS((uintptr_t)vaddr, 21, 12); 
+  printf("vaddr = %#x\n", vaddr);
   PTE *pte1 = (void *)ptr + vpn1 * PTESIZE;
-  printf("%p\n", pte1);
+  printf("&pte1 = %p\n", pte1);
   assert(*pte1 & PTE_V);
   PTE* pte0 = (void *)GET_PPN((uintptr_t)*pte1) + vpn0 * PTESIZE;
-  printf("%p\n", pte0);
+  printf("&pte2 = %p\n", pte0);
   assert(*pte0 & PTE_V);
   paddr_t paddr = GET_PPN((uintptr_t)*pte0) + READ_LOW(vaddr, 12);
-  printf("vaddr = %#x, paddr = %#x\n", vaddr, paddr);
+  printf("paddr = %#x\n", paddr);
   return paddr;
 }
 
