@@ -66,7 +66,6 @@ paddr_t isa_mmu_execute(vaddr_t vaddr, int len, int type) {
     addr = vaddr;
     break;
   case MMU_TRANSLATE:
-  printf("MMU_TRANSLATE\n");
     addr = isa_mmu_translate(vaddr, len, type);
     break;
   default:
