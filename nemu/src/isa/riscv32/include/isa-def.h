@@ -39,6 +39,6 @@ typedef struct {
 #define PTE_U 0x10
 #define PTE_A 0x40
 #define PTE_D 0x80
-typedef uintptr_t PTE;
+typedef uint32_t PTE;
 
 #endif
