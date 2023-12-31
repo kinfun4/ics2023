@@ -32,7 +32,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   pgfree_usr = pgfree_f;
 
   kas.ptr = pgalloc_f(PGSIZE);
-  printf("kas.ptr = %p\n", kas.ptr);
+  assert(kas.ptr);
 
   int i;
   for (i = 0; i < LENGTH(segments); i ++) {
@@ -79,6 +79,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
   if(!(*pte1 & PTE_V)){
     void *ptr = pgalloc_usr(PGSIZE);
+    assert(ptr);
     *pte1 = GET_PTE((uintptr_t)ptr) | PTE_V;  // non-leaf PTE
   }
   PTE* pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
