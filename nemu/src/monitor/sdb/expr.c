@@ -19,6 +19,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+#include <memory/vaddr.h>
 
 enum {
   TK_NOTYPE = 0 ,
@@ -191,7 +192,7 @@ bool check_unary_op(int p) {
 }
 
 static word_t get_addr(word_t addr){
-	return isa_mmu_execute(addr,4,MEM_TYPE_READ);
+	return vaddr_read(addr,4);
 }
 
 word_t eval(int p,int q)

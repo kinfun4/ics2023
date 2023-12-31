@@ -1,6 +1,9 @@
+#include "klib-macros.h"
+#include "riscv/riscv.h"
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>
+#include <stdint.h>
 
 static AddrSpace kas = {};
 static void* (*pgalloc_usr)(int) = NULL;
@@ -15,7 +18,7 @@ static Area segments[] = {      // Kernel memory mappings
 
 static inline void set_satp(void *pdir) {
   uintptr_t mode = 1ul << (__riscv_xlen - 1);
-  asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> 12)));
+  asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> PGWIDTH)));
 }
 
 static inline uintptr_t get_satp() {
@@ -66,7 +69,19 @@ void __am_switch(Context *c) {
   }
 }
 
+#define GET_PPN(pte) (READ_HIGH((pte), 10) << 2)
+#define GET_PTE(pa)  (READ_HIGH((pa), 12) >> 2)
+
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  uintptr_t vpn1 = (uintptr_t)va >> 22;
+  uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22); 
+  PTE *p = (void *)as->ptr + vpn1 * PTESIZE;
+  if(!(*p & PTE_V)){
+    void *ptr = pgalloc_usr(PGSIZE);
+    *p = GET_PTE((uintptr_t)ptr) | PTE_V;  // non-leaf PTE
+  }
+  PTE* pte = (void *)GET_PPN(*p) + vpn0 * PTESIZE;
+  *pte = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X | PTE_A | PTE_D; // leaf PTE
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {

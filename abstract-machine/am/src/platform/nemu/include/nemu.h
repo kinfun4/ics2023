@@ -46,5 +46,6 @@ extern char _pmem_start;
 typedef uintptr_t PTE;
 
 #define PGSIZE    4096
+#define PGWIDTH   12
 
 #endif

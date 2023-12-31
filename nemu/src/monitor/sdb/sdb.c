@@ -17,6 +17,7 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <memory/vaddr.h>
 #include "sdb.h"
 
 static int is_batch_mode = false;
@@ -101,7 +102,7 @@ static int cmd_x(char *args) {
 	}
 	for(int i=0;i<n;i++)
 	{
-		printf("0x%08x\n",isa_mmu_execute(addr,4,MEM_TYPE_READ));
+		printf("0x%08x\n",vaddr_read(addr,4));
 		addr+=4;
 	}
 	return 0;

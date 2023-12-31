@@ -36,13 +36,14 @@ extern int csrs[1<<12];
 #define MTVEC 0x305
 #define MEPC 0x341
 #define MCAUSE 0x342
+#define SATP 0x180
 
 static inline int check_csr_idx(int idx) {
-  assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE);
+  assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE || idx == SATP);
   return idx;
 }
 
 #define csr(idx) (csrs[check_csr_idx(idx)])
-#define CSR(i) csr(i)
+#define CSR(idx) csr(idx)
 
 #endif
