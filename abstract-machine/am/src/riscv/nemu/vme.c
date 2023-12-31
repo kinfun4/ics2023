@@ -75,13 +75,13 @@ void __am_switch(Context *c) {
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   uintptr_t vpn1 = (uintptr_t)va >> 22;
   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22); 
-  PTE *p = (void *)as->ptr + vpn1 * PTESIZE;
-  if(!(*p & PTE_V)){
+  PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
+  if(!(*pte1 & PTE_V)){
     void *ptr = pgalloc_usr(PGSIZE);
-    *p = GET_PTE((uintptr_t)ptr) | PTE_V;  // non-leaf PTE
+    *pte1 = GET_PTE((uintptr_t)ptr) | PTE_V;  // non-leaf PTE
   }
-  PTE* pte = (void *)GET_PPN(*p) + vpn0 * PTESIZE;
-  *pte = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X | PTE_A | PTE_D; // leaf PTE
+  PTE* pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
+  *pte0 = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X | PTE_A | PTE_D; // leaf PTE
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
