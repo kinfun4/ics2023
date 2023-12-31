@@ -50,11 +50,14 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
 paddr_t isa_mmu_execute(vaddr_t vaddr, int len, int type) {
   paddr_t addr = 0;
+  printf("vaddr = %#x\n", vaddr);
   switch (isa_mmu_check(vaddr, len, type)) {
   case MMU_DIRECT:
+  printf("MMU_DIRECT\n");
     addr = vaddr;
     break;
   case MMU_TRANSLATE:
+  printf("MMU_TRANSLATE\n");
     addr = isa_mmu_translate(vaddr, len, type);
     break;
   default:
