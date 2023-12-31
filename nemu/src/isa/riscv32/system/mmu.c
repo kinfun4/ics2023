@@ -38,23 +38,16 @@ int isa_mmu_check(vaddr_t vaddr, int len, int type) {
 
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uint32_t satp = CSR(SATP);
-  paddr_t ptr = READ_LOW(satp, 22) << 12;
+  paddr_t ppn = READ_LOW(satp, 22) << 12;
   paddr_t vpn1 = vaddr >> 22;
   paddr_t vpn0 = BITS(vaddr, 21, 12); 
-  printf("vaddr = %#x\n", vaddr);
-  // printf("ptr = %#x\n", ptr);
-  // printf("vpn1 = %#x\n", vpn1);
-  paddr_t pte1_ptr = ptr + vpn1 * PTESIZE;
-  // printf("&pte1 = %#x\n", pte1_ptr);
+  paddr_t pte1_ptr = ppn + vpn1 * PTESIZE;
   PTE pte1 = paddr_read(pte1_ptr, PTESIZE);
-  // printf("pte1 = %#x\n", pte1);
-  assert(pte1 & PTE_V);
+  Assert(pte1 & PTE_V, "vaddr = %#x, ppn = %#x, pte1_ptr = %#x, pte1 = %#x", vaddr, ppn, pte1_ptr, pte1);
   paddr_t pte0_ptr = GET_PPN(pte1) + vpn0 * PTESIZE;
-  // printf("&pte0_ptr = %#x\n", pte0_ptr);
   PTE pte0 = paddr_read(pte0_ptr, PTESIZE);
-  assert(pte0 & PTE_V);
+  Assert(pte0 & PTE_V, "vaddr = %#x, ppn = %#x, pte0_ptr = %#x, pte0 = %#x", vaddr, GET_PPN(pte1), pte0_ptr, pte0);
   paddr_t paddr = GET_PPN(pte0) + READ_LOW(vaddr, 12);
-  // printf("paddr = %#x\n", paddr);
   assert(paddr == vaddr);
   return paddr;
 }
