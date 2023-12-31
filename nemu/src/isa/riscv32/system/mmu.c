@@ -14,14 +14,15 @@
  ***************************************************************************************/
 
 #include "../local-include/reg.h"
-#include "common.h"
-#include "isa-def.h"
 #include <isa.h>
 #include <memory/paddr.h>
 #include <memory/vaddr.h>
-#include <stdint.h>
 
 #define MODE (1 << 31)
+#define READ_HIGH(a, x)     ((a) & (~((1 << (x)) - 1)))
+#define READ_LOW(a, x)      ((a) & ((1 << (x)) - 1))
+#define GET_PPN(pte) (READ_HIGH((pte), 10) << 2)
+#define GET_PTE(pa)  (READ_HIGH((pa), 12) >> 2)
 
 int isa_mmu_check(vaddr_t vaddr, int len, int type) {
   uint32_t satp = CSR(SATP);
@@ -30,11 +31,6 @@ int isa_mmu_check(vaddr_t vaddr, int len, int type) {
   else
     return MMU_DIRECT;
 }
-
-#define READ_HIGH(a, x)     ((a) & (~((1 << (x)) - 1)))
-#define READ_LOW(a, x)      ((a) & ((1 << (x)) - 1))
-#define GET_PPN(pte) (READ_HIGH((pte), 10) << 2)
-#define GET_PTE(pa)  (READ_HIGH((pa), 12) >> 2)
 
 paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   uint32_t satp = CSR(SATP);
@@ -51,6 +47,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
 
 paddr_t isa_mmu_execute(vaddr_t vaddr, int len, int type) {
   paddr_t addr = 0;
+  printf("%d\n", __LINE__);
   switch (isa_mmu_check(vaddr, len, type)) {
   case MMU_DIRECT:
     addr = vaddr;
@@ -58,7 +55,7 @@ paddr_t isa_mmu_execute(vaddr_t vaddr, int len, int type) {
   case MMU_TRANSLATE:
     addr = isa_mmu_translate(vaddr, len, type);
     break;
-  case MMU_FAIL:
+  default:
     panic("Invalid address!");
   }
   return addr;
