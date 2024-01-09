@@ -79,6 +79,7 @@ uintptr_t loader(PCB *pcb, const char *filename) {
   }
 
   pcb->max_brk = brk;
+  printf("max_brk = %#x\n", pcb->max_brk);
   fs_close(fd);
 
   return Ehdr->e_entry;
