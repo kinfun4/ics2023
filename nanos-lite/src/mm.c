@@ -1,4 +1,6 @@
+#include "am.h"
 #include <memory.h>
+#include <proc.h>
 
 static void *pf = NULL;
 
@@ -22,7 +24,14 @@ void free_page(void *p) {
 }
 
 /* The brk() system call handler. */
+extern PCB *current;
 int mm_brk(uintptr_t brk) {
+  while (current->max_brk < brk) {
+    void *paddr = new_page(1);
+    void *vaddr = (void *)current->max_brk;
+    map(&current->as, vaddr, paddr, 0x7);
+    current->max_brk += PGSIZE;
+  }
   return 0;
 }
 

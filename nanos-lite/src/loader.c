@@ -1,6 +1,9 @@
+#include "klib-macros.h"
+#include "memory.h"
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
+#include <stdint.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -49,6 +52,8 @@ static size_t page_clear(PCB *pcb, void *vaddr, size_t len) {
 
 uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
+  uintptr_t brk = 0; 
+
   Elf_Ehdr Ehdr[1];
   fs_read(fd, Ehdr, sizeof(Elf_Ehdr));
 
@@ -69,8 +74,11 @@ uintptr_t loader(PCB *pcb, const char *filename) {
       page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
       page_clear(pcb, (void *)ROUNDUP(Phdr->p_vaddr + Phdr->p_filesz, PGSIZE),
                  Phdr->p_memsz - Phdr->p_filesz);
+      brk = MAX(brk, ROUNDUP(Phdr->p_vaddr + Phdr->p_memsz, PGSIZE));
     }
   }
+
+  pcb->max_brk = brk;
   fs_close(fd);
 
   return Ehdr->e_entry;

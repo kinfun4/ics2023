@@ -1,6 +1,7 @@
 #include "syscall.h"
 #include <proc.h>
 #include <fs.h>
+#include <memory.h>
 #include <sys/time.h>
 
 
@@ -49,7 +50,7 @@ void do_syscall(Context *c) {
     c->GPRx = fs_lseek(a[1], a[2], a[3]);
     break;
   case SYS_brk:
-    c->GPRx = 0;
+    c->GPRx = mm_brk(a[1]);
     break;
   case SYS_execve:
     c->GPRx = execve((char *)a[1], (char **)a[2], (char **)a[3]);
