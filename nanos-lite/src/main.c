@@ -1,4 +1,5 @@
 #include <common.h>
+#include <stdio.h>
 
 void init_mm(void);
 void init_device(void);
@@ -23,6 +24,7 @@ int main() {
   init_irq();
 #endif
 
+printf("%d\n", __LINE__);
   init_fs();
 
   init_proc();
