@@ -21,7 +21,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   char *sp = (char *)new_page(PG_PER_STACK) + PG_PER_STACK * PGSIZE;
   assert(sp);
 
-  for(int i = 0;i < PG_PER_STACK;i++){
+  for(int i = 1;i <= PG_PER_STACK;i++){
     map(&pcb->as, sp_vaddr - i * PGSIZE, sp - i * PGSIZE, 0x7);
   }
 

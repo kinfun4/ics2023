@@ -26,9 +26,7 @@ int main() {
 
   init_fs();
 
-printf("%d\n", __LINE__);
   init_proc();
-printf("%d\n", __LINE__);
 
   Log("Finish initialization");
 
