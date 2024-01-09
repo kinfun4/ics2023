@@ -3,6 +3,7 @@
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __LP64__
@@ -21,41 +22,44 @@
 #define EXPECT_TYPE EM_NONE
 #endif
 
-static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t len) {
-    printf("load:st = %#x, en =  %#x\n", vaddr, vaddr + len);
+static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t file_sz, size_t mem_sz) {
   size_t nload = 0;
-  while (nload < len) {
-    void *paddr = new_page(1);
-    assert(paddr);
-    size_t _len = (PGSIZE < len - nload) ? PGSIZE : len - nload;
-    void *_vaddr = vaddr + nload;
-    printf("load:va = %#x\n", _vaddr);
-    map(&pcb->as, _vaddr, paddr, 0x7);
-    fs_read(fd, paddr, _len);
-    memset(paddr, 0, PGSIZE - _len);
-    nload += _len;
-  }
-  return len;
-}
+  uintptr_t offset = READ_LOW((uintptr_t)vaddr, PGWIDTH);
+  uintptr_t vpn = READ_HIGH((uintptr_t)vaddr, PGWIDTH);
 
-static size_t page_clear(PCB *pcb, void *vaddr, size_t len) {
-    printf("clear:st = %#x, en =  %#x\n", vaddr, vaddr + len);
-  size_t nload = 0;
-  while (nload < len) {
-    void *paddr = new_page(1);
-    assert(paddr);
-    size_t _len = (PGSIZE < len - nload) ? PGSIZE : len - nload;
-    void *_vaddr = vaddr + nload;
-    map(&pcb->as, _vaddr, paddr, 0x7);
-    memset(paddr, 0, _len);
+  while (nload < file_sz) {
+    void *_paddr = new_page(1);
+    assert(_paddr);
+    size_t _len =
+        (PGSIZE - offset < file_sz - nload) ? PGSIZE - offset : file_sz - nload;
+    void *_vaddr = (void *)vpn;
+    map(&pcb->as, _vaddr, _paddr, 0x7);
+    fs_read(fd, _paddr + offset, _len);
+    memset(_paddr + offset + _len, 0, PGSIZE - offset - _len);
+    offset = 0;
+    vpn += PGSIZE;
+    nload += PGSIZE - offset;
+  }
+
+  while (nload < mem_sz) {
+    void *_paddr = new_page(1);
+    assert(_paddr);
+    size_t _len =
+        (PGSIZE - offset < mem_sz - nload) ? PGSIZE - offset : mem_sz - nload;
+    void *_vaddr = (void *)vpn;
+    map(&pcb->as, _vaddr, _paddr, 0x7);
+    memset(_paddr + offset, 0, _len);
+    offset = 0;
+    vpn += PGSIZE;
     nload += _len;
   }
-  return len;
+
+  return mem_sz;
 }
 
 uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
-  uintptr_t brk = 0; 
+  uintptr_t brk = 0;
 
   Elf_Ehdr Ehdr[1];
   fs_read(fd, Ehdr, sizeof(Elf_Ehdr));
@@ -73,11 +77,10 @@ uintptr_t loader(PCB *pcb, const char *filename) {
     fs_read(fd, Phdr, Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
-    printf("st = %#x, en =  %#x\n", Phdr->p_vaddr, Phdr->p_vaddr + Phdr->p_memsz);
+      printf("st = %#x, en =  %#x\n", Phdr->p_vaddr,
+             Phdr->p_vaddr + Phdr->p_memsz);
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
-      page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
-      page_clear(pcb, (void *)ROUNDUP(Phdr->p_vaddr + Phdr->p_filesz, PGSIZE),
-                 Phdr->p_memsz - Phdr->p_filesz);
+      page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz, Phdr->p_memsz);
       brk = MAX(brk, ROUNDUP(Phdr->p_vaddr + Phdr->p_memsz, PGSIZE));
     }
   }
