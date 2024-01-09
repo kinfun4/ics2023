@@ -24,10 +24,11 @@ int main() {
   init_irq();
 #endif
 
-printf("%d\n", __LINE__);
   init_fs();
 
+printf("%d\n", __LINE__);
   init_proc();
+printf("%d\n", __LINE__);
 
   Log("Finish initialization");
 
