@@ -74,12 +74,12 @@ uintptr_t loader(PCB *pcb, const char *filename) {
       page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
       page_clear(pcb, (void *)ROUNDUP(Phdr->p_vaddr + Phdr->p_filesz, PGSIZE),
                  Phdr->p_memsz - Phdr->p_filesz);
+    printf("st = %#x, en =  %#x\n", Phdr->p_vaddr, Phdr->p_vaddr + Phdr->p_memsz);
       brk = MAX(brk, ROUNDUP(Phdr->p_vaddr + Phdr->p_memsz, PGSIZE));
     }
   }
 
   pcb->max_brk = brk;
-  printf("max_brk = %#x\n", pcb->max_brk);
   fs_close(fd);
 
   return Ehdr->e_entry;
