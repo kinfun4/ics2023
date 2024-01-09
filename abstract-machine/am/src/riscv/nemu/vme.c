@@ -53,7 +53,7 @@ void protect(AddrSpace *as) {
   as->area = USER_SPACE;
   as->pgsize = PGSIZE;
   // map kernel space
-  memcpy(updir, kas.ptr, PGSIZE);
+  // memcpy(updir, kas.ptr, PGSIZE);
 }
 
 void unprotect(AddrSpace *as) {}
@@ -87,7 +87,7 @@ void __am_switch(Context *c) {
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   if (as != &kas){
-    printf("va = %p, st = %p, en = %p\n", va, as->area.start, as->area.end);
+    // printf("va = %p, st = %p, en = %p\n", va, as->area.start, as->area.end);
     assert(IN_RANGE(va, as->area));
   }
 
