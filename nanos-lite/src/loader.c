@@ -29,6 +29,7 @@ static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t len) {
     assert(paddr);
     size_t _len = (PGSIZE < len - nload) ? PGSIZE : len - nload;
     void *_vaddr = vaddr + nload;
+    printf("load:va = %#x\n", _vaddr);
     map(&pcb->as, _vaddr, paddr, 0x7);
     fs_read(fd, paddr, _len);
     memset(paddr, 0, PGSIZE - _len);
