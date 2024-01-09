@@ -86,8 +86,10 @@ void __am_switch(Context *c) {
 // }
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
-  if (as != &kas)
+  if (as != &kas){
+    printf("va = %p, st = %p, en = %p\n", va, as->area.start, as->area.end);
     assert(IN_RANGE(va, as->area));
+  }
 
   uintptr_t vpn1 = (uintptr_t)va >> 22;
   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22);
