@@ -4,7 +4,8 @@
 #include <common.h>
 #include <memory.h>
 
-#define STACK_SIZE (8 * PGSIZE)
+#define PG_PER_STACK 8
+#define STACK_SIZE (PG_PER_STACK * PGSIZE)
 
 typedef union {
   uint8_t stack[STACK_SIZE] PG_ALIGN;
@@ -16,6 +17,7 @@ typedef union {
   };
 } PCB;
 
+uintptr_t loader(PCB *pcb, const char *filename);
 void naive_uload(PCB *pcb, const char *filename);
 extern PCB *current;
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]);

@@ -1,8 +1,6 @@
-#include "memory.h"
 #include <proc.h>
 
 #define MAX_NR_PROC 4
-#define PG_PER_STACK 8
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
@@ -16,21 +14,25 @@ void context_kload(PCB *pcb, void (*entry)(void *), void * arg){
   pcb->cp = kcontext((Area) { pcb->stack, pcb + 1 }, entry, arg);
 }
 
-intptr_t uload(PCB *pcb, const char *filename);
-
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]){
-  assert(argv);
-  assert(envp);
-  char *sp = (char *)new_page(PG_PER_STACK) + PG_PER_STACK * PGSIZE;
+  protect(&pcb->as);
+  void *sp_vaddr = pcb->as.area.end;
 
+  char *sp = (char *)new_page(PG_PER_STACK) + PG_PER_STACK * PGSIZE;
+  assert(sp);
+
+  for(int i = 0;i < PG_PER_STACK;i++){
+    map(&pcb->as, sp_vaddr - i * PGSIZE, sp - i * PGSIZE, 0x7);
+  }
+
+  assert(argv && envp);
   int envc = 0,argc = 0;
   while(*(envp + envc) != NULL)envc++;
   while(*(argv + argc) != NULL)argc++;
 
   char **_envp = malloc((envc + 1) * sizeof(char *));
   char **_argv = malloc((argc + 1) * sizeof(char *));
-  assert(_envp);
-  assert(_argv);
+  assert(_argv && _envp);
 
   for (int i = 0; i < envc; i++) {
     int len = strlen(*(envp + i)) + 1;
@@ -61,7 +63,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   sp -= sizeof(int);
   *(int *)sp = argc;
 
-  intptr_t entry = uload(pcb, filename);
+  intptr_t entry = loader(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
   pcb->cp->GPRx = (intptr_t) sp;
@@ -87,7 +89,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/nterm";
+  char *filename = "/bin/dummy";
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);

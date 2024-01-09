@@ -91,6 +91,7 @@ ASFLAGS  +=  $(CFLAGS)
 ## 4. ISA-Specific Configurations
 
 ### Paste in ISA-specific configurations (e.g., from `scripts/x86.mk`)
+VME = 1 # open Virtual Memory Environment
 -include $(NAVY_HOME)/scripts/$(ISA).mk
 
 ## 5. Compilation Rules
@@ -167,7 +168,7 @@ $(CLEAN_ALL):
 
 ### Build fsimg and ramdisk for Nanos-lite
 APPS = nterm
-TESTS =
+TESTS = dummy
 
 fsimg: $(addprefix apps/, $(APPS)) $(addprefix tests/, $(TESTS))
 	-for t in $^; do $(MAKE) -s -C $(NAVY_HOME)/$$t install; done

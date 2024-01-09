@@ -1,7 +1,6 @@
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
-#include <stdint.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
@@ -19,13 +18,36 @@
 #define EXPECT_TYPE EM_NONE
 #endif
 
-int fs_open(const char *pathname, int flags, int mode);
-size_t fs_read(int fd, void *buf, size_t len);
-size_t fs_write(int fd, const void *buf, size_t len);
-size_t fs_lseek(int fd, size_t offset, int whence);
-int fs_close(int fd);
+static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t len) {
+  size_t nload = 0;
+  while (nload < len) {
+    void *paddr = new_page(1);
+    assert(paddr);
+    size_t _len = (PGSIZE < len - nload) ? PGSIZE : len - nload;
+    void *_vaddr = vaddr + nload;
+    map(&pcb->as, _vaddr, paddr, 0x7);
+    fs_read(fd, paddr, _len);
+    memset(paddr, 0, PGSIZE - _len);
+    nload += _len;
+  }
+  return len;
+}
 
-static uintptr_t loader(PCB *pcb, const char *filename) {
+static size_t page_clear(PCB *pcb, void *vaddr, size_t len) {
+  size_t nload = 0;
+  while (nload < len) {
+    void *paddr = new_page(1);
+    assert(paddr);
+    size_t _len = (PGSIZE < len - nload) ? PGSIZE : len - nload;
+    void *_vaddr = vaddr + nload;
+    map(&pcb->as, _vaddr, paddr, 0x7);
+    memset(paddr, 0, _len);
+    nload += _len;
+  }
+  return len;
+}
+
+uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   Elf_Ehdr Ehdr[1];
   fs_read(fd, Ehdr, sizeof(Elf_Ehdr));
@@ -44,9 +66,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
     if (Phdr->p_type == PT_LOAD) {
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
-      fs_read(fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
-      memset((void *)Phdr->p_vaddr + Phdr->p_filesz, 0,
-             Phdr->p_memsz - Phdr->p_filesz);
+      page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
+      page_clear(pcb, (void *)ROUNDUP(Phdr->p_vaddr + Phdr->p_filesz, PGSIZE),
+                 Phdr->p_memsz - Phdr->p_filesz);
     }
   }
   fs_close(fd);
@@ -58,8 +80,4 @@ void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);
   ((void (*)())entry)();
-}
-
-intptr_t uload(PCB *pcb, const char *filename) {
-  return loader(pcb, filename);
 }

@@ -48,7 +48,7 @@ paddr_t isa_mmu_translate(vaddr_t vaddr, int len, int type) {
   PTE pte0 = paddr_read(pte0_ptr, PTESIZE);
   Assert(pte0 & PTE_V, "vaddr = %#x, ppn = %#x, pte0_ptr = %#x, pte0 = %#x", vaddr, GET_PPN(pte1), pte0_ptr, pte0);
   paddr_t paddr = GET_PPN(pte0) + READ_LOW(vaddr, 12);
-  assert(paddr == vaddr);
+  // assert(paddr == vaddr);
   return paddr;
 }
 

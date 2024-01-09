@@ -3,7 +3,6 @@
 #include <am.h>
 #include <nemu.h>
 #include <klib.h>
-#include <stdint.h>
 
 static AddrSpace kas = {};
 static void* (*pgalloc_usr)(int) = NULL;
@@ -38,7 +37,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   for (i = 0; i < LENGTH(segments); i ++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
-      map(&kas, va, va, 0);
+      map(&kas, va, va, PTE_V | PTE_R | PTE_W | PTE_X);
     }
   }
 
@@ -49,6 +48,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
 }
 
 void protect(AddrSpace *as) {
+  assert(as->ptr == NULL);
   PTE *updir = (PTE*)(pgalloc_usr(PGSIZE));
   as->ptr = updir;
   as->area = USER_SPACE;
@@ -73,7 +73,23 @@ void __am_switch(Context *c) {
 #define GET_PPN(pte) (READ_HIGH((pte), 10) << 2)
 #define GET_PTE(pa)  (READ_HIGH((pa), 12) >> 2)
 
+// int check_map(AddrSpace *as, void *va, void *pa, int prot) {
+//   uintptr_t vpn1 = (uintptr_t)va >> 22;
+//   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22); 
+//   PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
+//   if(!(*pte1 & PTE_V)){
+//     return 0;
+//   }
+//   PTE* pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
+//   if(!(*pte0 & PTE_V)){
+//     return 0;
+//   }
+//   return 1;
+// }
+
 void map(AddrSpace *as, void *va, void *pa, int prot) {
+  assert(IN_RANGE(va, as->area));
+
   uintptr_t vpn1 = (uintptr_t)va >> 22;
   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22); 
   PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
@@ -83,7 +99,7 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
     *pte1 = GET_PTE((uintptr_t)ptr) | PTE_V;  // non-leaf PTE
   }
   PTE* pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
-  *pte0 = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X | PTE_A | PTE_D; // leaf PTE
+  *pte0 = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X; // leaf PTE
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
@@ -92,5 +108,6 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   c->mepc = (uintptr_t)entry;
   c->mcause = 0x0;
   c->mstatus = 0x1800;
+  c->pdir = as->ptr;
   return c;
 }
