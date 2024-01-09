@@ -1,17 +1,16 @@
 #include "klib-macros.h"
 #include "riscv/riscv.h"
 #include <am.h>
-#include <nemu.h>
 #include <klib.h>
+#include <nemu.h>
 
 static AddrSpace kas = {};
-static void* (*pgalloc_usr)(int) = NULL;
-static void (*pgfree_usr)(void*) = NULL;
+static void *(*pgalloc_usr)(int) = NULL;
+static void (*pgfree_usr)(void *) = NULL;
 static int vme_enable = 0;
 
-static Area segments[] = {      // Kernel memory mappings
-  NEMU_PADDR_SPACE
-};
+static Area segments[] = { // Kernel memory mappings
+    NEMU_PADDR_SPACE};
 
 #define USER_SPACE RANGE(0x40000000, 0x80000000)
 
@@ -26,7 +25,7 @@ static inline uintptr_t get_satp() {
   return satp << 12;
 }
 
-bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
+bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
   pgalloc_usr = pgalloc_f;
   pgfree_usr = pgfree_f;
 
@@ -34,7 +33,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
   assert(kas.ptr);
 
   int i;
-  for (i = 0; i < LENGTH(segments); i ++) {
+  for (i = 0; i < LENGTH(segments); i++) {
     void *va = segments[i].start;
     for (; va < segments[i].end; va += PGSIZE) {
       map(&kas, va, va, PTE_V | PTE_R | PTE_W | PTE_X);
@@ -49,7 +48,7 @@ bool vme_init(void* (*pgalloc_f)(int), void (*pgfree_f)(void*)) {
 
 void protect(AddrSpace *as) {
   assert(as->ptr == NULL);
-  PTE *updir = (PTE*)(pgalloc_usr(PGSIZE));
+  PTE *updir = (PTE *)(pgalloc_usr(PGSIZE));
   as->ptr = updir;
   as->area = USER_SPACE;
   as->pgsize = PGSIZE;
@@ -57,8 +56,7 @@ void protect(AddrSpace *as) {
   memcpy(updir, kas.ptr, PGSIZE);
 }
 
-void unprotect(AddrSpace *as) {
-}
+void unprotect(AddrSpace *as) {}
 
 void __am_get_cur_as(Context *c) {
   c->pdir = (vme_enable ? (void *)get_satp() : NULL);
@@ -71,11 +69,11 @@ void __am_switch(Context *c) {
 }
 
 #define GET_PPN(pte) (READ_HIGH((pte), 10) << 2)
-#define GET_PTE(pa)  (READ_HIGH((pa), 12) >> 2)
+#define GET_PTE(pa) (READ_HIGH((pa), 12) >> 2)
 
 // int check_map(AddrSpace *as, void *va, void *pa, int prot) {
 //   uintptr_t vpn1 = (uintptr_t)va >> 22;
-//   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22); 
+//   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22);
 //   PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
 //   if(!(*pte1 & PTE_V)){
 //     return 0;
@@ -88,17 +86,18 @@ void __am_switch(Context *c) {
 // }
 
 void map(AddrSpace *as, void *va, void *pa, int prot) {
-  assert(IN_RANGE(va, as->area));
+  if (as != &kas)
+    assert(IN_RANGE(va, as->area));
 
   uintptr_t vpn1 = (uintptr_t)va >> 22;
-  uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22); 
+  uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22);
   PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
-  if(!(*pte1 & PTE_V)){
+  if (!(*pte1 & PTE_V)) {
     void *ptr = pgalloc_usr(PGSIZE);
     assert(ptr);
-    *pte1 = GET_PTE((uintptr_t)ptr) | PTE_V;  // non-leaf PTE
+    *pte1 = GET_PTE((uintptr_t)ptr) | PTE_V; // non-leaf PTE
   }
-  PTE* pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
+  PTE *pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
   *pte0 = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X; // leaf PTE
 }
 
