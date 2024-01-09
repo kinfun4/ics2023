@@ -72,11 +72,11 @@ uintptr_t loader(PCB *pcb, const char *filename) {
     fs_read(fd, Phdr, Ehdr->e_phentsize);
 
     if (Phdr->p_type == PT_LOAD) {
+    printf("st = %#x, en =  %#x\n", Phdr->p_vaddr, Phdr->p_vaddr + Phdr->p_memsz);
       fs_lseek(fd, Phdr->p_offset, SEEK_SET);
       page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
       page_clear(pcb, (void *)ROUNDUP(Phdr->p_vaddr + Phdr->p_filesz, PGSIZE),
                  Phdr->p_memsz - Phdr->p_filesz);
-    printf("st = %#x, en =  %#x\n", Phdr->p_vaddr, Phdr->p_vaddr + Phdr->p_memsz);
       brk = MAX(brk, ROUNDUP(Phdr->p_vaddr + Phdr->p_memsz, PGSIZE));
     }
   }
