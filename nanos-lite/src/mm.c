@@ -1,6 +1,6 @@
-#include "am.h"
 #include <memory.h>
 #include <proc.h>
+#include <stdio.h>
 
 static void *pf = NULL;
 
@@ -32,6 +32,7 @@ int mm_brk(uintptr_t brk) {
     map(&current->as, vaddr, paddr, 0x7);
     current->max_brk += PGSIZE;
   }
+  printf("max_brk = %#x\n", current->max_brk);
   return 0;
 }
 
