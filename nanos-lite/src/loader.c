@@ -38,6 +38,7 @@ static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t len) {
 
 static size_t page_clear(PCB *pcb, void *vaddr, size_t len) {
   size_t nload = 0;
+    printf("st = %#x, en =  %#x\n", vaddr, vaddr + len);
   while (nload < len) {
     void *paddr = new_page(1);
     assert(paddr);
@@ -74,7 +75,6 @@ uintptr_t loader(PCB *pcb, const char *filename) {
       page_load(pcb, fd, (void *)Phdr->p_vaddr, Phdr->p_filesz);
       page_clear(pcb, (void *)ROUNDUP(Phdr->p_vaddr + Phdr->p_filesz, PGSIZE),
                  Phdr->p_memsz - Phdr->p_filesz);
-    printf("st = %#x, en =  %#x\n", Phdr->p_vaddr, Phdr->p_vaddr + Phdr->p_memsz);
       brk = MAX(brk, ROUNDUP(Phdr->p_vaddr + Phdr->p_memsz, PGSIZE));
     }
   }
