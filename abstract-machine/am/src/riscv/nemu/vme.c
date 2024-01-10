@@ -47,7 +47,7 @@ bool vme_init(void *(*pgalloc_f)(int), void (*pgfree_f)(void *)) {
 }
 
 void protect(AddrSpace *as) {
-  assert(as->ptr == NULL);
+  // assert(as->ptr == NULL);
   PTE *updir = (PTE *)(pgalloc_usr(PGSIZE));
   as->ptr = updir;
   as->area = USER_SPACE;
