@@ -73,8 +73,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
-  printf("filename = %s\n", filename);
   if(fs_open(filename, 0, 0) == -1)return -2;
+  printf("filename = %s\n", filename);
   context_uload(p, filename, argv, envp);
   yield();
   return 0;
