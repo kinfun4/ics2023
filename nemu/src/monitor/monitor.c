@@ -16,6 +16,7 @@
 #include <isa.h>
 #include <memory/paddr.h>
 #include <stdio.h>
+#include <sys/cdefs.h>
 
 void init_rand();
 void init_log(const char *log_file);
@@ -117,6 +118,7 @@ void init_monitor(int argc, char *argv[]) {
   /* Open the log file. */
   init_log(log_file);
 
+  printf("%d\n", __LINE__);
   /* Opeb the elf file. */
   init_elf(elf_file, elf_cnt);
 
