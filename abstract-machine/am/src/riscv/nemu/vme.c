@@ -103,12 +103,14 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   *pte0 = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X; // leaf PTE
 }
 
+#define MIE 0x8
+
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *c = (Context *)kstack.end - 1;
   c->GPRx = (uintptr_t)heap.end;
   c->mepc = (uintptr_t)entry;
   c->mcause = 0x0;
-  c->mstatus = 0x1800;
+  c->mstatus = 0x1800 | MIE;
   c->pdir = as->ptr;
   return c;
 }
