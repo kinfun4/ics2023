@@ -14,7 +14,7 @@ static const char *keyname[256]
     __attribute__((used)) = {[AM_KEY_NONE] = "NONE", AM_KEYS(NAME)};
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
-  // yield();
+  yield();
   char *_buf = (char *)buf;
   size_t ret = 0;
   while (ret < len) {
