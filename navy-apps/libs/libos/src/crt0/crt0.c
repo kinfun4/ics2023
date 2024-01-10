@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -11,7 +10,6 @@ void call_main(uintptr_t *args) {
   char **argv = (char **)(args + 1);
   char **envp = (char **)(args + argc + 2);
   // char *empty[] =  {NULL };
-  printf("%d\n", __LINE__);
   environ = envp;
   __libc_init_array();
   exit(main(argc, argv, envp));
