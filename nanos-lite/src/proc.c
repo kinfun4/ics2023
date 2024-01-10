@@ -67,8 +67,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   intptr_t entry = loader(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
-  pcb->cp->GPRx = (intptr_t) sp;
-  printf("%#x\n", sp);
+  pcb->cp->GPRx = (intptr_t) sp_vaddr;
+  printf("%#x\n", sp_vaddr);
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
