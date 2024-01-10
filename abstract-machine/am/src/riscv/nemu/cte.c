@@ -46,6 +46,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   c->mepc = (uintptr_t)entry;
   c->mcause = 0x0;
   c->mstatus = 0x1800;
+  c->pdir = NULL;
   return c;
 }
 
