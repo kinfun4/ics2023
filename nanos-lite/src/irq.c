@@ -11,6 +11,7 @@ static Context *do_event(Event e, Context *c) {
     c = schedule(c);
     break;
   case EVENT_SYSCALL:
+    printf("EVENT_SYSCALL\n");
     do_syscall(c);
     break;
   case EVENT_ERROR:
