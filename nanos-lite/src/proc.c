@@ -68,6 +68,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
   pcb->cp->GPRx = (intptr_t) sp;
+  printf("%#x\n", sp);
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
@@ -92,7 +93,7 @@ void init_proc() {
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
-  context_uload(&pcb[1], "/bin/hello", argv, envp);
+  // context_uload(&pcb[1], "/bin/hello", argv, envp);
   // context_kload(&pcb[1], hello_fun, (void *)1);
   switch_boot_pcb();
   Log("Initializing processes...");
@@ -101,7 +102,7 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
   current->cp = prev;
-  // current = &pcb[0];
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  current = &pcb[0];
+  // current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
