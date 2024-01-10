@@ -17,7 +17,7 @@ static Context *do_event(Event e, Context *c) {
     panic("EVENT_ERROR\n");
     break;
   case EVENT_IRQ_TIMER:
-    printf("EVENT_IRQ_TIMER\n");
+    // printf("EVENT_IRQ_TIMER\n");
     c = schedule(c);
     break;
   default:
