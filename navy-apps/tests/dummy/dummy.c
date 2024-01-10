@@ -9,7 +9,6 @@
 extern int _syscall_(int, uintptr_t, uintptr_t, uintptr_t);
 
 int main() {
-  printf("%d\n", __LINE__);
-  printf("%d\n", __LINE__);
+  printf("%d 12312412\n", __LINE__);
   return _syscall_(SYS_yield, 0, 0, 0);
 }
