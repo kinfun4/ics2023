@@ -1,3 +1,4 @@
+#include <bits/pthreadtypes.h>
 #include <proc.h>
 #include <fs.h>
 
@@ -103,6 +104,9 @@ void init_proc() {
 Context* schedule(Context *prev) {
   current->cp = prev;
   // current = &pcb[0];
-  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+  static int cnt = 0;
+  if(current == &pcb[0])cnt++;
+  if(cnt == 10) current = &pcb[1], cnt = 0;
+  else current = &pcb[0];
   return current->cp;
 }
