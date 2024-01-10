@@ -11,8 +11,8 @@ void call_main(uintptr_t *args) {
   char **argv = (char **)(args + 1);
   char **envp = (char **)(args + argc + 2);
   // char *empty[] =  {NULL };
-  uintptr_t x = 1;
-  write(1, &x, sizeof(uintptr_t));
+  char x = 'A';
+  write(1, &x, sizeof(x));
   exit(0);
   environ = envp;
   __libc_init_array();
