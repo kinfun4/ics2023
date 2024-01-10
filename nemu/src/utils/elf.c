@@ -109,7 +109,7 @@ void init_elf(char **elf_file, int elf_cnt) {
         strcpy(func_tab[func_cnt].name, str_tab + Symbol.st_name);
         func_tab[func_cnt].st = Symbol.st_value;
         func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
-        printf("name = %30s, st = %#x, en = %#x\n", func_tab[func_cnt].name,
+        printf("name = %40s, st = %#x, en = %#x\n", func_tab[func_cnt].name,
                func_tab[func_cnt].st, func_tab[func_cnt].en);
         func_cnt++;
       }
