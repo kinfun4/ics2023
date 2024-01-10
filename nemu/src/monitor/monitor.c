@@ -118,7 +118,6 @@ void init_monitor(int argc, char *argv[]) {
   /* Open the log file. */
   init_log(log_file);
 
-  printf("%d\n", __LINE__);
   /* Opeb the elf file. */
   init_elf(elf_file, elf_cnt);
 
