@@ -101,7 +101,9 @@ int NDL_Init(uint32_t flags) {
   char buf[64];
   assert(read(dispinfo_fd, buf, sizeof(buf)));
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d", &width, &height);
+  printf("%d\n", __LINE__);
   uint32_t *buffer = malloc(sizeof(uint32_t) * width * height);
+  printf("%d\n", __LINE__);
   memset(buffer, 0, sizeof(uint32_t) * width * height);
   NDL_DrawRect(buffer, 0, 0, width, height);
   free(buffer);
