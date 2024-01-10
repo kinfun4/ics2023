@@ -34,6 +34,7 @@ static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t file_sz, size_t me
         (PGSIZE - offset < file_sz - nload) ? PGSIZE - offset : file_sz - nload;
     void *_vaddr = (void *)vpn;
     map(&pcb->as, _vaddr, _paddr, 0x7);
+    printf("%paddr = #x, vaddr = %#x, len = %#x\n", _paddr + offset, _vaddr, _len);
     fs_read(fd, _paddr + offset, _len);
     memset(_paddr + offset + _len, 0, PGSIZE - offset - _len);
     offset = 0;
@@ -49,6 +50,7 @@ static size_t page_load(PCB *pcb, int fd, void *vaddr, size_t file_sz, size_t me
     void *_vaddr = (void *)vpn;
     map(&pcb->as, _vaddr, _paddr, 0x7);
     memset(_paddr + offset, 0, _len);
+    printf("%paddr = #x, vaddr = %#x, len = %#x\n", _paddr + offset, _vaddr, _len);
     offset = 0;
     vpn += PGSIZE;
     nload += _len;
