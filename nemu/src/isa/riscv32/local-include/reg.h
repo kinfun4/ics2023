@@ -42,6 +42,8 @@ static inline int check_csr_idx(int idx) {
   assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE || idx == SATP);
   return idx;
 }
+#define MIE   0x8
+#define MIPE  0x80
 
 #define csr(idx) (csrs[check_csr_idx(idx)])
 #define CSR(idx) csr(idx)

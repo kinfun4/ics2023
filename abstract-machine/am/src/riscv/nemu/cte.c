@@ -6,12 +6,17 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 void __am_get_cur_as(Context *c);
 void __am_switch(Context *c);
 
+#define IRQ_TIMER 0x80000007
+#define IRQ_ECALL 0x0000000b
+
 Context* __am_irq_handle(Context *c) {
   __am_get_cur_as(c);
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
-      case 0xb: ev.event = c->GPR1 == -1 ? EVENT_YIELD : EVENT_SYSCALL; c->mepc +=4; break; // Enviroment call from M-mode
+      case IRQ_ECALL: ev.event = c->GPR1 == -1 ? EVENT_YIELD : EVENT_SYSCALL; c->mepc +=4; break; // Enviroment call from M-mode
+      case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
+
       default: ev.event = EVENT_ERROR; break;
     }
 

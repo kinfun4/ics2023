@@ -42,4 +42,6 @@ typedef struct {
 #define PTE_D 0x80
 typedef uint32_t PTE;
 
+#define IRQ_TIMER 0x80000007 // for riscv32
+
 #endif

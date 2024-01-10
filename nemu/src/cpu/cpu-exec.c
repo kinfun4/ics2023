@@ -53,7 +53,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   IFDEF(CONFIG_IRINGBUF, strcpy(iringbuf[iringbuf_cnt], _this->logbuf),
         iringbuf_cnt =
-            iringbuf_cnt == MAX_INST_TO_TRACE-1 ? 0 : iringbuf_cnt + 1);
+            iringbuf_cnt == MAX_INST_TO_TRACE - 1 ? 0 : iringbuf_cnt + 1);
   if (g_print_step) {
     IFDEF(CONFIG_ITRACE, puts(_this->logbuf));
   }
@@ -108,6 +108,10 @@ static void execute(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING)
       break;
     IFDEF(CONFIG_DEVICE, device_update());
+    word_t intr = isa_query_intr();
+    if (intr != INTR_EMPTY) {
+      cpu.pc = isa_raise_intr(intr, cpu.pc);
+    }
   }
 }
 

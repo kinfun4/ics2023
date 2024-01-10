@@ -17,6 +17,7 @@ static Context *do_event(Event e, Context *c) {
     panic("EVENT_ERROR\n");
     break;
   case EVENT_IRQ_TIMER:
+    c = schedule(c);
     break;
   default:
     panic("Unhandled event ID = %d", e.event);
