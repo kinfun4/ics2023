@@ -88,6 +88,7 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  printf("%d\n", __LINE__);
   // init file
   fb_fd = open("/dev/fb", O_WRONLY);
   event_fd = open("/dev/events", O_RDONLY);
