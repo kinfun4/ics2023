@@ -64,7 +64,6 @@ void init_elf(char **elf_file, int elf_cnt) {
     Assert(Header.e_shstrndx != SHN_UNDEF,
            "There is no String and Symble Table ");
 
-  printf("%d\n", __LINE__);
     // get section header string table
     fseek(fp, Header.e_shoff + Header.e_shstrndx * Header.e_shentsize,
           SEEK_SET);
@@ -76,7 +75,6 @@ void init_elf(char **elf_file, int elf_cnt) {
                shstr_section.sh_size,
            "Can not read shstr Table");
 
-  printf("%d\n", __LINE__);
     fseek(fp, Header.e_shoff, SEEK_SET);
     for (int i = 0; i < Header.e_shnum; i++) {
       Assert(fread(&Section, sizeof(Elf32_Shdr), 1, fp) == 1,
@@ -95,7 +93,6 @@ void init_elf(char **elf_file, int elf_cnt) {
     }
     Assert(symtab_ndx != 0, "Can not get symtab_section");
     Assert(strtab_ndx != 0, "Can not get strtab_section");
-  printf("%d\n", __LINE__);
 
     fseek(fp, strtab_section.sh_offset, SEEK_SET);
     str_tab = malloc(sizeof(char) * strtab_section.sh_size);
@@ -104,10 +101,10 @@ void init_elf(char **elf_file, int elf_cnt) {
            "Can not read str Table");
 
     fseek(fp, symtab_section.sh_offset, SEEK_SET);
-  printf("%d\n", __LINE__);
     for (int i = 0; i < symtab_num; i++) {
       Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp) == 1,
              "Can not read symbol Table");
+  printf("%d\n", __LINE__);
       if (ELF32_ST_TYPE(Symbol.st_info) == STT_FUNC) {
         func_tab[func_cnt].name = malloc(sizeof(char) * 50);
         strcpy(func_tab[func_cnt].name, str_tab + Symbol.st_name);
@@ -117,6 +114,7 @@ void init_elf(char **elf_file, int elf_cnt) {
                func_tab[func_cnt].st, func_tab[func_cnt].en);
         func_cnt++;
       }
+  printf("%d\n", __LINE__);
     }
     free(shstr_tab);
     free(str_tab);
