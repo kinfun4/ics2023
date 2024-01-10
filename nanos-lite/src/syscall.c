@@ -51,7 +51,6 @@ void do_syscall(Context *c) {
     break;
   case SYS_brk:
     printf("%d\n", c->GPRx);
-    c->GPRx = mm_brk(a[1]);
     break;
   case SYS_execve:
     c->GPRx = execve((char *)a[1], (char **)a[2], (char **)a[3]);
