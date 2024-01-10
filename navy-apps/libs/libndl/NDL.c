@@ -89,6 +89,7 @@ int NDL_Init(uint32_t flags) {
     evtdev = 3;
   }
   // init file
+    printf("%d\n", __LINE__);
   fb_fd = open("/dev/fb", O_WRONLY);
   event_fd = open("/dev/events", O_RDONLY);
   dispinfo_fd = open("/proc/dispinfo", O_RDWR);
