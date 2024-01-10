@@ -137,7 +137,7 @@ void func_call(word_t pc, word_t dnpc) {
 
   int func1 = find_func(pc);
   int func2 = find_func(dnpc);
-  Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
+  Assert(func1 != -1 && func2 != -1, "pc = %#x, func1 = %d, dnpc = %#x, func2 = %d\n", pc, func1, dnpc, func2);
 
   if (dnpc == func_tab[func2].st) {
     PRINT_FUNC("call", pc, 2, func_tab[func2].name, dnpc);
@@ -155,7 +155,7 @@ void func_ret(word_t pc, word_t dnpc) {
 
   int func1 = find_func(pc);
   int func2 = find_func(dnpc);
-  Assert(func1 != -1 && func2 != -1, "pc = %#x, dnpc = %#x\n", pc, dnpc);
+  Assert(func1 != -1 && func2 != -1, "pc = %#x, func1 = %d, dnpc = %#x, func2 = %d\n", pc, func1, dnpc, func2);
 
   PRINT_FUNC("cur", pc, 2, func_tab[func1].name, pc);
 
