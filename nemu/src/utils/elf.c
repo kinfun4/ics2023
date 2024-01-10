@@ -39,18 +39,17 @@ static Elf32_Sym Symbol;
 static uint32_t symtab_ndx, strtab_ndx, symtab_num;
 static uint32_t func_cnt;
 static int depth;
-static int stack[1000];
+static int stack[2000];
 struct func {
   char *name;
   word_t st, en;
-} static func_tab[2000];
+} static func_tab[5000];
 
 void init_elf(char **elf_file, int elf_cnt) {
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
   while (elf_cnt > 0) {
-  printf("%d\n", elf_cnt);
     char *elf = elf_file[--elf_cnt];
 
     if (elf == NULL)
