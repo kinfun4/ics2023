@@ -89,7 +89,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/hello";
+  char *filename = "/bin/time-test";
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
