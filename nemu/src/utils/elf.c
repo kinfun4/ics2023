@@ -49,8 +49,8 @@ void init_elf(char **elf_file, int elf_cnt) {
 #ifndef CONFIG_FTRACE
   return;
 #endif /* ifndef CONFIG_FTRACE */
-  printf("%d\n", __LINE__);
   while (elf_cnt > 0) {
+  printf("%d\n", elf_cnt);
     char *elf = elf_file[--elf_cnt];
 
     if (elf == NULL)
