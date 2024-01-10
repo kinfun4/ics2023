@@ -1,9 +1,11 @@
 #include <common.h>
+#include <stdio.h>
 
 void do_syscall(Context *c);
 Context *schedule(Context *prev);
 
 static Context *do_event(Event e, Context *c) {
+  printf("%d\n", __LINE__);
   switch (e.event) {
   case EVENT_YIELD:
     printf("EVENT_YIELD\n");
