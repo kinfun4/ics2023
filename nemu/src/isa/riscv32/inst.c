@@ -24,7 +24,7 @@
 void func_call(word_t pc, word_t dnpc);
 void func_ret(word_t pc, word_t dnpc);
 
-// #define FTRACE 1
+#define FTRACE 1
 #define CALL(a,b) MUXDEF(FTRACE, func_call(a,b), (void)0)
 #define RET(a,b) MUXDEF(FTRACE, func_ret(a,b), (void)0)
 #define INTR isa_raise_intr
