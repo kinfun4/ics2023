@@ -92,7 +92,8 @@ void init_proc() {
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
-  context_kload(&pcb[1], hello_fun, (void *)1);
+  context_uload(&pcb[1], "/bin/hello", argv, envp);
+  // context_kload(&pcb[1], hello_fun, (void *)1);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
