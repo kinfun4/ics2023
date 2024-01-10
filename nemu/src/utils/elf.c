@@ -105,8 +105,7 @@ void init_elf(char **elf_file, int elf_cnt) {
       Assert(fread(&Symbol, sizeof(Elf32_Sym), 1, fp) == 1,
              "Can not read symbol Table");
       if (ELF32_ST_TYPE(Symbol.st_info) == STT_FUNC) {
-  printf("%d\n", func_cnt);
-        func_tab[func_cnt].name = malloc(sizeof(char) * 50);
+        func_tab[func_cnt].name = malloc(sizeof(char) * 100);
         strcpy(func_tab[func_cnt].name, str_tab + Symbol.st_name);
         func_tab[func_cnt].st = Symbol.st_value;
         func_tab[func_cnt].en = Symbol.st_value + Symbol.st_size;
@@ -114,7 +113,6 @@ void init_elf(char **elf_file, int elf_cnt) {
                func_tab[func_cnt].st, func_tab[func_cnt].en);
         func_cnt++;
       }
-  printf("%d\n", __LINE__);
     }
     free(shstr_tab);
     free(str_tab);
