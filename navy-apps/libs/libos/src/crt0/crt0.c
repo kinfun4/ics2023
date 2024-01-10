@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <unistd.h>
 
 void __libc_init_array (void);
 int main(int argc, char *argv[], char *envp[]);
@@ -10,6 +11,9 @@ void call_main(uintptr_t *args) {
   char **argv = (char **)(args + 1);
   char **envp = (char **)(args + argc + 2);
   // char *empty[] =  {NULL };
+  uintptr_t x = 1;
+  write(1, &x, sizeof(uintptr_t));
+  exit(0);
   environ = envp;
   __libc_init_array();
   exit(main(argc, argv, envp));
