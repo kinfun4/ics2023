@@ -43,6 +43,7 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 
 #define SP 2
 #define A0 10
+#define MIE 0x8
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   Context *c = (Context *)kstack.end - 1;
@@ -50,7 +51,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   c->gpr[A0] = (uintptr_t)arg;
   c->mepc = (uintptr_t)entry;
   c->mcause = 0x0;
-  c->mstatus = 0x1800;
+  c->mstatus = 0x1800 | MIE;
   c->pdir = NULL;
   return c;
 }
