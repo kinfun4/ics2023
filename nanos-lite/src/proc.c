@@ -89,7 +89,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/bird";
+  char *filename = "/bin/nplayer";
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
