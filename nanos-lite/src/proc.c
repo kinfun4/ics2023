@@ -77,7 +77,6 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
   context_uload(p, filename, argv, envp);
   printf("%d\n", __LINE__);
   yield();
-  printf("%d\n", __LINE__);
   return 0;
 }
 
@@ -105,6 +104,7 @@ void init_proc() {
 Context* schedule(Context *prev) {
   current->cp = prev;
   // current = &pcb[0];
+  printf("%d\n", __LINE__);
   current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
