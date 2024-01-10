@@ -13,7 +13,7 @@ void call_main(uintptr_t *args) {
   char **envp = (char **)(args + argc + 2);
   // char *empty[] =  {NULL };
   putchar('A');
-  #define N 0x10000
+  #define N 0x100000
   char *p = malloc(N);
   for (int i = 0; i < N; i++, p++)
     putchar(*p);
