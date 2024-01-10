@@ -19,8 +19,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   protect(&pcb->as);
   void *sp_vaddr = pcb->as.area.end;
 
-  char *sp = (char *)new_page(PG_PER_STACK) + PG_PER_STACK * PGSIZE;
-  assert(sp);
+  void *sp_paddr = new_page(PG_PER_STACK) + PG_PER_STACK * PGSIZE;
+  assert(sp_paddr);
+  char *sp = sp_paddr;
 
   for(int i = 1;i <= PG_PER_STACK;i++){
     map(&pcb->as, sp_vaddr - i * PGSIZE, sp - i * PGSIZE, 0x7);
@@ -67,8 +68,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   intptr_t entry = loader(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
-  pcb->cp->GPRx = (intptr_t) sp_vaddr;
-  printf("%#x\n", sp_vaddr);
+  pcb->cp->GPRx = (intptr_t) sp_vaddr - (sp_paddr - (void *)sp);
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
