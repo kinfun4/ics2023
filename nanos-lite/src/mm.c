@@ -32,7 +32,7 @@ int mm_brk(uintptr_t brk) {
     map(&current->as, vaddr, paddr, 0x7);
     current->max_brk += PGSIZE;
   }
-  printf("brk = %#x, max_brk = %#x\n", brk, current->max_brk);
+  // printf("brk = %#x, max_brk = %#x\n", brk, current->max_brk);
   return 0;
 }
 

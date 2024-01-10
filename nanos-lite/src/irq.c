@@ -1,5 +1,4 @@
 #include <common.h>
-#include <stdio.h>
 
 void do_syscall(Context *c);
 Context *schedule(Context *prev);
