@@ -112,6 +112,7 @@ void init_elf(char **elf_file, int elf_cnt) {
         printf("name = %20s, st = %#x, en = %#x\n", func_tab[func_cnt].name,
                func_tab[func_cnt].st, func_tab[func_cnt].en);
         func_cnt++;
+  printf("%d\n", func_cnt);
       }
     }
     free(shstr_tab);
