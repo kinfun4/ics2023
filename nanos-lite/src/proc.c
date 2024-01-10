@@ -75,7 +75,9 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
   PCB *p = current == &pcb[0] ? &pcb[1] : &pcb[0];
   if(fs_open(filename, 0, 0) == -1)return -2;
   context_uload(p, filename, argv, envp);
+  printf("%d\n", __LINE__);
   yield();
+  printf("%d\n", __LINE__);
   return 0;
 }
 
