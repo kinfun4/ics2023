@@ -13,7 +13,6 @@ void call_main(uintptr_t *args) {
   // char *empty[] =  {NULL };
   environ = envp;
   __libc_init_array();
-  exit(0);
   exit(main(argc, argv, envp));
   assert(0);
 }
