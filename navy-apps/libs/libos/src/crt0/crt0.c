@@ -13,6 +13,10 @@ void call_main(uintptr_t *args) {
   char **envp = (char **)(args + argc + 2);
   // char *empty[] =  {NULL };
   putchar('A');
+  #define N 0x10000
+  char *p = malloc(N);
+  for (int i = 0; i < N; i++, p++)
+    putchar(*p);
   exit(0);
   environ = envp;
   __libc_init_array();
