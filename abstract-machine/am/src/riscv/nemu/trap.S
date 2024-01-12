@@ -88,16 +88,16 @@ save_context:
   mv sp, a0
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
-  csrw mstatus, t1
-  csrw mepc, t2
 
   LOAD t0, OFFSET_NP(sp)
   beqz t0, restore_context
   
-  addi t1, sp, CONTEXT_SIZE
-  csrw mscratch, t1 # ksp = $sp
+  addi t0, sp, CONTEXT_SIZE
+  csrw mscratch, t0 # ksp = $sp
 
 restore_context:
+  csrw mstatus, t1
+  csrw mepc, t2
   MAP(REGS, POP)
   LOAD sp, OFFSET_SP(sp)
   mret
