@@ -43,11 +43,30 @@ f(30) f(31)
 .globl __am_asm_trap
 .type	__am_asm_trap, @function
 __am_asm_trap:
+
+  csrrw sp, mscratch, sp
+  bnez sp, set_np
+  csrr sp, mscratch   # ksp == 0
+
   addi sp, sp, -CONTEXT_SIZE
-
-
-save_ccontext:
   MAP(REGS, PUSH)
+
+  STORE zero, OFFSET_NP(sp)
+  j save_context
+
+set_np:  # ksp != 0
+
+  addi sp, sp, -CONTEXT_SIZE
+  MAP(REGS, PUSH)
+
+  li t0, 1
+  STORE t0, OFFSET_NP(sp)
+
+save_context:
+  csrr t0, mscratch
+  STORE t0, OFFSET_SP(sp)   # c->sp = $sp
+
+  csrw mscratch, zero  # ksp = 0
 
   csrr t0, mcause
   csrr t1, mstatus
@@ -66,13 +85,22 @@ save_ccontext:
   jal __am_irq_handle
 
   mv sp, a0
+  
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
+
   csrw mstatus, t1
   csrw mepc, t2
 
-  MAP(REGS, POP)
+  LOAD t0, OFFSET_NP(sp)
+  beqz t0, restore_context
 
-  addi sp, sp, CONTEXT_SIZE
+  addi t1, sp, CONTEXT_SIZE
+  csrw mscratch, t1 # ksp = $sp
+
+restore_context:
+  MAP(REGS, POP)
+  LOAD sp, OFFSET_SP(sp)
   mret
+
 .size	__am_asm_trap, .-__am_asm_trap
