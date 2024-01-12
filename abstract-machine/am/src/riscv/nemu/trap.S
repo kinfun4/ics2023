@@ -51,7 +51,7 @@ __am_asm_trap:
   addi sp, sp, -CONTEXT_SIZE
   MAP(REGS, PUSH)
 
-  STORE zero, OFFSET_NP(sp)
+  STORE zero, OFFSET_NP(sp) # c->np = 0
 
   j save_context
 
@@ -61,7 +61,7 @@ set_np:  # ksp != 0
   MAP(REGS, PUSH)
 
   li t0, 1
-  STORE t0, OFFSET_NP(sp)
+  STORE t0, OFFSET_NP(sp) # c->np = 1
 
 save_context:
   csrr t0, mscratch
@@ -85,13 +85,12 @@ save_context:
   mv a0, sp
   jal __am_irq_handle
   
-  mv t1, sp
   mv sp, a0
 
   LOAD t0, OFFSET_NP(sp)
   beqz t0, restore_context
 
-  addi t1, t1, CONTEXT_SIZE
+  addi t1, sp, CONTEXT_SIZE
   csrw mscratch, t1 # ksp = $sp
 
 restore_context:
