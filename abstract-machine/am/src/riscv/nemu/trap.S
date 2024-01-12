@@ -55,15 +55,15 @@ __am_asm_trap:
 
 #  j save_context
 
-set_np:  # ksp != 0
+# set_np:  # ksp != 0
 
   addi sp, sp, -CONTEXT_SIZE
   MAP(REGS, PUSH)
 
-  li t0, 1
-  STORE t0, OFFSET_NP(sp)
+#  li t0, 1
+#  STORE t0, OFFSET_NP(sp)
 
-save_context:
+# save_context:
 #  csrr t0, mscratch
 #  STORE t0, OFFSET_SP(sp)   # c->sp = $sp
 
