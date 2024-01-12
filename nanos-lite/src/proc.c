@@ -102,13 +102,12 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
   current->cp = prev;
-  printf("%#x\n", pcb[0].cp->mstatus);
-  printf("%#x\n", pcb[1].cp->mstatus);
   // current = &pcb[0];
   static int cnt = 0;
   if(current == &pcb[0])cnt++;
   printf("cnt = %d\n", cnt);
   if(cnt == 60) current = &pcb[1], cnt = 0;
   else current = &pcb[0];
+  printf("%#x\n", current->cp->mstatus);
   return current->cp;
 }
