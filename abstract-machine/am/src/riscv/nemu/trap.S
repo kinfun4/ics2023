@@ -91,7 +91,6 @@ save_context:
   LOAD t0, OFFSET_NP(sp)
   beqz t0, restore_context
 
-  addi t1, t1, CONTEXT_SIZE
   csrw mscratch, t1 # ksp = $sp
 
   LOAD t1, OFFSET_STATUS(sp)
