@@ -88,6 +88,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
 }
 
 void hello_fun(void *arg) {
+  printf("%d\n", 1);
   int j = 1;
 
   while (1) {
