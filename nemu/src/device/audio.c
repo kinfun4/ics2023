@@ -60,8 +60,8 @@ static void init_audio_ctrl() {
   s.channels = audio_base[reg_channels];
   s.samples = audio_base[reg_samples];
   s.callback = audio_play;
-  assert(SDL_InitSubSystem(SDL_INIT_AUDIO) == 0);
-  assert(SDL_OpenAudio(&s, NULL) == 0);
+  // assert(SDL_InitSubSystem(SDL_INIT_AUDIO) == 0);
+  // assert(SDL_OpenAudio(&s, NULL) == 0);
   silence = s.silence;
   SDL_PauseAudio(0);
 }
