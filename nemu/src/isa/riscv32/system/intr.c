@@ -32,6 +32,5 @@ word_t isa_query_intr() {
     cpu.intr = false;
     return IRQ_TIMER;
   }
-  cpu.intr = false;
   return INTR_EMPTY;
 }
