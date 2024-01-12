@@ -121,7 +121,7 @@ Context *schedule(Context *prev) {
   static int cnt = 0;
   if (current == fg_pcb)
     cnt++;
-  if (cnt == 1) {
+  if (cnt == 30) {
     current = bg_pcb, cnt = 0;
   } else
     current = fg_pcb;
