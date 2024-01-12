@@ -106,7 +106,7 @@ Context* schedule(Context *prev) {
   // current = &pcb[0];
   static int cnt = 0;
   if(current == &pcb[0])cnt++;
-  if(cnt == 1000) current = &pcb[1], cnt = 0;
+  if(cnt == 60) current = &pcb[1], cnt = 0;
   else current = &pcb[0];
   return current->cp;
 }
