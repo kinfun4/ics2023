@@ -122,6 +122,9 @@ Context *schedule(Context *prev) {
   static int cnt = 0;
   if (current == fg_pcb)
     cnt++;
+  if (cnt == 0) {
+    printf("bg:%#x\n", bg_pcb->cp->mepc);
+  }
   if (cnt == 3) {
     current = bg_pcb, cnt = 0;
     printf("bg:%#x\n", bg_pcb->cp->mepc);
