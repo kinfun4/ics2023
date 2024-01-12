@@ -104,13 +104,14 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 #define MIE 0x8
+#define MPIE 0x80
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   Context *c = (Context *)kstack.end - 1;
   c->GPRx = (uintptr_t)heap.end;
   c->mepc = (uintptr_t)entry;
   c->mcause = 0x0;
-  c->mstatus = 0x1800 | MIE;
+  c->mstatus = 0x1800 | MIE | MPIE;
   c->pdir = as->ptr;
   c->np = 1;
   return c;

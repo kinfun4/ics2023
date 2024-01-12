@@ -108,6 +108,5 @@ Context* schedule(Context *prev) {
   printf("cnt = %d\n", cnt);
   if(cnt == 60) current = &pcb[1], cnt = 0;
   else current = &pcb[0];
-  printf("%#x\n", current->cp->mstatus);
   return current->cp;
 }
