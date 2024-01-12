@@ -86,6 +86,8 @@ save_context:
   jal __am_irq_handle
 
   mv sp, a0
+  LOAD t1, OFFSET_STATUS(sp)
+  csrw mstatus, t1
   LOAD t2, OFFSET_EPC(sp)
   csrw mepc, t2
 
@@ -96,8 +98,6 @@ save_context:
   csrw mscratch, t1 # ksp = $sp
 
 restore_context:
-  LOAD t1, OFFSET_STATUS(sp)
-  csrw mstatus, t1
   MAP(REGS, POP)
   LOAD sp, OFFSET_SP(sp)
   mret
