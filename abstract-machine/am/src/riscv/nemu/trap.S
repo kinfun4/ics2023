@@ -44,17 +44,20 @@ f(30) f(31)
 .type	__am_asm_trap, @function
 __am_asm_trap:
 
-  addi sp, sp, -CONTEXT_SIZE
-  MAP(REGS, PUSH)
-
   csrrw sp, mscratch, sp
   bnez sp, set_np
   csrr sp, mscratch   # ksp == 0
+
+  addi sp, sp, -CONTEXT_SIZE
+  MAP(REGS, PUSH)
 
   STORE zero, OFFSET_NP(sp)
   j save_context
 
 set_np:  # ksp != 0
+
+  addi sp, sp, -CONTEXT_SIZE
+  MAP(REGS, PUSH)
 
   li t0, 1
   STORE t0, OFFSET_NP(sp)
