@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
@@ -104,6 +105,7 @@ int _gettimeofday(struct timeval *tv, struct timezone *tz) {
 int _execve(const char *fname, char *const argv[], char *const envp[]) {
   int ret =
       _syscall_(SYS_execve, (intptr_t)fname, (intptr_t)argv, (intptr_t)envp);
+  printf("%d\n", ret);
   if (ret < 0) {
     errno = -ret;
     return -1;

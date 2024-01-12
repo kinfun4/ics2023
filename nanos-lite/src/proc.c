@@ -126,6 +126,6 @@ Context *schedule(Context *prev) {
     current = bg_pcb, cnt = 0;
   } else
     current = fg_pcb;
-  printf("cp:%#x\n", current->cp->mepc);
+  // printf("cp:%#x\n", current->cp->mepc);
   return current->cp;
 }
