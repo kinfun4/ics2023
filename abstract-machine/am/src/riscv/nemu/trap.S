@@ -62,6 +62,7 @@ set_np:  # ksp != 0
 
   li t0, 1
   STORE t0, OFFSET_NP(sp)
+  j save_context
 
 save_context:
   csrr t0, mscratch
@@ -96,6 +97,7 @@ save_context:
 
   addi t1, sp, CONTEXT_SIZE
   csrw mscratch, t1 # ksp = $sp
+  j restore_context
 
 restore_context:
   MAP(REGS, POP)
