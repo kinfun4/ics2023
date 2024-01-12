@@ -1,6 +1,5 @@
 #include <fs.h>
 #include <proc.h>
-
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
@@ -82,8 +81,8 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
   PCB *p = current;
   if (fs_open(filename, 0, 0) == -1)
     return -2;
-  printf("%d\n", __LINE__);
   context_uload(p, filename, argv, envp);
+  printf("%d\n", __LINE__);
   yield();
   return 0;
 }
