@@ -1,5 +1,6 @@
 #include <proc.h>
 #include <fs.h>
+#include <stdint.h>
 
 #define MAX_NR_PROC 4
 
@@ -74,7 +75,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   intptr_t entry = loader(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
-  pcb->cp->GPRx = (intptr_t) sp_vaddr - (sp_paddr - (void *)sp);
+  // pcb->cp->GPRx = (intptr_t) sp_vaddr - (sp_paddr - (void *)sp);
+  pcb->cp->GPRx = (uintptr_t)sp;
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
