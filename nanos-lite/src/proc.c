@@ -4,6 +4,7 @@
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
+static PCB pcb_exec = {};
 PCB *current = NULL;
 PCB *fg_pcb = NULL, *bg_pcb = NULL;
 
@@ -78,7 +79,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[],
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]) {
-  PCB *p = current;
+  PCB *p = &pcb_exec;
   if (fs_open(filename, 0, 0) == -1)
     return -2;
   context_uload(p, filename, argv, envp);
