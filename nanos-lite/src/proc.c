@@ -121,6 +121,7 @@ Context* schedule(Context *prev) {
   if(current == fg_pcb)cnt++;
   if(cnt == 1){
 current = bg_pcb, cnt = 0;
+    printf("1:%#x, %#x, %#x\n",bg_pcb, bg_pcb->cp, bg_pcb->cp->mepc);
   } 
   else current = fg_pcb;
   return current->cp;
