@@ -84,7 +84,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
   context_uload(p, filename, argv, envp);
   // printf("p:%#x\n", p->cp->mepc);
   yield();
-  return 1;
+  return 0;
 }
 
 void hello_fun(void *arg) {
