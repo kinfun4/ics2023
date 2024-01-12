@@ -89,7 +89,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-    printf("2:%d, %#x, %#x\n",bg_pcb->cp->np, bg_pcb->cp->mepc, bg_pcb->cp->mstatus);
+    printf("2:%#x, %#x, %#x\n",bg_pcb, bg_pcb->cp, bg_pcb->cp->mepc);
     Log("Hello World from Nanos-lite with arg '%p' for the %dth time!", (uintptr_t)arg, j);
     j ++;
     yield();
@@ -121,7 +121,6 @@ Context* schedule(Context *prev) {
   if(current == fg_pcb)cnt++;
   if(cnt == 1){
 current = bg_pcb, cnt = 0;
-    printf("1:%d, %#x, %#x\n",bg_pcb->cp->np, bg_pcb->cp->mepc, bg_pcb->cp->mstatus);
   } 
   else current = fg_pcb;
   return current->cp;
