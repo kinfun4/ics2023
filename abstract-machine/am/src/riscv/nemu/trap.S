@@ -97,7 +97,7 @@ __am_asm_trap:
 #  addi t1, sp, CONTEXT_SIZE
 #  csrw mscratch, t1 # ksp = $sp
 
-restore_context:
+# restore_context:
   MAP(REGS, POP)
 #  LOAD sp, OFFSET_SP(sp)
   mret
