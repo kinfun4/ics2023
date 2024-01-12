@@ -87,6 +87,7 @@ size_t sbctl_write(void *buf, size_t offset, size_t len) {
 
 size_t sb_write(const void *buf, size_t offset, size_t len){
   assert(offset == 0);
+  printf("%d\n", len);
   AM_AUDIO_PLAY_T ctl;
   ctl.buf.start = (void *)buf;
   ctl.buf.end = (void *)buf + len;
