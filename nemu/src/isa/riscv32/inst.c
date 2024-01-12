@@ -138,7 +138,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 011 ????? 11100 11", csrrc  , I, R(rd) = CSR(imm), CSR(imm) = CSR(imm) & (~src1));
 
   // Trap-Return Instructions
-  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = CSR(MEPC), printf("pc = %#x\n", CSR(MEPC)), RET(s->pc, s->dnpc), CSR(MSTATUS) = ((CSR(MSTATUS) & MPIE) ? CSR(MSTATUS) | MIE : CSR(MSTATUS) & (~MIE)) | MPIE);
+  INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , N, s->dnpc = CSR(MEPC), RET(s->pc, s->dnpc), CSR(MSTATUS) = ((CSR(MSTATUS) & MPIE) ? CSR(MSTATUS) | MIE : CSR(MSTATUS) & (~MIE)) | MPIE);
 
 
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc = INTR(0xb, s->pc), CALL(s->pc, s->dnpc)); //0xb is Machine Mode Environment call
