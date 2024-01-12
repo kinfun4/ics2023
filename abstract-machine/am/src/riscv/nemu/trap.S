@@ -86,6 +86,8 @@ save_context:
   jal __am_irq_handle
 
   mv sp, a0
+  LOAD t1, OFFSET_STATUS(sp)
+  csrw mstatus, t1
 
   LOAD t0, OFFSET_NP(sp)
 
