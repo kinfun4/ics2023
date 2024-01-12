@@ -98,7 +98,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename[3] = {"/bin/nterm", "/bin/bird", "/bin/pal"};
+  char *filename[3] = {"/bin/pal", "/bin/bird", "/bin/pal"};
   char *argv0[] = {filename[0], NULL};
   char *argv1[] = {filename[1], NULL};
   char *argv2[] = {filename[2], NULL};
