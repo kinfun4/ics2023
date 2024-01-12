@@ -44,7 +44,7 @@ static inline int check_csr_idx(int idx) {
   return idx;
 }
 #define MIE   0x8
-#define MIPE  0x80
+#define MPIE  0x80
 
 #define csr(idx) (csrs[check_csr_idx(idx)])
 #define CSR(idx) csr(idx)

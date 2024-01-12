@@ -10,6 +10,7 @@ void __am_switch(Context *c);
 #define IRQ_ECALL 0x0000000b
 
 Context* __am_irq_handle(Context *c) {
+  printf("1:%#x\n", c->mstatus);
   __am_get_cur_as(c);
   if (user_handler) {
     Event ev = {0};
@@ -24,6 +25,7 @@ Context* __am_irq_handle(Context *c) {
     assert(c != NULL);
   }
 
+  printf("2:%#x\n", c->mstatus);
   __am_switch(c);
   return c;
 }
