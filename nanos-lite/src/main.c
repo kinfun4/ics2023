@@ -1,5 +1,4 @@
 #include <common.h>
-#include <stdio.h>
 
 void init_mm(void);
 void init_device(void);

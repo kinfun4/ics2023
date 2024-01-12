@@ -58,6 +58,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(void *buf, size_t offset, size_t len) {
+  printf("%d\n", len);
   offset /= sizeof(uint32_t);
   int x = offset % width;
   int y = offset / width;
