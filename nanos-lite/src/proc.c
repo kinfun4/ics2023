@@ -94,8 +94,8 @@ void init_proc() {
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
   context_uload(&pcb[1], "/bin/hello", argv, envp);
-  printf("%d\n", pcb[0].cp->mstatus);
-  printf("%d\n", pcb[1].cp->mstatus);
+  printf("%#x\n", pcb[0].cp->mstatus);
+  printf("%#x\n", pcb[1].cp->mstatus);
   // context_kload(&pcb[1], hello_fun, (void *)1);
   switch_boot_pcb();
   Log("Initializing processes...");
