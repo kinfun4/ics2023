@@ -95,7 +95,7 @@ save_context:
   beqz t0, restore_context
 
   addi t1, sp, CONTEXT_SIZE
-  csrw mscratch, sp # ksp = $sp
+  csrw mscratch, t1 # ksp = $sp
 
 restore_context:
   MAP(REGS, POP)
