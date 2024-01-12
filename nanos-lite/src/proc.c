@@ -87,7 +87,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
 }
 
 void hello_fun(void *arg) {
-    printf("2:%#x, %#x, %#x\n",bg_pcb, bg_pcb->cp, bg_pcb->cp->mepc);
+    printf("2:%#x, %#x, %#x\n",bg_pcb->cp->mcause, bg_pcb->cp->mstatus, bg_pcb->cp->mepc);
   int j = 1;
   while (1) {
     Log("Hello World from Nanos-lite with arg '%p' for the %dth time!", (uintptr_t)arg, j);
