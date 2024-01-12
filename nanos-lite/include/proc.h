@@ -22,5 +22,6 @@ void naive_uload(PCB *pcb, const char *filename);
 extern PCB *current;
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]);
 int execve(const char *filename, char *const argv[], char *const envp[]);
+void switch_fgpcb (int k);
 
 #endif

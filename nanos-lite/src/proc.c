@@ -6,9 +6,15 @@
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
+PCB *fg_pcb = NULL, *bg_pcb = NULL;
 
 void switch_boot_pcb() {
   current = &pcb_boot;
+}
+
+void switch_fgpcb (int k) {
+  assert(k>=0 && k<=2);
+  fg_pcb = &pcb[k];
 }
 
 void context_kload(PCB *pcb, void (*entry)(void *), void * arg){
@@ -89,11 +95,18 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/nterm";
-  char *argv[] = {filename, NULL};
+  char *filename[3] = {"/bin/nterm", "/bin/bird", "/bin/pal"};
+  char *argv0[] = {filename[0], NULL};
+  char *argv1[] = {filename[1], NULL};
+  char *argv2[] = {filename[2], NULL};
+  char *argv[] = {NULL};
   char *envp[] = {NULL};
-  context_uload(&pcb[0], filename, argv, envp);
-  context_uload(&pcb[1], "/bin/hello", argv, envp);
+  context_uload(&pcb[0], filename[0], argv0, envp);
+  context_uload(&pcb[1], filename[1], argv1, envp);
+  context_uload(&pcb[2], filename[2], argv2, envp);
+  context_uload(&pcb[3], "/bin/hello", argv, envp);
+  fg_pcb = &pcb[0];
+  bg_pcb = &pcb[3];
   // context_kload(&pcb[1], hello_fun, (void *)1);
   switch_boot_pcb();
   Log("Initializing processes...");
@@ -103,8 +116,8 @@ void init_proc() {
 Context* schedule(Context *prev) {
   // current = &pcb[0];
   static int cnt = 0;
-  if(current == &pcb[0])cnt++;
-  if(cnt == 30) current = &pcb[1], cnt = 0;
-  else current = &pcb[0];
+  if(current == fg_pcb)cnt++;
+  if(cnt == 30) current = bg_pcb, cnt = 0;
+  else current = fg_pcb;
   return current->cp;
 }

@@ -1,10 +1,6 @@
-#include "klib-macros.h"
-#include "memory.h"
 #include <elf.h>
 #include <fs.h>
 #include <proc.h>
-#include <stddef.h>
-#include <stdint.h>
 
 #ifdef __LP64__
 #define Elf_Ehdr Elf64_Ehdr
