@@ -20,10 +20,10 @@ uint32_t csrs[1 << 12];
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   // printf("NO=0x%08x  epc=0x%08x\n",NO,epc);
   CSR(MEPC) = epc;
+  printf("%#x\n", CSR(MSTATUS));
   CSR(MSTATUS) =
       ((CSR(MSTATUS) & MIE) ? CSR(MSTATUS) | MIPE : CSR(MSTATUS) & (~MIPE)) &
       (~MIE);
-  printf("%#x\n", CSR(MSTATUS));
   CSR(MCAUSE) = NO;
   return CSR(MTVEC);
 }
