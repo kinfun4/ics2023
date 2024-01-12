@@ -119,7 +119,7 @@ Context* schedule(Context *prev) {
   // current = &pcb[0];
   static int cnt = 0;
   if(current == fg_pcb)cnt++;
-  if(cnt == 3) current = bg_pcb, cnt = 0;
+  if(cnt == 1) current = bg_pcb, cnt = 0;
   else current = fg_pcb;
   return current->cp;
 }
