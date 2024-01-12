@@ -23,17 +23,12 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
   CSR(MSTATUS) =
       ((CSR(MSTATUS) & MIE) ? CSR(MSTATUS) | MIPE : CSR(MSTATUS) & (~MIPE)) &
       (~MIE);
+  printf("%#x\n", CSR(MSTATUS));
   CSR(MCAUSE) = NO;
   return CSR(MTVEC);
 }
 
 word_t isa_query_intr() {
-  // static int cnt = 0;
-  // if (cpu.intr) {
-  //   cnt++;
-  //   printf("intr = %d, MIE = %d\n", cpu.intr, CSR(MSTATUS) & MIE);
-  //   assert(cnt < 1000);
-  // }
   if (cpu.intr && CSR(MSTATUS) & MIE) {
     cpu.intr = false;
     return IRQ_TIMER;
