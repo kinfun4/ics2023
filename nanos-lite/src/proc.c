@@ -118,6 +118,7 @@ void init_proc() {
 }
 
 Context *schedule(Context *prev) {
+  current->cp = prev;
   // current = &pcb[0];
   static int cnt = 0;
   if (current == fg_pcb)
