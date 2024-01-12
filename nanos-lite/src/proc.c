@@ -82,7 +82,6 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
   if (fs_open(filename, 0, 0) == -1)
     return -2;
   context_uload(p, filename, argv, envp);
-  // printf("p:%#x\n", p->cp->mepc);
   yield();
   return 0;
 }
@@ -126,6 +125,5 @@ Context *schedule(Context *prev) {
     current = bg_pcb, cnt = 0;
   } else
     current = fg_pcb;
-  // printf("cp:%#x\n", current->cp->mepc);
   return current->cp;
 }
