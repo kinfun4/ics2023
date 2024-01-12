@@ -19,8 +19,8 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
     c = user_handler(ev, c);
+  if(ev.event == EVENT_YIELD)printf("%#x\n", c->mepc);
     assert(c != NULL);
-  if(ev.event == EVENT_YIELD)printf("%d\n", __LINE__);
   }
 
   __am_switch(c);
