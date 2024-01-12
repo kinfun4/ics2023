@@ -109,7 +109,7 @@ void init_proc() {
   context_uload(&pcb[1], filename[1], argv1, envp);
   context_uload(&pcb[2], filename[2], argv2, envp);
   context_uload(&pcb[3], "/bin/hello", argv, envp);
-  // context_kload(&pcb[3], hello_fun, (void *)1);
+  context_kload(&pcb[3], hello_fun, (void *)1);
   fg_pcb = &pcb[0];
   bg_pcb = &pcb[3];
   switch_boot_pcb();
