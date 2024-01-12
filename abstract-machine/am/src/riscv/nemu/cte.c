@@ -16,15 +16,9 @@ Context* __am_irq_handle(Context *c) {
     switch (c->mcause) {
       case IRQ_ECALL: ev.event = c->GPR1 == -1 ? EVENT_YIELD : EVENT_SYSCALL; c->mepc +=4; break; // Enviroment call from M-mode
       case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
-
       default: ev.event = EVENT_ERROR; break;
     }
-  if(ev.event == EVENT_IRQ_TIMER)printf("IRQ:%#x\n", c->mepc);
-  if(ev.event == EVENT_YIELD)printf("YIELD:%#x\n", c->mepc);
-
     c = user_handler(ev, c);
-  if(ev.event == EVENT_IRQ_TIMER)printf("IRQ:%#x\n", c->mepc);
-  if(ev.event == EVENT_YIELD)printf("YIELD:%#x\n", c->mepc);
     assert(c != NULL);
   }
 

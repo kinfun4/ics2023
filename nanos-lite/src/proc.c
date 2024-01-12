@@ -119,16 +119,11 @@ void init_proc() {
 
 Context *schedule(Context *prev) {
   current->cp = prev;
-  // current = &pcb[0];
   static int cnt = 0;
   if (current == fg_pcb)
     cnt++;
-  if (cnt == 0) {
-    printf("bg:%#x\n", bg_pcb->cp->mepc);
-  }
-  if (cnt == 3) {
+  if (cnt == 30) {
     current = bg_pcb, cnt = 0;
-    printf("bg:%#x\n", bg_pcb->cp->mepc);
   } else
     current = fg_pcb;
   return current->cp;
