@@ -93,9 +93,9 @@ save_context:
   csrw mscratch, t1 # ksp = $sp
 
 restore_context:
-  LOAD t3, OFFSET_STATUS(sp)
+  LOAD t0, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
-  csrw mstatus, t3
+  csrw mstatus, t0
   csrw mepc, t2
 
   MAP(REGS, POP)
