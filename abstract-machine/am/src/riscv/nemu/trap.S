@@ -94,7 +94,9 @@ save_context:
   LOAD t0, OFFSET_NP(sp)
   beqz t0, restore_context
 
-  csrw mscratch, sp # ksp = $sp
+  
+  addi t1, sp, CONTEXT_SIZE
+  csrw mscratch, t1 # ksp = $sp
 
 restore_context:
   MAP(REGS, POP)
