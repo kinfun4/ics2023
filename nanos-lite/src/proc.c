@@ -118,13 +118,13 @@ void init_proc() {
 }
 
 Context *schedule(Context *prev) {
-  printf("%d\n", __LINE__);
   current->cp = prev;
   static int cnt = 0;
   if (current == fg_pcb)
     cnt++;
   if (cnt == 30) {
     current = bg_pcb, cnt = 0;
+  printf("%d\n", __LINE__);
   } else
     current = fg_pcb;
   return current->cp;
