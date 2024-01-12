@@ -99,15 +99,15 @@ void init_proc() {
   char *argv0[] = {filename[0], NULL};
   char *argv1[] = {filename[1], NULL};
   char *argv2[] = {filename[2], NULL};
-  char *argv[] = {NULL};
+  // char *argv[] = {NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename[0], argv0, envp);
   context_uload(&pcb[1], filename[1], argv1, envp);
   context_uload(&pcb[2], filename[2], argv2, envp);
-  context_uload(&pcb[3], "/bin/hello", argv, envp);
+  // context_uload(&pcb[3], "/bin/hello", argv, envp);
+  context_kload(&pcb[3], hello_fun, (void *)1);
   fg_pcb = &pcb[0];
   bg_pcb = &pcb[3];
-  // context_kload(&pcb[1], hello_fun, (void *)1);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
