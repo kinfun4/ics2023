@@ -40,7 +40,6 @@ extern uint32_t csrs[1<<12];
 #define SATP 0x180
 
 static inline int check_csr_idx(int idx) {
-  printf("%#x\n", idx);
   assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE || idx == SATP || idx == MSCRATCH);
   return idx;
 }
