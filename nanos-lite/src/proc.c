@@ -74,8 +74,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
   intptr_t entry = loader(pcb, filename);
   pcb->cp = ucontext(&pcb->as, (Area) { pcb->stack, pcb + 1 }, (void *)entry);
 
-  // pcb->cp->GPRx = (intptr_t) sp_vaddr - (sp_paddr - (void *)sp);
-  pcb->cp->GPRx = (uintptr_t)sp;
+  pcb->cp->GPRx = (intptr_t) sp_vaddr - (sp_paddr - (void *)sp);
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]){
@@ -87,7 +86,6 @@ int execve(const char *filename, char *const argv[], char *const envp[]){
 }
 
 void hello_fun(void *arg) {
-    printf("2:%#x, %#x, %#x\n",bg_pcb->cp->mcause, bg_pcb->cp->mstatus, bg_pcb->cp->mepc);
   int j = 1;
   while (1) {
     Log("Hello World from Nanos-lite with arg '%p' for the %dth time!", (uintptr_t)arg, j);
