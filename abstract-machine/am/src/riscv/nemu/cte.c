@@ -16,7 +16,7 @@ Context* __am_irq_handle(Context *c) {
     Event ev = {0};
     switch (c->mcause) {
       case IRQ_ECALL: ev.event = c->GPR1 == -1 ? EVENT_YIELD : EVENT_SYSCALL; c->mepc +=4; break; // Enviroment call from M-mode
-      case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER;c->mepc +=4; break;
+      case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
 
       default: ev.event = EVENT_ERROR; break;
     }
