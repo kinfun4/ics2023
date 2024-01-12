@@ -94,7 +94,6 @@ save_context:
   LOAD t0, OFFSET_NP(sp)
   beqz t0, restore_context
 
-  csrw mscratch, sp # ksp = $sp
 
 restore_context:
   MAP(REGS, POP)
