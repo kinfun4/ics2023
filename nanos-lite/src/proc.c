@@ -88,7 +88,6 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
 }
 
 void hello_fun(void *arg) {
-  printf("%d\n", 1);
   int j = 1;
 
   while (1) {
@@ -123,7 +122,7 @@ Context *schedule(Context *prev) {
   static int cnt = 0;
   if (current == fg_pcb)
     cnt++;
-  if (cnt == 3) {
+  if (cnt == 30) {
     current = bg_pcb, cnt = 0;
   } else
     current = fg_pcb;
