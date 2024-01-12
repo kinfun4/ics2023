@@ -31,7 +31,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   switch (ev.keycode) {
   case AM_KEY_0:switch_fgpcb(0);break;
   case AM_KEY_1:switch_fgpcb(1);break;
-  case AM_KEY_2:switch_fgpcb(2);break;
+  // case AM_KEY_2:switch_fgpcb(2);break;
   default: break;
   }
   if (ev.keycode == AM_KEY_NONE)
