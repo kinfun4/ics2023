@@ -28,12 +28,12 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   char *_buf = buf;
   int ret = 0;
   AM_INPUT_KEYBRD_T ev = io_read(AM_INPUT_KEYBRD);
-  switch (ev.keycode) {
-  case AM_KEY_0:switch_fgpcb(0);break;
-  case AM_KEY_1:switch_fgpcb(1);break;
-  case AM_KEY_2:switch_fgpcb(2);break;
-  default: break;
-  }
+  // switch (ev.keycode) {
+  // case AM_KEY_0:switch_fgpcb(0);break;
+  // case AM_KEY_1:switch_fgpcb(1);break;
+  // case AM_KEY_2:switch_fgpcb(2);break;
+  // default: break;
+  // }
   if (ev.keycode == AM_KEY_NONE)
     return 0;
   if (ev.keydown)

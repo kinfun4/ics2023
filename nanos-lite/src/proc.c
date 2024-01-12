@@ -105,9 +105,9 @@ void init_proc() {
   context_uload(&pcb[1], filename[1], argv1, envp);
   context_uload(&pcb[2], filename[2], argv2, envp);
   context_uload(&pcb[3], "/bin/hello", argv, envp);
+  // context_kload(&pcb[3], hello_fun, (void *)1);
   fg_pcb = &pcb[0];
   bg_pcb = &pcb[3];
-  // context_kload(&pcb[1], hello_fun, (void *)1);
   switch_boot_pcb();
   Log("Initializing processes...");
   // naive_uload(NULL, "/bin/nterm");
@@ -117,7 +117,7 @@ Context* schedule(Context *prev) {
   // current = &pcb[0];
   static int cnt = 0;
   if(current == fg_pcb)cnt++;
-  if(cnt == 30) current = bg_pcb, cnt = 0;
+  if(cnt == 60) current = bg_pcb, cnt = 0;
   else current = fg_pcb;
   return current->cp;
 }
