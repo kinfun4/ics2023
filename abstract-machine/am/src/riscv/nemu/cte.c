@@ -11,7 +11,6 @@ void __am_switch(Context *c);
 
 Context* __am_irq_handle(Context *c) {
   __am_get_cur_as(c);
-  printf("%#x\n", c->mepc);
   if (user_handler) {
     Event ev = {0};
     switch (c->mcause) {
@@ -20,6 +19,7 @@ Context* __am_irq_handle(Context *c) {
 
       default: ev.event = EVENT_ERROR; break;
     }
+  if(ev.event == EVENT_YIELD)printf("%#x\n", c->mepc);
 
     c = user_handler(ev, c);
     assert(c != NULL);
