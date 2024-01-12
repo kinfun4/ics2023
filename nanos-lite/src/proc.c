@@ -1,6 +1,5 @@
 #include <proc.h>
 #include <fs.h>
-#include <stdint.h>
 
 #define MAX_NR_PROC 4
 
@@ -119,7 +118,10 @@ Context* schedule(Context *prev) {
   // current = &pcb[0];
   static int cnt = 0;
   if(current == fg_pcb)cnt++;
-  if(cnt == 2) current = bg_pcb, cnt = 0;
+  if(cnt == 1){
+current = bg_pcb, cnt = 0;
+    printf("%d. %#x, %#x\n",bg_pcb->cp->np, bg_pcb->cp->mepc, bg_pcb->cp->mstatus);
+  } 
   else current = fg_pcb;
   return current->cp;
 }
