@@ -26,7 +26,7 @@ Context* __am_irq_handle(Context *c) {
   }
 
   __am_switch(c);
-    // printf("3:%d, %#x, %#x\n",c->np, c->mepc, c->mstatus);
+    printf("3:%#x, %#x, %#x\n",c, c->mepc);
   return c;
 }
 
