@@ -92,12 +92,12 @@ save_context:
   csrw mepc, t2
 
   LOAD t0, OFFSET_NP(sp)
-  beqz t0, restore_context
+  beqz t0, res
   
   addi t1, sp, CONTEXT_SIZE
   csrw mscratch, t1 # ksp = $sp
 
-restore_context:
+res:
   MAP(REGS, POP)
   LOAD sp, OFFSET_SP(sp)
   mret
