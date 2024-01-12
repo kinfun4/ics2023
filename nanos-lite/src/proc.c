@@ -89,7 +89,7 @@ void hello_fun(void *arg) {
 }
 
 void init_proc() {
-  char *filename = "/bin/nterm";
+  char *filename = "/bin/pal";
   char *argv[] = {filename, NULL};
   char *envp[] = {NULL};
   context_uload(&pcb[0], filename, argv, envp);
@@ -101,7 +101,6 @@ void init_proc() {
 }
 
 Context* schedule(Context *prev) {
-  current->cp = prev;
   // current = &pcb[0];
   static int cnt = 0;
   if(current == &pcb[0])cnt++;
