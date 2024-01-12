@@ -31,19 +31,43 @@ f(30) f(31)
 #define PUSH(n) STORE concat(x, n), (n * XLEN)(sp);
 #define POP(n)  LOAD  concat(x, n), (n * XLEN)(sp);
 
-#define CONTEXT_SIZE  ((NR_REGS + 3 + 1) * XLEN)
+#define CONTEXT_SIZE  ((NR_REGS + 3 + 1 + 1) * XLEN)
 #define OFFSET_SP     ( 2 * XLEN)
 #define OFFSET_CAUSE  ((NR_REGS + 0) * XLEN)
 #define OFFSET_STATUS ((NR_REGS + 1) * XLEN)
 #define OFFSET_EPC    ((NR_REGS + 2) * XLEN)
+#define OFFSET_PDIR   ((NR_REGS + 3) * XLEN)
+#define OFFSET_NP     ((NR_REGS + 4) * XLEN)
 
 .align 3
 .globl __am_asm_trap
 .type	__am_asm_trap, @function
 __am_asm_trap:
-  addi sp, sp, -CONTEXT_SIZE
 
+  csrrw sp, mscratch, sp
+  bnez sp, set_np
+  csrr sp, mscratch   # ksp == 0
+
+  addi sp, sp, -CONTEXT_SIZE
   MAP(REGS, PUSH)
+
+  STORE zero, OFFSET_NP(sp)
+
+  j save_context
+
+set_np:  # ksp != 0
+
+  addi sp, sp, -CONTEXT_SIZE
+  MAP(REGS, PUSH)
+
+  li t0, 1
+  STORE t0, OFFSET_NP(sp)
+
+save_context:
+  csrr t0, mscratch
+  STORE t0, OFFSET_SP(sp)   # c->sp = $sp
+
+  csrw mscratch, zero  # ksp = 0
 
   csrr t0, mcause
   csrr t1, mstatus
@@ -67,8 +91,14 @@ __am_asm_trap:
   csrw mstatus, t1
   csrw mepc, t2
 
-  MAP(REGS, POP)
+  LOAD t0, OFFSET_NP(sp)
+  beqz t0, restore_context
 
-  addi sp, sp, CONTEXT_SIZE
+  csrw mscratch, sp
+
+restore_context:
+  MAP(REGS, POP)
+  LOAD sp, OFFSET_SP(sp)
   mret
+
 .size	__am_asm_trap, .-__am_asm_trap

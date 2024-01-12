@@ -34,12 +34,13 @@ static inline const char* reg_name(int idx) {
 extern uint32_t csrs[1<<12];
 #define MSTATUS 0x300
 #define MTVEC 0x305
+#define MSCRATCH 0x340
 #define MEPC 0x341
 #define MCAUSE 0x342
 #define SATP 0x180
 
 static inline int check_csr_idx(int idx) {
-  assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE || idx == SATP);
+  assert(idx == MSTATUS || idx == MTVEC || idx == MEPC || idx == MCAUSE || idx == SATP || idx == MSCRATCH);
   return idx;
 }
 #define MIE   0x8

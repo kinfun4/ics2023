@@ -11,6 +11,7 @@ struct Context {
   uintptr_t  gpr[NR_REGS];
   uintptr_t  mcause, mstatus, mepc;
   void *pdir;
+  uint32_t np;
 };
 
 #ifdef __riscv_e
