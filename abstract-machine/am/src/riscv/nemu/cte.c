@@ -19,10 +19,12 @@ Context* __am_irq_handle(Context *c) {
 
       default: ev.event = EVENT_ERROR; break;
     }
-  if(ev.event == EVENT_IRQ_TIMER)printf("1:%#x\n", c->mepc);
+  if(ev.event == EVENT_IRQ_TIMER)printf("IRQ:%#x\n", c->mepc);
+  if(ev.event == EVENT_YIELD)printf("YIELD:%#x\n", c->mepc);
 
     c = user_handler(ev, c);
-  if(ev.event == EVENT_IRQ_TIMER)printf("2:%#x\n", c->mepc);
+  if(ev.event == EVENT_IRQ_TIMER)printf("IRQ:%#x\n", c->mepc);
+  if(ev.event == EVENT_YIELD)printf("YIELD:%#x\n", c->mepc);
     assert(c != NULL);
   }
 
