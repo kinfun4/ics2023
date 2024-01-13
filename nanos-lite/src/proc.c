@@ -83,7 +83,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
     return -2;
   context_uload(p, filename, argv, envp);
   printf("1:%#x, %#x\n",p->cp->mepc, p->cp->pdir);
-  // yield();
+  yield();
   return 0;
 }
 
