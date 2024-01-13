@@ -11,6 +11,7 @@ static Context *do_event(Event e, Context *c) {
     break;
   case EVENT_SYSCALL:
     // printf("EVENT_SYSCALL\n");
+    printf("1:%p\n", c);
     do_syscall(c);
     break;
   case EVENT_ERROR:
