@@ -18,9 +18,9 @@ Context* __am_irq_handle(Context *c) {
       case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
       default: ev.event = EVENT_ERROR; break;
     }
-    printf("3:event = %d, mepc = %#x\n", ev.event ,c->mepc);
+    printf("3:pdir = %#x, mepc = %#x\n", c->pdir,c->mepc);
     c = user_handler(ev, c);
-    printf("2:event = %d, mepc = %#x\n", ev.event ,c->mepc);
+    printf("2:pdir = %#x, mepc = %#x\n", c->pdir,c->mepc);
     assert(c != NULL);
   }
 
