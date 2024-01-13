@@ -103,7 +103,6 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
   *pte0 = GET_PTE((uintptr_t)pa) | PTE_V | PTE_R | PTE_W | PTE_X; // leaf PTE
 }
 
-#define MIE 0x8
 #define MPIE 0x80
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
@@ -111,7 +110,7 @@ Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
   c->GPRx = (uintptr_t)heap.end;
   c->mepc = (uintptr_t)entry;
   c->mcause = 0x0;
-  c->mstatus = 0x1800 | MIE | MPIE;
+  c->mstatus = 0x1800 | MPIE;
   c->pdir = as->ptr;
   c->np = 1;
   return c;
