@@ -19,7 +19,7 @@ Context* __am_irq_handle(Context *c) {
       default: ev.event = EVENT_ERROR; break;
     }
     c = user_handler(ev, c);
-    printf("2:%#x\n", c->mepc);
+    printf("2:event = %d, mepc = %#x\n", ev.event ,c->mepc);
     assert(c != NULL);
   }
 
