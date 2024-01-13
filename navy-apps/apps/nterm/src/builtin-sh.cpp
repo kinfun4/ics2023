@@ -39,6 +39,7 @@ void cmd_r(const char *buf) {
   int ret = execvp(filename, argv);
   if (ret == -1)
     sh_printf("filename error!\n");
+  else sh_printf("exec succeed!\n");
 }
 
 struct handler {
