@@ -14,13 +14,8 @@
  ***************************************************************************************/
 
 #include "../local-include/reg.h"
-#include "common.h"
-#include "isa-def.h"
-#include <assert.h>
 #include <isa.h>
 #include <memory/paddr.h>
-#include <memory/vaddr.h>
-#include <stdint.h>
 
 #define MODE (1 << 31)
 #define READ_HIGH(a, x)     ((a) & (~((1 << (x)) - 1)))
