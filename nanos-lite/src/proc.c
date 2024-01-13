@@ -78,7 +78,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[],
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]) {
-  PCB *p = &pcb[1];
+  PCB *p = current;
   if (fs_open(filename, 0, 0) == -1)
     return -2;
   context_uload(p, filename, argv, envp);
