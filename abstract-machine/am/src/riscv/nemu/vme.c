@@ -71,20 +71,6 @@ void __am_switch(Context *c) {
 #define GET_PPN(pte) (READ_HIGH((pte), 10) << 2)
 #define GET_PTE(pa) (READ_HIGH((pa), 12) >> 2)
 
-// int check_map(AddrSpace *as, void *va, void *pa, int prot) {
-//   uintptr_t vpn1 = (uintptr_t)va >> 22;
-//   uintptr_t vpn0 = READ_LEN((uintptr_t)va, 12, 22);
-//   PTE *pte1 = (void *)as->ptr + vpn1 * PTESIZE;
-//   if(!(*pte1 & PTE_V)){
-//     return 0;
-//   }
-//   PTE* pte0 = (void *)GET_PPN(*pte1) + vpn0 * PTESIZE;
-//   if(!(*pte0 & PTE_V)){
-//     return 0;
-//   }
-//   return 1;
-// }
-
 void map(AddrSpace *as, void *va, void *pa, int prot) {
   if (as != &kas){
     // printf("va = %p, st = %p, en = %p\n", va, as->area.start, as->area.end);

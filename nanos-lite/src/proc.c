@@ -44,14 +44,14 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[],
 
   for (int i = 0; i < envc; i++) {
     int len = strlen(*(envp + i)) + 1;
-    len = (len & ~3) + (len & 3 ? 4 : 0);
+    len = (len + 3) & (~3);
     sp -= len;
     _envp[i] = sp;
     strncpy(_envp[i], *(envp + i), len);
   }
   for (int i = 0; i < argc; i++) {
     int len = strlen(*(argv + i)) + 1;
-    len = (len & ~3) + (len & 3 ? 4 : 0);
+    len = (len + 3) & (~3);
     sp -= len;
     _argv[i] = sp;
     strncpy(_argv[i], *(argv + i), len);
