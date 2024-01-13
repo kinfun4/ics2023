@@ -82,8 +82,8 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
   if (fs_open(filename, 0, 0) == -1)
     return -2;
   context_uload(p, filename, argv, envp);
-  printf("1:%#x, %#x\n",p->cp->mepc, p->cp->pdir);
-  yield();
+  printf("1:%#x, %#x\n",p->cp->mstatus, p->cp->np);
+  // yield();
   return 0;
 }
 
