@@ -84,13 +84,12 @@ save_context:
   mv a0, sp
   jal __am_irq_handle
 
-  mv t1, sp
   mv sp, a0
   
   LOAD t0, OFFSET_NP(sp)
   beqz t0, restore_context
 
-  addi t1, t1, CONTEXT_SIZE
+  addi t1, sp, CONTEXT_SIZE
   csrw mscratch, t1 # ksp = $sp
 
 restore_context:
