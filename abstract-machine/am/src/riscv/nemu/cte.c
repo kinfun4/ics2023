@@ -18,9 +18,9 @@ Context* __am_irq_handle(Context *c) {
       case IRQ_TIMER: ev.event = EVENT_IRQ_TIMER; break;
       default: ev.event = EVENT_ERROR; break;
     }
-    printf("3:%p, mepc = %#x\n", c,c->gpr[1]);
+    // printf("3:%p, mepc = %#x\n", c,c->mepc);
     c = user_handler(ev, c);
-    printf("2:%p, mepc = %#x\n", c,c->gpr[1]);
+    // printf("2:%p, mepc = %#x\n", c,c->mepc);
     assert(c != NULL);
   }
 
